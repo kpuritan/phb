@@ -1028,29 +1028,59 @@ export default function PuritanHeritageBooksApp() {
 
       {/* 6. BRAND STORY & MISSION */}
       <section id="about" className="py-16 bg-[#F8F7F4] border-b border-[#E4DFD7] text-center">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="w-12 h-12 mx-auto rounded-full bg-[#6E1B2A] text-[#DFC075] flex items-center justify-center font-serif font-bold text-lg mb-4 shadow-md">
             PHB
           </div>
           <span className="font-serif text-xs font-bold tracking-[0.3em] text-[#6E1B2A] uppercase block mb-2">
             Publishing Mission Statement • 사명선언문
           </span>
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#17191C] mb-6">
-            “오직 그리스도(Solus Christus), 오직 하나님께 영광(Soli Deo Gloria)”
+          <h2 className="text-lg sm:text-2xl lg:text-[23px] font-serif font-bold text-[#17191C] mb-6 leading-relaxed">
+            “오직 성경(Sola Scriptura) · 오직 믿음(Sola Fide) · 오직 은혜(Sola Gratia)<br className="hidden sm:inline" /> · 오직 그리스도(Solus Christus) · 오직 하나님께 영광(Soli Deo Gloria)”
           </h2>
-          <p className="text-sm sm:text-base text-[#5E6470] font-serif leading-loose max-w-3xl mx-auto">
+          <p className="text-sm sm:text-base text-[#5E6470] font-serif leading-loose max-w-3xl mx-auto mb-10">
             퓨리탄 헤리티지 북스(Puritan Heritage Books)는 바른 교리와 뜨거운 경건이 결합된 역사적 개혁주의와 청교도 고전 문헌을 한국 교회와 성도들에게 가장 신실한 원전 번역과 단정한 만듦새로 전합니다. 
             영혼을 각성시키고 교회를 견고히 세우는 신학적 보화를 다음 세대에게 변함없이 전수하겠습니다.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3 text-xs text-[#5E6470]">
-            <span className="bg-white border border-[#E4DFD7] px-3 py-1.5 rounded-full">
+
+          {/* 5 Solas (종교개혁 5대 강령) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 text-left mb-8">
+            <div className="bg-white border border-[#E4DFD7] rounded-xl p-4 shadow-xs hover:border-[#C39738] transition-all">
+              <span className="text-[10px] font-serif font-bold text-[#6E1B2A] tracking-wider uppercase block mb-1">01 · Sola Scriptura</span>
+              <h3 className="text-sm font-serif font-bold text-[#17191C] mb-1">오직 성경</h3>
+              <p className="text-[11px] text-[#7E8694] leading-relaxed">신앙과 삶, 구원의 유일무이한 최고 권위 규범</p>
+            </div>
+            <div className="bg-white border border-[#E4DFD7] rounded-xl p-4 shadow-xs hover:border-[#C39738] transition-all">
+              <span className="text-[10px] font-serif font-bold text-[#6E1B2A] tracking-wider uppercase block mb-1">02 · Sola Fide</span>
+              <h3 className="text-sm font-serif font-bold text-[#17191C] mb-1">오직 믿음</h3>
+              <p className="text-[11px] text-[#7E8694] leading-relaxed">의롭다 하심을 얻는 유일한 통로이자 수단</p>
+            </div>
+            <div className="bg-white border border-[#E4DFD7] rounded-xl p-4 shadow-xs hover:border-[#C39738] transition-all">
+              <span className="text-[10px] font-serif font-bold text-[#6E1B2A] tracking-wider uppercase block mb-1">03 · Sola Gratia</span>
+              <h3 className="text-sm font-serif font-bold text-[#17191C] mb-1">오직 은혜</h3>
+              <p className="text-[11px] text-[#7E8694] leading-relaxed">자격 없는 자에게 거저 주시는 하나님의 주권적 구원</p>
+            </div>
+            <div className="bg-white border border-[#E4DFD7] rounded-xl p-4 shadow-xs hover:border-[#C39738] transition-all">
+              <span className="text-[10px] font-serif font-bold text-[#6E1B2A] tracking-wider uppercase block mb-1">04 · Solus Christus</span>
+              <h3 className="text-sm font-serif font-bold text-[#17191C] mb-1">오직 그리스도</h3>
+              <p className="text-[11px] text-[#7E8694] leading-relaxed">하나님과 사람 사이의 영원하고 유일한 참 중보자</p>
+            </div>
+            <div className="bg-white border border-[#E4DFD7] rounded-xl p-4 shadow-xs hover:border-[#C39738] transition-all">
+              <span className="text-[10px] font-serif font-bold text-[#6E1B2A] tracking-wider uppercase block mb-1">05 · Soli Deo Gloria</span>
+              <h3 className="text-sm font-serif font-bold text-[#17191C] mb-1">오직 하나님께 영광</h3>
+              <p className="text-[11px] text-[#7E8694] leading-relaxed">창조와 구속, 모든 만물의 궁극적 목적이자 찬송</p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-3 text-xs text-[#5E6470]">
+            <span className="bg-white border border-[#E4DFD7] px-3.5 py-1.5 rounded-full shadow-xs">
               웨스트민스터 표준문서 (Westminster Standards)
             </span>
-            <span className="bg-white border border-[#E4DFD7] px-3 py-1.5 rounded-full">
+            <span className="bg-white border border-[#E4DFD7] px-3.5 py-1.5 rounded-full shadow-xs">
               일치 신조 삼형식 (Three Forms of Unity)
             </span>
-            <span className="bg-white border border-[#E4DFD7] px-3 py-1.5 rounded-full">
-              종교개혁 5대 강령 (Five Solas)
+            <span className="bg-white border border-[#E4DFD7] px-3.5 py-1.5 rounded-full shadow-xs">
+              종교개혁 5대 솔라 (Five Solas)
             </span>
           </div>
         </div>
