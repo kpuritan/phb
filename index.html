@@ -52,7 +52,7 @@
 
   <style>
     body {
-      background-color: #F8F7F4;
+      background-color: #FAF8F5;
       color: #17191C;
       font-family: 'Noto Sans KR', -apple-system, sans-serif;
       overflow-x: hidden;
@@ -74,20 +74,18 @@
       border-bottom-left-radius: 4px;
     }
     .gold-foil-text {
-      background: linear-gradient(135deg, #C39738 0%, #F5E6A8 50%, #9A7424 100%);
+      background: linear-gradient(135deg, #9A7424 0%, #C39738 50%, #7A5B18 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .parchment-texture {
-      background-color: #F8F7F4;
-      background-image: radial-gradient(#E4DFD7 0.75px, transparent 0.75px);
-      background-size: 24px 24px;
+    .luxury-ambient-glow {
+      background: radial-gradient(circle at 50% 30%, rgba(195,151,56,0.09) 0%, rgba(110,27,42,0.03) 45%, transparent 75%);
     }
     ::-webkit-scrollbar {
       width: 8px;
     }
     ::-webkit-scrollbar-track {
-      background: #F8F7F4;
+      background: #FAF8F5;
     }
     ::-webkit-scrollbar-thumb {
       background: #C39738;
@@ -95,7 +93,7 @@
     }
   </style>
 </head>
-<body class="parchment-texture selection:bg-[#6E1B2A] selection:text-white">
+<body class="bg-[#FAF8F5] selection:bg-[#6E1B2A] selection:text-white">
 
   <!-- ========================================== -->
   <!-- TOAST NOTIFICATION CONTAINER -->
@@ -108,24 +106,24 @@
   <!-- ========================================== -->
   <!-- 1. TOP UTILITY BANNER -->
   <!-- ========================================== -->
-  <div class="bg-[#17191C] text-[#E4DFD7] text-xs py-2 px-4 border-b border-[#2B2F36]">
+  <div class="bg-[#52131F] text-[#F5EDE8] text-xs py-2 px-4 border-b border-[#731D2D]">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
       <div class="flex items-center space-x-2">
-        <span class="bg-[#6E1B2A] text-white text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase">
-          학술 신간
+        <span class="bg-[#C39738] text-[#17191C] text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase font-cinzel">
+          신간 예약
         </span>
-        <p class="truncate text-[#E4DFD7]">
+        <p class="truncate text-[#F5EDE8] text-[11px] sm:text-xs">
           조엘 비키 & 폴 스몰리 『개혁주의 조직신학 전집 (전4권)』 완간 세트 특별 사전예약 접수 중
         </p>
       </div>
-      <div class="flex items-center space-x-4 text-[11px] text-[#A6ADB8]">
-        <a href="#shipping" class="hover:text-[#C39738] transition-colors">주문/배송조회</a>
-        <span class="text-[#3A3F4A]">|</span>
-        <a href="#about" class="hover:text-[#C39738] transition-colors font-serifKr font-semibold text-[#E4DFD7]">
+      <div class="flex items-center space-x-4 text-[11px] text-[#E0D5CF]">
+        <a href="#shipping" class="hover:text-[#DFC075] transition-colors">주문/배송조회</a>
+        <span class="text-[#80313E]">|</span>
+        <a href="#about" class="hover:text-[#DFC075] transition-colors font-serifKr font-semibold text-white">
           출판 사명선언문
         </a>
-        <span class="text-[#3A3F4A]">|</span>
-        <span class="text-[#C39738] font-cinzel font-semibold tracking-wider">KR / EN</span>
+        <span class="text-[#80313E]">|</span>
+        <span class="text-[#DFC075] font-cinzel font-semibold tracking-wider">KR / EN</span>
       </div>
     </div>
   </div>
@@ -133,14 +131,14 @@
   <!-- ========================================== -->
   <!-- 2. MAIN HEADER & BRAND IDENTITY -->
   <!-- ========================================== -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E4DFD7] shadow-xs">
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#EAE5DC] shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
       <div class="flex items-center justify-between h-20 gap-3 xl:gap-8">
         
         <!-- Brand Logo & Seal -->
         <a href="#" class="flex items-center space-x-3 flex-shrink-0 group">
           <div class="w-11 h-11 sm:w-12 sm:h-12 rounded bg-[#17191C] border-2 border-[#C39738] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform flex-shrink-0">
-            <div class="text-center text-[#C39738]">
+            <div class="text-center text-[#DFC075]">
               <span class="font-cinzel text-base sm:text-lg font-black leading-none block">PHB</span>
               <span class="text-[7px] tracking-widest text-[#E4DFD7] uppercase font-bold">Veritas</span>
             </div>
@@ -151,7 +149,7 @@
             </div>
             <div class="text-[11px] text-[#5E6470] tracking-wider font-serifKr flex items-center space-x-1.5 whitespace-nowrap">
               <span>퓨리탄 헤리티지 북스</span>
-              <span className="text-[#C39738]">•</span>
+              <span class="text-[#C39738]">•</span>
               <span class="font-sans text-[10px] text-[#8C2538] font-semibold">역사적 개혁주의 & 청교도 정본 출판사</span>
             </div>
           </div>
@@ -181,7 +179,7 @@
               type="text"
               placeholder="도서명, 저자 검색..."
               oninput="handleSearch(this.value)"
-              class="w-full bg-[#F8F7F4] border border-[#E4DFD7] text-xs rounded-full pl-8 pr-7 py-1.5 focus:outline-none focus:border-[#C39738] focus:ring-1 focus:ring-[#C39738] transition-all"
+              class="w-full bg-[#FAF8F5] border border-[#E4DFD7] text-xs rounded-full pl-8 pr-7 py-1.5 focus:outline-none focus:border-[#C39738] focus:ring-1 focus:ring-[#C39738] transition-all"
             />
             <div class="absolute left-2.5 top-2 text-[#5E6470]">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -202,7 +200,7 @@
           <!-- Cart Drawer Trigger -->
           <button
             onclick="toggleCart(true)"
-            class="relative p-2 sm:p-2.5 rounded-full bg-[#F8F7F4] hover:bg-[#EDE9E1] border border-[#E4DFD7] text-[#17191C] transition-all group flex-shrink-0"
+            class="relative p-2 sm:p-2.5 rounded-full bg-[#FAF8F5] hover:bg-[#EDE9E1] border border-[#E4DFD7] text-[#17191C] transition-all group flex-shrink-0"
             aria-label="장바구니 열기"
           >
             <svg class="w-5 h-5 text-[#17191C] group-hover:text-[#6E1B2A] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
@@ -217,70 +215,72 @@
   </header>
 
   <!-- ========================================== -->
-  <!-- 3. MONUMENTAL HERO EXHIBITION -->
+  <!-- 3. BRIGHT & LUXURIOUS HERO EXHIBITION -->
   <!-- ========================================== -->
-  <section class="relative bg-[#17191C] text-white overflow-hidden py-12 lg:py-20 border-b-4 border-[#C39738]">
+  <section class="relative bg-gradient-to-b from-[#F5F0E6] via-[#FAF7F2] to-[#FAF8F5] text-[#17191C] overflow-hidden py-14 lg:py-24 border-b border-[#EAE5DC] luxury-ambient-glow">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         
         <!-- Left Content -->
         <div class="lg:col-span-7 space-y-6">
           <div class="flex flex-wrap items-center gap-2">
-            <span class="bg-[#6E1B2A] text-[#F8F7F4] text-xs font-semibold px-3 py-1 rounded tracking-wide uppercase border border-[#8C2538]">
+            <span class="bg-[#6E1B2A] text-white text-xs font-semibold px-3 py-1 rounded tracking-wide uppercase shadow-xs">
               2026 기념비적 완간 역작
             </span>
-            <span class="bg-[#17191C] text-[#C39738] text-xs font-semibold px-3 py-1 rounded border border-[#C39738]/50 flex items-center gap-1.5 font-cinzel">
+            <span class="bg-white text-[#9A7424] text-xs font-semibold px-3 py-1 rounded border border-[#C39738]/50 flex items-center gap-1.5 font-cinzel shadow-xs">
               SOLI DEO GLORIA
             </span>
-            <span class="text-[#A6ADB8] text-xs">
+            <span class="text-[#5E6470] text-xs font-medium">
               양장 금박 한정판 • 정본 완역
             </span>
           </div>
 
           <div class="space-y-2">
-            <p class="text-xs sm:text-sm font-cinzel tracking-[0.25em] text-[#C39738] uppercase">
+            <p class="text-xs sm:text-sm font-cinzel tracking-[0.25em] text-[#9A7424] font-bold uppercase">
               Monumental Publication • Reformed Systematic Theology
             </p>
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-serifKr font-bold text-white leading-tight tracking-tight">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-serifKr font-bold text-[#17191C] leading-tight tracking-tight">
               개혁주의 조직신학 전집 <br class="hidden sm:inline" />
-              <span class="text-[#C39738] font-normal text-2xl sm:text-3xl lg:text-4xl">
+              <span class="text-[#6E1B2A] font-normal text-2xl sm:text-3xl lg:text-4xl">
                 (전 4권 완간 세트)
               </span>
             </h1>
           </div>
 
-          <div class="border-l-2 border-[#C39738] pl-4 space-y-1 text-sm text-[#E4DFD7]">
-            <p class="font-medium text-base text-white">
-              저자: <span class="text-[#DFC075]">조엘 비키 & 폴 스몰리</span> (Joel R. Beeke & Paul M. Smalley)
+          <div class="border-l-3 border-[#C39738] pl-4 space-y-1 text-sm text-[#5E6470]">
+            <p class="font-medium text-base text-[#17191C]">
+              저자: <span class="text-[#6E1B2A] font-bold">조엘 비키 & 폴 스몰리</span> (Joel R. Beeke & Paul M. Smalley)
             </p>
-            <p class="text-xs text-[#A6ADB8]">
+            <p class="text-xs text-[#7E8694]">
               역자: 조계광, 손현선 공역 • 한국개혁주의신학회 추천도서
             </p>
           </div>
 
-          <p class="text-[#D3D7DF] text-sm sm:text-base leading-relaxed max-w-2xl">
+          <p class="text-[#4A505C] text-sm sm:text-base leading-relaxed max-w-2xl font-sans">
             16~17세기 정통 청교도 신학과 역사적 개혁교의학의 정수를 21세기 현대 언어로 집대성한 필생의 대작. 
-            단순한 학문적 체계를 넘어, 모든 교리를 <strong class="text-white font-serifKr">“하나님을 아는 지식과 뜨거운 찬양, 거룩한 순종”</strong>으로 승화시킨 기념비적 전집입니다.
+            단순한 학문적 체계를 넘어, 모든 교리를 <strong class="text-[#17191C] font-serifKr font-bold">“하나님을 아는 지식과 뜨거운 찬양, 거룩한 순종”</strong>으로 승화시킨 기념비적 전집입니다.
           </p>
 
-          <div class="bg-[#23272D] border border-[#3A3F4A] rounded-lg p-4 inline-flex flex-wrap items-center gap-6">
+          <div class="bg-white/95 border border-[#C39738]/40 rounded-xl p-5 inline-flex flex-wrap items-center gap-6 shadow-sm">
             <div>
-              <span class="text-xs text-[#A6ADB8] block">사전예약 10% 특별 혜택가</span>
+              <span class="text-xs text-[#7E8694] block">사전예약 10% 특별 혜택가</span>
               <div class="flex items-baseline space-x-2">
-                <span class="text-2xl font-bold text-[#DFC075] font-cinzel">198,000원</span>
-                <span class="text-xs text-[#7E8694] line-through">220,000원</span>
+                <span class="text-2xl sm:text-3xl font-bold text-[#6E1B2A] font-cinzel">198,000원</span>
+                <span class="text-xs text-[#A6ADB8] line-through">220,000원</span>
               </div>
             </div>
-            <div class="border-l border-[#3A3F4A] pl-6 text-xs text-[#E4DFD7] space-y-0.5">
-              <p class="text-[#DFC075] font-semibold">★ 한정 특전: 원전 대조 요약 소책자 증정</p>
-              <p class="text-[#A6ADB8]">전국 무료 배송 • 고급 양장 하드커버 슬립케이스</p>
+            <div class="border-l border-[#EAE5DC] pl-6 text-xs text-[#5E6470] space-y-1">
+              <p class="text-[#9A7424] font-semibold flex items-center gap-1">
+                ★ 한정 특전: 원전 대조 요약 소책자 증정
+              </p>
+              <p class="text-[#7E8694]">전국 무료 배송 • 고급 양장 하드커버 슬립케이스</p>
             </div>
           </div>
 
           <div class="flex flex-wrap gap-4 pt-2">
             <button
               onclick="addToCart('phb-001')"
-              class="bg-[#6E1B2A] hover:bg-[#8C2538] text-white px-7 py-3.5 rounded font-semibold text-sm transition-all shadow-lg flex items-center space-x-2 border border-[#9A2D42]"
+              class="bg-[#6E1B2A] hover:bg-[#8C2538] text-white px-7 py-3.5 rounded-lg font-semibold text-sm transition-all shadow-md hover:shadow-lg flex items-center space-x-2 border border-[#8C2538]"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
               <span>사전예약 구매하기 (담기)</span>
@@ -288,7 +288,7 @@
 
             <button
               onclick="openBookPreview('phb-001')"
-              class="bg-transparent hover:bg-[#C39738]/10 text-[#DFC075] border border-[#C39738] px-6 py-3.5 rounded font-semibold text-sm transition-all flex items-center space-x-2"
+              class="bg-white hover:bg-[#FAF7F2] text-[#9A7424] border border-[#C39738] px-6 py-3.5 rounded-lg font-semibold text-sm transition-all flex items-center space-x-2 shadow-xs"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
               <span>목차 및 서문 미리보기</span>
@@ -299,7 +299,9 @@
         <!-- Right 3D Book Mockup -->
         <div class="lg:col-span-5 flex justify-center">
           <div class="relative group cursor-pointer" onclick="openBookPreview('phb-001')">
-            <div class="relative w-64 sm:w-72 md:w-80 h-[400px] sm:h-[450px] md:h-[480px] bg-gradient-to-br from-[#1b1e23] via-[#241a1f] to-[#121417] rounded-r-lg rounded-l-sm shadow-book-lg border border-[#C39738]/40 book-spine-effect p-6 flex flex-col justify-between transform transition-transform duration-500 group-hover:-translate-y-2 group-hover:rotate-1">
+            <div class="absolute -inset-2 bg-gradient-to-r from-[#C39738] to-[#6E1B2A] rounded-xl blur-xl opacity-20 group-hover:opacity-35 transition duration-500"></div>
+
+            <div class="relative w-64 sm:w-72 md:w-80 h-[400px] sm:h-[450px] md:h-[480px] bg-gradient-to-br from-[#1c1e23] via-[#241a1f] to-[#121417] rounded-r-lg rounded-l-sm shadow-book-lg border border-[#C39738]/40 book-spine-effect p-6 flex flex-col justify-between transform transition-transform duration-500 group-hover:-translate-y-2 group-hover:rotate-1">
               <div class="absolute inset-3 border border-[#C39738]/40 rounded-sm pointer-events-none"></div>
               
               <div class="relative z-10 text-center space-y-1">
@@ -338,7 +340,7 @@
   <!-- ========================================== -->
   <!-- 4. CURATED CATALOG & TABBED BOOK GRID -->
   <!-- ========================================== -->
-  <section id="catalog-section" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+  <section id="catalog-section" class="py-18 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
     <div class="text-center max-w-3xl mx-auto mb-12 space-y-3">
       <span class="font-cinzel text-xs font-bold tracking-[0.25em] text-[#6E1B2A] uppercase">
         Scholarly Editions & Classic Literature
@@ -366,13 +368,13 @@
   <!-- ========================================== -->
   <!-- 5. EXPERIENTIAL RELIGION & CONFESSIONAL ANCHOR -->
   <!-- ========================================== -->
-  <section id="quotes" class="bg-[#EDE9E1] py-16 border-y border-[#E4DFD7] relative">
+  <section id="quotes" class="bg-[#F4EFEB] py-18 border-y border-[#EAE5DC] relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
         
         <!-- Quote Box -->
-        <div class="lg:col-span-6 bg-white p-8 sm:p-10 rounded-xl border border-[#E4DFD7] shadow-parchment flex flex-col justify-between relative">
-          <div class="absolute top-4 right-6 font-serifEn text-7xl text-[#E4DFD7] select-none pointer-events-none font-bold">“</div>
+        <div class="lg:col-span-6 bg-white p-8 sm:p-10 rounded-xl border border-[#E4DFD7] shadow-sm flex flex-col justify-between relative">
+          <div class="absolute top-4 right-6 font-serifEn text-7xl text-[#E8E2D5] select-none pointer-events-none font-bold">“</div>
           <div>
             <div class="flex items-center space-x-2 mb-6">
               <span class="w-2 h-2 rounded-full bg-[#C39738]"></span>
@@ -384,7 +386,7 @@
               <!-- Injected -->
             </blockquote>
           </div>
-          <div class="border-t border-[#E4DFD7] pt-4 flex items-center justify-between">
+          <div class="border-t border-[#EAE5DC] pt-4 flex items-center justify-between">
             <div>
               <p id="puritan-quote-author" class="font-serifKr font-semibold text-sm text-[#17191C]"></p>
               <p id="puritan-quote-source" class="text-xs text-[#5E6470]"></p>
@@ -396,18 +398,18 @@
         </div>
 
         <!-- Confessions Anchor Box -->
-        <div id="confessions" class="lg:col-span-6 bg-[#17191C] text-white p-8 sm:p-10 rounded-xl border border-[#3A3F4A] shadow-xl flex flex-col justify-between">
+        <div id="confessions" class="lg:col-span-6 bg-white text-[#17191C] p-8 sm:p-10 rounded-xl border border-[#C39738]/40 shadow-sm flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center space-x-2">
-                <span class="text-xs font-cinzel font-bold text-[#DFC075] tracking-wider uppercase">
+                <span class="text-xs font-cinzel font-bold text-[#6E1B2A] tracking-wider uppercase">
                   Confessional Anchor • 표준 신앙고백 연계
                 </span>
               </div>
-              <span class="text-[11px] text-[#A6ADB8]">웨스트민스터 & 하이델베르크</span>
+              <span class="text-[11px] text-[#7E8694]">웨스트민스터 & 하이델베르크</span>
             </div>
 
-            <h3 class="font-serifKr text-xl font-bold text-white mb-4">
+            <h3 class="font-serifKr text-xl font-bold text-[#17191C] mb-4">
               교리와 문답으로 만나는 PHB 추천 도서
             </h3>
 
@@ -415,14 +417,14 @@
               <!-- Injected -->
             </div>
 
-            <div id="confession-detail-container" class="bg-[#23272D] border border-[#3A3F4A] rounded-lg p-4 space-y-3">
+            <div id="confession-detail-container" class="bg-[#FAF8F5] border border-[#EAE5DC] rounded-lg p-4 space-y-3">
               <!-- Injected -->
             </div>
           </div>
 
-          <div class="mt-6 pt-4 border-t border-[#3A3F4A] flex items-center justify-between">
-            <span class="text-xs text-[#A6ADB8]">개혁교회 역사적 표준문서 정본 완역 출판</span>
-            <button id="confession-view-book-btn" class="text-xs font-semibold text-[#DFC075] hover:text-white flex items-center gap-1 transition-colors">
+          <div class="mt-6 pt-4 border-t border-[#EAE5DC] flex items-center justify-between">
+            <span class="text-xs text-[#7E8694]">개혁교회 역사적 표준문서 정본 완역 출판</span>
+            <button id="confession-view-book-btn" class="text-xs font-semibold text-[#6E1B2A] hover:text-[#9A7424] flex items-center gap-1 transition-colors">
               <span>해당 도서 상세보기 →</span>
             </button>
           </div>
@@ -435,7 +437,7 @@
   <!-- ========================================== -->
   <!-- 6. BRAND STORY & MISSION STATEMENT STRIP -->
   <!-- ========================================== -->
-  <section id="about" class="py-16 bg-[#F8F7F4] border-b border-[#E4DFD7] text-center">
+  <section id="about" class="py-18 bg-[#FAF8F5] border-b border-[#EAE5DC] text-center">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
       <div class="w-12 h-12 mx-auto rounded-full bg-[#6E1B2A] text-[#DFC075] flex items-center justify-center font-cinzel font-bold text-lg mb-4 shadow-md">
         PHB
@@ -451,9 +453,9 @@
         영혼을 각성시키고 교회를 견고히 세우는 신학적 보화를 다음 세대에게 변함없이 전수하겠습니다.
       </p>
       <div class="mt-8 flex flex-wrap justify-center gap-3 text-xs text-[#5E6470]">
-        <span class="bg-white border border-[#E4DFD7] px-3 py-1.5 rounded-full">웨스트민스터 표준문서 (Westminster Standards)</span>
-        <span class="bg-white border border-[#E4DFD7] px-3 py-1.5 rounded-full">일치 신조 삼형식 (Three Forms of Unity)</span>
-        <span class="bg-white border border-[#E4DFD7] px-3 py-1.5 rounded-full">종교개혁 5대 강령 (Five Solas)</span>
+        <span class="bg-white border border-[#EAE5DC] px-3.5 py-1.5 rounded-full shadow-xs">웨스트민스터 표준문서 (Westminster Standards)</span>
+        <span class="bg-white border border-[#EAE5DC] px-3.5 py-1.5 rounded-full shadow-xs">일치 신조 삼형식 (Three Forms of Unity)</span>
+        <span class="bg-white border border-[#EAE5DC] px-3.5 py-1.5 rounded-full shadow-xs">종교개혁 5대 강령 (Five Solas)</span>
       </div>
     </div>
   </section>
