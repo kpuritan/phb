@@ -14,6 +14,8 @@ import {
   X,
   Plus,
   ChevronRight,
+  ChevronDown,
+  Menu,
   Check,
   CheckCircle2,
   BookX
@@ -32,11 +34,13 @@ export const BOOKS_DATA = [
     translator: '조계광, 손현선 공역',
     series: '개혁교의학 대계 (Reformed Dogmatics Series)',
     category: 'dogmatics',
+    subCategory: 'set',
     isNew: true,
     isPreorder: true,
     isFeatured: true,
     isHardcover: true,
     isMasterTranslation: true,
+    isEbook: false,
     price: 198000,
     originalPrice: 220000,
     discountRate: 10,
@@ -65,12 +69,14 @@ export const BOOKS_DATA = [
     originalAuthor: 'John Owen (1616–1683)',
     translator: '서문강 역',
     series: '오늘을 위한 청교도 보화 01',
-    category: 'puritan-gems',
+    category: 'christian-life',
+    subCategory: null,
     isNew: false,
     isPreorder: false,
     isFeatured: true,
     isHardcover: true,
     isMasterTranslation: true,
+    isEbook: true,
     price: 31500,
     originalPrice: 35000,
     discountRate: 10,
@@ -98,12 +104,14 @@ export const BOOKS_DATA = [
     originalAuthor: 'Thomas Watson (1620–1686)',
     translator: '백금산 역',
     series: '오늘을 위한 청교도 보화 02',
-    category: 'puritan-gems',
+    category: 'christian-life',
+    subCategory: null,
     isNew: false,
     isPreorder: false,
     isFeatured: false,
     isHardcover: true,
     isMasterTranslation: true,
+    isEbook: true,
     price: 19800,
     originalPrice: 22000,
     discountRate: 10,
@@ -131,12 +139,14 @@ export const BOOKS_DATA = [
     originalAuthor: 'Joel R. Beeke, Michael P. V. Barrett et al.',
     translator: '이원택 역',
     series: '가정예배와 거룩한 유산 01',
-    category: 'family',
+    category: 'christian-life',
+    subCategory: null,
     isNew: false,
     isPreorder: false,
     isFeatured: true,
     isHardcover: true,
     isMasterTranslation: true,
+    isEbook: true,
     price: 49500,
     originalPrice: 55000,
     discountRate: 10,
@@ -164,12 +174,14 @@ export const BOOKS_DATA = [
     originalAuthor: 'Richard Sibbes (1577–1635)',
     translator: '장호연 역',
     series: '개혁파 영성 클래식 01',
-    category: 'puritan-gems',
+    category: 'christian-life',
+    subCategory: null,
     isNew: false,
     isPreorder: false,
     isFeatured: false,
     isHardcover: false,
     isMasterTranslation: true,
+    isEbook: true,
     price: 16200,
     originalPrice: 18000,
     discountRate: 10,
@@ -198,11 +210,13 @@ export const BOOKS_DATA = [
     translator: '박태현 역 / 김남준 목사 해제',
     series: '개혁교의학 대계 (Reformed Dogmatics Series)',
     category: 'dogmatics',
+    subCategory: 'soteriology',
     isNew: true,
     isPreorder: false,
     isFeatured: false,
     isHardcover: true,
     isMasterTranslation: true,
+    isEbook: false,
     price: 68400,
     originalPrice: 76000,
     discountRate: 10,
@@ -230,12 +244,14 @@ export const BOOKS_DATA = [
     originalAuthor: 'J. C. Ryle (1816–1900)',
     translator: '정성욱 역',
     series: '개혁파 영성 클래식 02',
-    category: 'puritan-gems',
+    category: 'christian-life',
+    subCategory: null,
     isNew: false,
     isPreorder: false,
     isFeatured: false,
     isHardcover: true,
     isMasterTranslation: true,
+    isEbook: true,
     price: 27000,
     originalPrice: 30000,
     discountRate: 10,
@@ -263,12 +279,14 @@ export const BOOKS_DATA = [
     originalAuthor: 'John Owen (1616–1683)',
     translator: '김홍만 역',
     series: '오늘을 위한 청교도 보화 03',
-    category: 'puritan-gems',
+    category: 'dogmatics',
+    subCategory: 'christology',
     isNew: false,
     isPreorder: false,
     isFeatured: false,
     isHardcover: true,
     isMasterTranslation: true,
+    isEbook: true,
     price: 24300,
     originalPrice: 27000,
     discountRate: 10,
@@ -287,6 +305,355 @@ export const BOOKS_DATA = [
       '제4장 그리스도의 영광을 묵상함이 주는 성화의 능력'
     ],
     excerpt: `“믿음으로 그리스도의 영광을 바라보는 것은 우리 영혼이 이 땅에서 누릴 수 있는 가장 고귀한 특권이며, 장차 천국에서 누릴 완전한 영화(Glorification)의 첫 열매이다.”`
+  },
+  {
+    id: 'phb-009',
+    title: '매튜 풀 성경주석 완간 세트 (신구약 전3권)',
+    originalTitle: "Matthew Poole's Commentary on the Holy Bible (3 Vols Set)",
+    author: '매튜 풀',
+    originalAuthor: 'Matthew Poole (1624–1679)',
+    translator: '박문재 역',
+    series: '개혁주의 성경주석 대계 01',
+    category: 'commentary',
+    subCategory: 'set',
+    isNew: true,
+    isPreorder: false,
+    isFeatured: true,
+    isHardcover: true,
+    isMasterTranslation: true,
+    isEbook: false,
+    price: 180000,
+    originalPrice: 200000,
+    discountRate: 10,
+    pages: '3,850쪽',
+    isbn: '979-11-984501-8-7',
+    pubDate: '2026. 04. 15',
+    tagline: '스펄전이 ‘목회자의 서재에 가장 먼저 꽂혀 있어야 할 주석’으로 격찬한 청교도 주석학의 기념비',
+    coverGradient: 'from-[#19232d] via-[#101920] to-[#090e13]',
+    coverAccent: '#C39738',
+    confessionTag: 'WCF 제1장 성경 (성경 해석의 규범)',
+    description: `원문 언어에 대한 탁월한 분석과 교리적 정합성, 명쾌한 본문 해설을 결합하여 개혁교회 400년간 사랑받아 온 신구약 성경 주석의 최고 권위서입니다.`,
+    toc: [
+      '제1권 구약 모세오경 및 역사서 (창세기~에스더)',
+      '제2권 구약 시가서 및 선지서 (욥기~말라기)',
+      '제3권 신약성경 전체 (마태복음~요한계시록)'
+    ],
+    excerpt: `“성경은 성경 자체로 해석되어야 하며, 기록된 하나님의 말씀은 신자의 믿음과 순종을 위한 유일무이하고 무오한 표준이다.”`
+  },
+  {
+    id: 'phb-010',
+    title: '시편 강해: 다윗의 보고 (전3권 세트)',
+    originalTitle: 'The Treasury of David (Exposition of the Psalms)',
+    author: '찰스 스펄전',
+    originalAuthor: 'Charles H. Spurgeon (1834–1892)',
+    translator: '서문강 역',
+    series: '개혁주의 성경주석 대계 02',
+    category: 'commentary',
+    subCategory: 'ot',
+    isNew: false,
+    isPreorder: false,
+    isFeatured: true,
+    isHardcover: true,
+    isMasterTranslation: true,
+    isEbook: true,
+    price: 108000,
+    originalPrice: 120000,
+    discountRate: 10,
+    pages: '2,640쪽',
+    isbn: '979-11-984501-9-4',
+    pubDate: '2025. 12. 01',
+    tagline: '20여 년에 걸쳐 완성된 시편 주석의 불후의 금자탑, 청교도 거장들의 주해가 총망라된 영혼의 보고',
+    coverGradient: 'from-[#2b1f14] via-[#1c130b] to-[#0e0905]',
+    coverAccent: '#C39738',
+    confessionTag: '웨스트민스터 예배지침 (시편 찬송과 기도)',
+    description: `설교자의 황태자 스펄전이 20년의 목회적 열정을 바쳐 시편 150편 전편을 주해하고 수백 명의 역사적 청교도 주해를 집대성한 역작입니다.`,
+    toc: [
+      '제1권 시편 1편~52편 강해 및 청교도 주해선집',
+      '제2권 시편 53편~103편 강해 및 영적 적용',
+      '제3권 시편 104편~150편 강해 및 할렐루야 찬양'
+    ],
+    excerpt: `“시편은 성도의 모든 슬픔과 환희, 회개와 찬양이 녹아있는 심장의 거울이다. 그리스도는 시편 모든 구절 속에서 살아 숨 쉬고 계신다.”`
+  },
+  {
+    id: 'phb-011',
+    title: '히브리서 주석 정본 (전7권 완간 세트)',
+    originalTitle: 'An Exposition of the Epistle to the Hebrews',
+    author: '존 오웬',
+    originalAuthor: 'John Owen (1616–1683)',
+    translator: '조계광 역',
+    series: '개혁주의 성경주석 대계 03',
+    category: 'commentary',
+    subCategory: 'nt',
+    isNew: true,
+    isPreorder: true,
+    isFeatured: true,
+    isHardcover: true,
+    isMasterTranslation: true,
+    isEbook: false,
+    price: 252000,
+    originalPrice: 280000,
+    discountRate: 10,
+    pages: '4,960쪽',
+    isbn: '979-11-984502-0-0',
+    pubDate: '2026. 11. 20 (출간예정)',
+    tagline: '청교도의 황태자 존 오웬이 16년간 평생의 학문과 경건을 쏟아부은 신약 주석 사상 최대의 역작',
+    coverGradient: 'from-[#331822] via-[#210c14] to-[#100509]',
+    coverAccent: '#C39738',
+    confessionTag: 'WCF 제8장 중보자 그리스도 / 히브리서 대제사장직',
+    description: `더 우월하신 대제사장 예수 그리스도와 더 좋은 언약의 영광을 구약의 제사 제도와 비교하며 심오하게 밝혀낸 교회사 불후의 신약 주석입니다.`,
+    toc: [
+      '제1~2권 서론적 연구 및 그리스도의 탁월하신 신성과 인격 (히 1~3장)',
+      '제3~4권 멜기세덱의 반차를 따른 영원한 대제사장 (히 4~7장)',
+      '제5~6권 더 좋은 언약과 단번의 온전한 제사 (히 8~10장)',
+      '제7권 믿음의 선진들과 흔들리지 않는 나라 (히 11~13장)'
+    ],
+    excerpt: `“그리스도의 보혈은 영원한 단번의 제사로서 신자의 양심을 죽은 행실에서 깨끗하게 하며, 살아 계신 하나님을 담대히 섬기게 하는 유일한 능력이다.”`
+  },
+  {
+    id: 'phb-012',
+    title: '하나님의 존재와 속성 (전2권 완역 세트)',
+    originalTitle: 'Discourses upon the Existence and Attributes of God',
+    author: '스티븐 차녹',
+    originalAuthor: 'Stephen Charnock (1628–1680)',
+    translator: '김남준 목사 감수, 손현선 역',
+    series: '개혁교의학 대계 (신론편)',
+    category: 'dogmatics',
+    subCategory: 'theology-proper',
+    isNew: false,
+    isPreorder: false,
+    isFeatured: true,
+    isHardcover: true,
+    isMasterTranslation: true,
+    isEbook: true,
+    price: 88200,
+    originalPrice: 98000,
+    discountRate: 10,
+    pages: '1,720쪽',
+    isbn: '979-11-984502-1-7',
+    pubDate: '2025. 09. 15',
+    tagline: '하나님의 무한성, 영원성, 주권, 전지하심과 거룩하심을 가장 웅장하고 심오하게 해명한 불멸의 신론 대작',
+    coverGradient: 'from-[#172228] via-[#0e171c] to-[#060b0e]',
+    coverAccent: '#C39738',
+    confessionTag: 'WCF 제2장 하나님과 거룩하신 삼위일체',
+    description: `무신론에 대한 강력한 성경적 논박과 함께 전능하심, 거룩하심, 자비하심 등 하나님의 신적 속성을 하나하나 눈부시게 밝혀 신자를 경배로 인도합니다.`,
+    toc: [
+      '제1부 하나님의 실재와 무신론 비판',
+      '제2부 하나님의 영성과 편재성, 영원성과 불변성',
+      '제3부 하나님의 전지와 지혜, 권능과 거룩하심',
+      '제4부 하나님의 선하심, 공의와 주권적 통치'
+    ],
+    excerpt: `“하나님의 속성을 깊이 묵상하는 영혼은 세상의 모든 환난 앞에서도 요동하지 않는 영원한 반석 위에 서게 된다.”`
+  },
+  {
+    id: 'phb-013',
+    title: '인간의 사중 상태 (Human Nature in Its Fourfold State)',
+    originalTitle: 'Human Nature in Its Fourfold State',
+    author: '토마스 보스턴',
+    originalAuthor: 'Thomas Boston (1676–1732)',
+    translator: '정성욱 역',
+    series: '개혁교의학 대계 (인간론편)',
+    category: 'dogmatics',
+    subCategory: 'anthropology',
+    isNew: false,
+    isPreorder: false,
+    isFeatured: false,
+    isHardcover: true,
+    isMasterTranslation: true,
+    isEbook: true,
+    price: 28800,
+    originalPrice: 32000,
+    discountRate: 10,
+    pages: '480쪽',
+    isbn: '979-11-984502-2-4',
+    pubDate: '2026. 02. 01',
+    tagline: '원초적 무죄, 타락과 전적 부패, 중생과 은혜, 영원한 영화의 상태로 조명하는 성경적 인간 본성의 완전한 해부',
+    coverGradient: 'from-[#2e1d16] via-[#1d110c] to-[#0f0705]',
+    coverAccent: '#C39738',
+    confessionTag: 'WCF 제6장 인간의 타락과 죄와 형벌 / 제9장 자유의지',
+    description: `에덴동산의 원초적 무죄 상태부터 타락 후 전적 부패, 그리스도 안에서의 은혜 상태, 내세의 영원한 상태에 이르는 인간의 실존을 명징하게 해부합니다.`,
+    toc: [
+      '제1부 무죄의 상태: 창조 시 인간의 본래적 의와 영광',
+      '제2부 타락의 상태: 죄의 지배와 전적 무능력',
+      '제3부 은혜의 상태: 그리스도와의 연합과 중생',
+      '제4부 영원한 상태: 의인의 부활과 악인의 영원한 심판'
+    ],
+    excerpt: `“우리의 옛 본성은 아담 안에서 완전히 파선하였으나, 복음의 은혜는 둘째 아담이신 그리스도 안에서 우리를 새로운 피조물로 빚으신다.”`
+  },
+  {
+    id: 'phb-014',
+    title: '개혁교회론과 성례전 (Reformed Ecclesiology)',
+    originalTitle: 'Institutes of Elenctic Theology: The Church and Sacraments',
+    author: '프란키스쿠스 튜레틴',
+    originalAuthor: 'Franciscus Turretin (1623–1687)',
+    translator: '박태현 역',
+    series: '개혁교의학 대계 (교회론편)',
+    category: 'dogmatics',
+    subCategory: 'ecclesiology',
+    isNew: true,
+    isPreorder: false,
+    isFeatured: false,
+    isHardcover: true,
+    isMasterTranslation: true,
+    isEbook: false,
+    price: 45000,
+    originalPrice: 50000,
+    discountRate: 10,
+    pages: '720쪽',
+    isbn: '979-11-984502-3-1',
+    pubDate: '2026. 07. 01',
+    tagline: '참된 교회의 표지와 그리스도의 몸 된 교회의 직분, 세례와 성찬의 영광스러운 은혜를 규명한 정통 교의학',
+    coverGradient: 'from-[#1a2c26] via-[#101c18] to-[#070e0b]',
+    coverAccent: '#C39738',
+    confessionTag: 'WCF 제25장 교회 / 제27~29장 성례, 세례, 성찬',
+    description: `제네바 아카데미의 최고 스콜라 신학자 튜레틴이 로마 가톨릭의 교권주의와 열광주의를 성경적으로 반박하고 참된 교회의 본질을 정립한 고전입니다.`,
+    toc: [
+      '제1부 교회의 본질, 통일성, 거룩성과 보편성',
+      '제2부 참된 교회의 참된 표지: 말씀 전파와 권징',
+      '제3부 교회의 직분과 영적 치리',
+      '제4부 은혜의 외적 방편: 말씀과 세례, 주의 성찬'
+    ],
+    excerpt: `“교회는 인간의 인위적 결사체가 아니라 오직 영원한 대제사장이신 그리스도의 음성을 듣고 따르는 양들의 거룩한 회중이다.”`
+  },
+  {
+    id: 'phb-015',
+    title: '성도의 영원한 안식 (The Saints\' Everlasting Rest)',
+    originalTitle: 'The Saints\' Everlasting Rest',
+    author: '리처드 백스터',
+    originalAuthor: 'Richard Baxter (1615–1691)',
+    translator: '백금산 역',
+    series: '개혁교의학 대계 (종말론편)',
+    category: 'dogmatics',
+    subCategory: 'eschatology',
+    isNew: false,
+    isPreorder: false,
+    isFeatured: false,
+    isHardcover: true,
+    isMasterTranslation: true,
+    isEbook: true,
+    price: 32400,
+    originalPrice: 36000,
+    discountRate: 10,
+    pages: '640쪽',
+    isbn: '979-11-984502-4-8',
+    pubDate: '2025. 08. 20',
+    tagline: '장차 그리스도와 함께 누릴 천국의 영광스러운 안식과 부활의 소망을 사모하게 하는 종말론적 경건의 정수',
+    coverGradient: 'from-[#2c1d2e] via-[#1c111e] to-[#0e070f]',
+    coverAccent: '#C39738',
+    confessionTag: 'WCF 제32장 사후 상태와 부활 / 제33장 최후 심판',
+    description: `질병으로 생사의 기로에 섰던 백스터가 천국의 지복직관(Beatific Vision)과 그리스도인의 궁극적 소망을 영혼의 벅찬 감격으로 써내려간 걸작입니다.`,
+    toc: [
+      '제1부 성도들에게 예비된 영원한 안식의 탁월함',
+      '제2부 이 안식을 잃어버리는 자들의 비참과 경고',
+      '제3부 천국 안식을 사모하며 누리는 영혼의 훈련',
+      '제4부 믿음의 눈으로 바라보는 영광스러운 부활의 날'
+    ],
+    excerpt: `“우리의 순례길이 험난할수록 저 영원한 본향에서 기다리고 있는 안식은 더욱 달콤할 것이다. 마음의 닻을 천국 보좌에 굳게 내리라.”`
+  },
+  {
+    id: 'phb-016',
+    title: '16세기 종교개혁사 (전5권 세트)',
+    originalTitle: 'History of the Reformation in the Sixteenth Century (5 Vols)',
+    author: 'J. H. 메를 도비녜',
+    originalAuthor: 'J. H. Merle d\'Aubigné (1794–1872)',
+    translator: '이원택 역',
+    series: '역사신학 대계 01',
+    category: 'historical',
+    subCategory: null,
+    isNew: true,
+    isPreorder: false,
+    isFeatured: true,
+    isHardcover: true,
+    isMasterTranslation: true,
+    isEbook: false,
+    price: 225000,
+    originalPrice: 250000,
+    discountRate: 10,
+    pages: '3,400쪽',
+    isbn: '979-11-984502-5-5',
+    pubDate: '2026. 06. 10',
+    tagline: '루터, 츠빙글리, 칼빈으로 이어지는 종교개혁의 불꽃과 섭리의 역사를 웅장한 필치로 기록한 역사신학의 불후의 고전',
+    coverGradient: 'from-[#3a2818] via-[#24170c] to-[#120a05]',
+    coverAccent: '#C39738',
+    confessionTag: '오직 성경, 오직 은혜, 오직 믿음 (Five Solas)',
+    description: `스위스 제네바의 개혁주의 교회사학자 도비녜가 방대한 1차 사료를 바탕으로 하나님의 주권적 손길이 역사의 물줄기를 바꾼 종교개혁의 파노라마를 생생히 복원합니다.`,
+    toc: [
+      '제1~2권 루터와 독일 종교개혁의 여명 (보름스 제국의회)',
+      '제3권 츠빙글리와 스위스 종교개혁의 발흥',
+      '제4권 칼빈과 제네바의 거룩한 개혁',
+      '제5권 영국 및 스코틀랜드 종교개혁과 순교자들의 피'
+    ],
+    excerpt: `“종교개혁은 인간 영웅의 업적이 아니요, 하나님의 생명의 말씀이 어둠 속에 갇힌 교회를 깨우고 부활시킨 성령의 기적이었다.”`
+  },
+  {
+    id: 'phb-017',
+    title: '존 오웬 전집 (Works of John Owen, 전16권 정본 완역판)',
+    originalTitle: 'The Works of John Owen (16 Volumes Complete Set)',
+    author: '존 오웬',
+    originalAuthor: 'John Owen (1616–1683)',
+    translator: 'PHB 청교도원전번역위원회 공역',
+    series: '청교도저작 전집 대계 01',
+    category: 'puritan-works',
+    subCategory: null,
+    isNew: true,
+    isPreorder: true,
+    isFeatured: true,
+    isHardcover: true,
+    isMasterTranslation: true,
+    isEbook: false,
+    price: 720000,
+    originalPrice: 800000,
+    discountRate: 10,
+    pages: '10,800쪽',
+    isbn: '979-11-984502-6-2',
+    pubDate: '2026. 12. 15 (한정판 사전예약)',
+    tagline: '영국 최고의 신학자 존 오웬의 교의학, 성령론, 성화론, 교회론 문헌 전체를 망라한 역사적 정본 전집',
+    coverGradient: 'from-[#22161b] via-[#160d11] to-[#0b0508]',
+    coverAccent: '#C39738',
+    confessionTag: '웨스트민스터 총회 신학의 정점',
+    description: `삼위일체론, 성령론 대작, 그리스도의 죽으심의 효능, 죄 죽이기, 배교론 등 오웬이 남긴 16권의 전집 전체를 17세기 원문 대조로 정밀하게 완역한 한국 출판 사상 초유의 기념비적 전집입니다.`,
+    toc: [
+      '제1~3권 기독론 및 삼위일체 하나님과의 교제',
+      '제4~5권 성령론 대계 (The Holy Spirit)',
+      '제6~7권 성화론과 영적 전쟁 (죄 죽이기, 유혹, 내주하는 죄)',
+      '제8~9권 그리스도의 구속 사역의 완전성 (제한속죄론)',
+      '제10~16권 교회론, 배교론 및 학술 논단'
+    ],
+    excerpt: `“우리가 그리스도를 닮아가는 유일한 길은 날마다 믿음의 눈으로 그분의 영광을 바라보는 것이다. 이 바라봄이 우리 영혼을 변화시킨다.”`
+  },
+  {
+    id: 'phb-018',
+    title: '토마스 굿윈 전집 (Works of Thomas Goodwin, 전12권 세트)',
+    originalTitle: 'The Works of Thomas Goodwin (12 Volumes Set)',
+    author: '토마스 굿윈',
+    originalAuthor: 'Thomas Goodwin (1600–1680)',
+    translator: 'PHB 청교도원전번역위원회 공역',
+    series: '청교도저작 전집 대계 02',
+    category: 'puritan-works',
+    subCategory: null,
+    isNew: true,
+    isPreorder: false,
+    isFeatured: true,
+    isHardcover: true,
+    isMasterTranslation: true,
+    isEbook: false,
+    price: 540000,
+    originalPrice: 600000,
+    discountRate: 10,
+    pages: '8,400쪽',
+    isbn: '979-11-984502-7-9',
+    pubDate: '2026. 09. 30',
+    tagline: '하늘에 계신 그리스도의 마음과 성령의 인치심, 영원한 선택의 영광을 가장 깊이 있게 논증한 청교도 거장의 전집',
+    coverGradient: 'from-[#1c2230] via-[#111722] to-[#070b12]',
+    coverAccent: '#C39738',
+    confessionTag: '웨스트민스터 독립파 위원 대표작',
+    description: `웨스트민스터 총회 핵심 주역이자 옥스퍼드 모들린 칼리지 학장이었던 토마스 굿윈의 에베소서 강해, 그리스도의 심장, 성령의 사역, 지혜론 등을 총망라한 전집입니다.`,
+    toc: [
+      '제1~2권 에베소서 강해 (창세 전 선택과 예정의 영광)',
+      '제3~4권 하늘에 계신 그리스도의 심장과 중보의 사랑',
+      '제5~7권 성령의 역사와 신자의 인치심, 구원의 확신',
+      '제8~12권 의인의 보상, 정당한 권징과 개혁교회 질서'
+    ],
+    excerpt: `“그리스도의 마음은 지금도 하늘 보좌에서 상처 입고 연약한 지상 성도들을 향해 가장 부드럽고 긍휼한 사랑으로 박동하고 있다.”`
   }
 ];
 
@@ -357,6 +724,9 @@ export const CONFESSIONS_MAP = [
 // ==========================================
 export default function PuritanHeritageBooksApp() {
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedSubcategory, setSelectedSubcategory] = useState('all');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileAccordion, setMobileAccordion] = useState(null); // 'commentary' | 'dogmatics' | null
   const [searchQuery, setSearchQuery] = useState('');
   const [cart, setCart] = useState([
     { book: BOOKS_DATA[0], quantity: 1 },
@@ -383,6 +753,19 @@ export default function PuritanHeritageBooksApp() {
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  // Filter Selection Handler
+  const selectFilter = (cat, subcat = 'all', shouldScroll = true) => {
+    setSelectedCategory(cat);
+    setSelectedSubcategory(subcat);
+    if (shouldScroll) {
+      document.getElementById('catalog-section')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const toggleMobileAccordion = (name) => {
+    setMobileAccordion(prev => prev === name ? null : name);
   };
 
   // Cart Calculations
@@ -428,13 +811,18 @@ export default function PuritanHeritageBooksApp() {
   // Filtered Books
   const filteredBooks = useMemo(() => {
     return BOOKS_DATA.filter(book => {
-      const matchesCat =
-        selectedCategory === 'all' ||
-        (selectedCategory === 'puritan-gems' && book.category === 'puritan-gems') ||
-        (selectedCategory === 'dogmatics' && book.category === 'dogmatics') ||
-        (selectedCategory === 'family' && book.category === 'family') ||
-        (selectedCategory === 'ebook' && book.isEbook) ||
-        (selectedCategory === 'new' && (book.isNew || book.isPreorder));
+      const matchesCat = (() => {
+        if (selectedCategory === 'all') return true;
+        if (selectedCategory === 'ebook') return book.isEbook;
+        if (selectedCategory === 'new') return book.isNew || book.isPreorder;
+
+        if (book.category !== selectedCategory) return false;
+
+        if (selectedSubcategory && selectedSubcategory !== 'all') {
+          return book.subCategory === selectedSubcategory;
+        }
+        return true;
+      })();
 
       const q = searchQuery.toLowerCase().trim();
       const matchesQuery =
@@ -443,11 +831,12 @@ export default function PuritanHeritageBooksApp() {
         book.author.toLowerCase().includes(q) ||
         book.translator.toLowerCase().includes(q) ||
         book.series.toLowerCase().includes(q) ||
-        book.originalTitle.toLowerCase().includes(q);
+        (book.tagline && book.tagline.toLowerCase().includes(q)) ||
+        (book.originalTitle && book.originalTitle.toLowerCase().includes(q));
 
       return matchesCat && matchesQuery;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, selectedSubcategory, searchQuery]);
 
   const handleNewsletter = (e) => {
     e.preventDefault();
@@ -518,46 +907,23 @@ export default function PuritanHeritageBooksApp() {
               </div>
             </a>
 
-            {/* Desktop Navigation (3 Menus: PHB 소개, 도서몰, 전자책) */}
-            <nav className="hidden md:flex items-center space-x-5 xl:space-x-7 flex-shrink-0">
-              <a 
-                href="#about" 
-                className="text-xs sm:text-sm font-semibold text-[#17191C] hover:text-[#6E1B2A] transition-colors py-2 border-b-2 border-transparent hover:border-[#6E1B2A] whitespace-nowrap flex-shrink-0"
-              >
-                PHB 소개
-              </a>
-              <button 
-                onClick={() => { setSelectedCategory('all'); document.getElementById('catalog-section')?.scrollIntoView({behavior: 'smooth'}); }}
-                className="text-xs sm:text-sm font-semibold text-[#17191C] hover:text-[#6E1B2A] transition-colors py-2 border-b-2 border-transparent hover:border-[#6E1B2A] whitespace-nowrap flex-shrink-0"
-              >
-                도서몰
-              </button>
-              <button 
-                onClick={() => { setSelectedCategory('ebook'); document.getElementById('catalog-section')?.scrollIntoView({behavior: 'smooth'}); }}
-                className="text-xs sm:text-sm font-semibold text-[#17191C] hover:text-[#6E1B2A] transition-colors py-2 border-b-2 border-transparent hover:border-[#6E1B2A] whitespace-nowrap flex-shrink-0 flex items-center gap-1.5"
-              >
-                <span>전자책(ebook)</span>
-                <span className="text-[10px] bg-[#6E1B2A] text-white px-1.5 py-0.2 rounded font-sans font-medium">ePub</span>
-              </button>
-            </nav>
-
-            {/* Search, Login, Signup and Cart */}
+            {/* Right Controls: Search, Login, Signup, Cart, Mobile Menu Button */}
             <div className="flex items-center space-x-2 sm:space-x-3.5 flex-shrink-0">
-              <div className="relative hidden lg:block w-36 xl:w-48 flex-shrink-0">
+              <div className="relative hidden lg:block w-40 xl:w-56 flex-shrink-0">
                 <input
                   type="text"
-                  placeholder="도서명, 저자 검색..."
+                  placeholder="도서명, 저자, 역자 검색..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-[#F8F7F4] border border-[#E4DFD7] text-xs rounded-full pl-8 pr-7 py-1.5 focus:outline-none focus:border-[#C39738] focus:ring-1 focus:ring-[#C39738] transition-all"
+                  className="w-full bg-[#F8F7F4] border border-[#E4DFD7] text-xs rounded-full pl-8 pr-7 py-2 focus:outline-none focus:border-[#C39738] focus:ring-1 focus:ring-[#C39738] transition-all"
                 />
-                <div className="absolute left-2.5 top-2 text-[#5E6470]">
+                <div className="absolute left-2.5 top-2.5 text-[#5E6470]">
                   <Search className="w-3.5 h-3.5" />
                 </div>
                 {searchQuery && (
                   <button 
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-2.5 top-2 text-[#A6ADB8] hover:text-[#17191C]"
+                    className="absolute right-2.5 top-2.5 text-[#A6ADB8] hover:text-[#17191C]"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -565,7 +931,7 @@ export default function PuritanHeritageBooksApp() {
               </div>
 
               {/* Login & Sign Up Actions */}
-              <div className="flex items-center space-x-1.5 sm:space-x-2 text-xs font-medium">
+              <div className="hidden sm:flex items-center space-x-1.5 sm:space-x-2 text-xs font-medium">
                 <button
                   onClick={() => { setAuthMode('login'); setAuthModalOpen(true); }}
                   className="text-[#17191C] hover:text-[#6E1B2A] px-2 py-1.5 rounded transition-colors whitespace-nowrap font-medium"
@@ -581,6 +947,7 @@ export default function PuritanHeritageBooksApp() {
                 </button>
               </div>
 
+              {/* Cart Drawer Button */}
               <button
                 onClick={() => setIsCartOpen(true)}
                 className="relative p-2 sm:p-2.5 rounded-full bg-[#F8F7F4] hover:bg-[#EDE9E1] border border-[#E4DFD7] text-[#17191C] transition-all group flex-shrink-0"
@@ -593,11 +960,373 @@ export default function PuritanHeritageBooksApp() {
                   </span>
                 )}
               </button>
+
+              {/* Mobile Hamburger Menu Button */}
+              <button
+                onClick={() => setMobileMenuOpen(true)}
+                className="md:hidden p-2 rounded-lg bg-[#F8F7F4] hover:bg-[#EDE9E1] border border-[#E4DFD7] text-[#17191C] transition-all"
+                aria-label="전체 메뉴 열기"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
             </div>
 
           </div>
         </div>
+
+        {/* GLOBAL NAVIGATION BAR (GNB) - DESKTOP */}
+        <nav className="bg-[#17191C] text-[#E4DFD7] border-t border-[#2B2F36] hidden md:block">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-12">
+              
+              {/* Category Menus */}
+              <div className="flex items-center space-x-1 lg:space-x-2 text-xs font-medium">
+                
+                {/* 0. 전체 도서 */}
+                <button
+                  onClick={() => selectFilter('all', 'all')}
+                  className="px-3 py-2 rounded font-serif text-white hover:text-[#DFC075] hover:bg-[#23272D] transition-colors"
+                >
+                  전체도서
+                </button>
+
+                {/* 1. 성경주석 Dropdown (Set, 구약, 신약) */}
+                <div className="relative group">
+                  <button
+                    onClick={() => selectFilter('commentary', 'all')}
+                    className="flex items-center space-x-1 px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serif font-semibold"
+                  >
+                    <span>성경주석</span>
+                    <ChevronDown className="w-3.5 h-3.5 text-[#C39738] group-hover:rotate-180 transition-transform duration-200" />
+                  </button>
+
+                  <div className="absolute left-0 top-full pt-1 hidden group-hover:block z-50 min-w-[210px]">
+                    <div className="bg-[#17191C] border border-[#C39738]/50 rounded-b-lg shadow-2xl py-2 px-1 text-xs divide-y divide-[#2B2F36]">
+                      <div className="px-3 py-1.5 flex items-center justify-between text-[10px] font-serif text-[#DFC075] tracking-wider uppercase">
+                        <span>Commentaries</span>
+                        <span className="text-[#7E8694]">정본 주석</span>
+                      </div>
+                      <div className="py-1">
+                        <button
+                          onClick={() => selectFilter('commentary', 'all')}
+                          className="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between"
+                        >
+                          <span className="font-medium text-white">성경주석 전체보기</span>
+                          <span className="text-[10px] text-[#A6ADB8]">All</span>
+                        </button>
+                        <button
+                          onClick={() => selectFilter('commentary', 'set')}
+                          className="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between"
+                        >
+                          <span className="font-medium text-white">Set (전집/세트)</span>
+                          <span className="text-[10px] bg-[#6E1B2A] text-[#DFC075] px-1.5 py-0.5 rounded font-serif">완간</span>
+                        </button>
+                        <button
+                          onClick={() => selectFilter('commentary', 'ot')}
+                          className="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between"
+                        >
+                          <span className="font-medium text-white">구약 (Old Testament)</span>
+                          <span className="text-[10px] text-[#7E8694]">시편•예언서</span>
+                        </button>
+                        <button
+                          onClick={() => selectFilter('commentary', 'nt')}
+                          className="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between"
+                        >
+                          <span className="font-medium text-white">신약 (New Testament)</span>
+                          <span className="text-[10px] text-[#7E8694]">복음•서신서</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. 조직신학 Dropdown (Set, 신론, 인간론, 기독론, 구원론, 교회론, 종말론) */}
+                <div className="relative group">
+                  <button
+                    onClick={() => selectFilter('dogmatics', 'all')}
+                    className="flex items-center space-x-1 px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serif font-semibold"
+                  >
+                    <span>조직신학</span>
+                    <ChevronDown className="w-3.5 h-3.5 text-[#C39738] group-hover:rotate-180 transition-transform duration-200" />
+                  </button>
+
+                  <div className="absolute left-0 top-full pt-1 hidden group-hover:block z-50 min-w-[310px]">
+                    <div className="bg-[#17191C] border border-[#C39738]/50 rounded-b-lg shadow-2xl py-2 px-1 text-xs divide-y divide-[#2B2F36]">
+                      <div className="px-3 py-1.5 flex items-center justify-between text-[10px] font-serif text-[#DFC075] tracking-wider uppercase">
+                        <span>Reformed Dogmatics</span>
+                        <span className="text-[#7E8694]">개혁교의학</span>
+                      </div>
+                      <div className="py-1">
+                        <button
+                          onClick={() => selectFilter('dogmatics', 'all')}
+                          className="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors font-medium text-white"
+                        >
+                          조직신학 전체보기
+                        </button>
+                        <button
+                          onClick={() => selectFilter('dogmatics', 'set')}
+                          className="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between"
+                        >
+                          <span className="font-medium text-white">Set (전집/세트)</span>
+                          <span className="text-[10px] bg-[#6E1B2A] text-white px-1.5 py-0.5 rounded font-sans">교의학 대계</span>
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-2 gap-0.5 py-1 px-1">
+                        <button
+                          onClick={() => selectFilter('dogmatics', 'theology-proper')}
+                          className="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors"
+                        >
+                          <span className="block font-medium text-white">신론</span>
+                          <span className="block text-[9px] text-[#7E8694]">하나님의 존재•속성</span>
+                        </button>
+                        <button
+                          onClick={() => selectFilter('dogmatics', 'anthropology')}
+                          className="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors"
+                        >
+                          <span className="block font-medium text-white">인간론</span>
+                          <span className="block text-[9px] text-[#7E8694]">창조•타락•사중상태</span>
+                        </button>
+                        <button
+                          onClick={() => selectFilter('dogmatics', 'christology')}
+                          className="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors"
+                        >
+                          <span className="block font-medium text-white">기독론</span>
+                          <span className="block text-[9px] text-[#7E8694]">그리스도의 인격•영광</span>
+                        </button>
+                        <button
+                          onClick={() => selectFilter('dogmatics', 'soteriology')}
+                          className="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors"
+                        >
+                          <span className="block font-medium text-white">구원론</span>
+                          <span className="block text-[9px] text-[#7E8694]">언약신학•구원의 서정</span>
+                        </button>
+                        <button
+                          onClick={() => selectFilter('dogmatics', 'ecclesiology')}
+                          className="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors"
+                        >
+                          <span className="block font-medium text-white">교회론</span>
+                          <span className="block text-[9px] text-[#7E8694]">참된 교회표지•성례</span>
+                        </button>
+                        <button
+                          onClick={() => selectFilter('dogmatics', 'eschatology')}
+                          className="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors"
+                        >
+                          <span className="block font-medium text-white">종말론</span>
+                          <span className="block text-[9px] text-[#7E8694]">재림•성도의 영원한 안식</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. 역사신학 */}
+                <button
+                  onClick={() => selectFilter('historical', 'all')}
+                  className="px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serif font-semibold"
+                >
+                  역사신학
+                </button>
+
+                {/* 4. 크리스천 라이프 */}
+                <button
+                  onClick={() => selectFilter('christian-life', 'all')}
+                  className="px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serif font-semibold"
+                >
+                  크리스천 라이프
+                </button>
+
+                {/* 5. 청교도저작 전집 */}
+                <button
+                  onClick={() => selectFilter('puritan-works', 'all')}
+                  className="px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serif font-semibold flex items-center gap-1.5"
+                >
+                  <span>청교도저작 전집</span>
+                  <span className="text-[9px] bg-[#C39738] text-[#17191C] px-1 py-0.2 rounded font-bold">정본</span>
+                </button>
+
+              </div>
+
+              {/* Utility Quick Links on Right of GNB */}
+              <div className="hidden lg:flex items-center space-x-4 text-xs text-[#A6ADB8]">
+                <button
+                  onClick={() => selectFilter('ebook', 'all')}
+                  className="hover:text-[#DFC075] flex items-center gap-1.5 transition-colors"
+                >
+                  <span>전자책 (eBook)</span>
+                  <span className="text-[9px] bg-[#6E1B2A] text-white px-1.5 py-0.2 rounded font-sans">ePub</span>
+                </button>
+                <span className="text-[#3A3F4A]">|</span>
+                <a href="#about" className="hover:text-[#DFC075] transition-colors">PHB 소개</a>
+              </div>
+
+            </div>
+          </div>
+        </nav>
       </header>
+
+      {/* MOBILE SLIDE-OVER NAVIGATION DRAWER */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <div className="fixed inset-y-0 left-0 max-w-full flex pr-10">
+            <div className="w-80 bg-[#17191C] text-[#F8F7F4] shadow-2xl flex flex-col justify-between border-r border-[#C39738]/40">
+              
+              {/* Drawer Header */}
+              <div className="p-5 border-b border-[#2B2F36] flex items-center justify-between">
+                <div className="flex items-center space-x-2.5">
+                  <div className="w-8 h-8 rounded bg-[#23272D] border border-[#C39738] flex items-center justify-center font-serif text-xs text-[#DFC075] font-black">
+                    PHB
+                  </div>
+                  <div>
+                    <span className="font-serif text-sm font-bold block text-white">PURITAN HERITAGE</span>
+                    <span className="text-[10px] text-[#A6ADB8]">도서 카테고리 전체 메뉴</span>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-1 text-[#A6ADB8] hover:text-white"
+                  aria-label="메뉴 닫기"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Drawer Navigation List */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-1 text-sm font-serif">
+                <button
+                  onClick={() => { selectFilter('all', 'all'); setMobileMenuOpen(false); }}
+                  className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-medium"
+                >
+                  <span>전체 도서 둘러보기</span>
+                  <span className="text-xs text-[#7E8694]">All</span>
+                </button>
+
+                {/* Accordion 1: 성경주석 (Set, 구약, 신약) */}
+                <div className="border border-[#2B2F36] rounded-lg overflow-hidden bg-[#1F2228]">
+                  <button
+                    onClick={() => toggleMobileAccordion('commentary')}
+                    className="w-full text-left px-3.5 py-2.5 flex items-center justify-between text-white font-semibold hover:text-[#DFC075]"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
+                      <span>성경주석</span>
+                    </span>
+                    <ChevronDown className={`w-4 h-4 text-[#C39738] transition-transform duration-200 ${mobileAccordion === 'commentary' ? 'rotate-180' : ''}`} />
+                  </button>
+                  {mobileAccordion === 'commentary' && (
+                    <div className="px-4 pb-2.5 pt-1 space-y-1 text-xs border-t border-[#2B2F36] bg-[#17191C]">
+                      <button onClick={() => { selectFilter('commentary', 'all'); setMobileMenuOpen(false); }} className="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 성경주석 전체보기</button>
+                      <button onClick={() => { selectFilter('commentary', 'set'); setMobileMenuOpen(false); }} className="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• Set (전집 및 완간 세트)</button>
+                      <button onClick={() => { selectFilter('commentary', 'ot'); setMobileMenuOpen(false); }} className="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 구약 주석 (Old Testament)</button>
+                      <button onClick={() => { selectFilter('commentary', 'nt'); setMobileMenuOpen(false); }} className="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 신약 주석 (New Testament)</button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Accordion 2: 조직신학 (Set, 신론, 인간론, 기독론, 구원론, 교회론, 종말론) */}
+                <div className="border border-[#2B2F36] rounded-lg overflow-hidden bg-[#1F2228]">
+                  <button
+                    onClick={() => toggleMobileAccordion('dogmatics')}
+                    className="w-full text-left px-3.5 py-2.5 flex items-center justify-between text-white font-semibold hover:text-[#DFC075]"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
+                      <span>조직신학</span>
+                    </span>
+                    <ChevronDown className={`w-4 h-4 text-[#C39738] transition-transform duration-200 ${mobileAccordion === 'dogmatics' ? 'rotate-180' : ''}`} />
+                  </button>
+                  {mobileAccordion === 'dogmatics' && (
+                    <div className="px-4 pb-2.5 pt-1 space-y-1 text-xs border-t border-[#2B2F36] bg-[#17191C]">
+                      <button onClick={() => { selectFilter('dogmatics', 'all'); setMobileMenuOpen(false); }} className="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 조직신학 전체보기</button>
+                      <button onClick={() => { selectFilter('dogmatics', 'set'); setMobileMenuOpen(false); }} className="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• Set (교의학 전집 세트)</button>
+                      <button onClick={() => { selectFilter('dogmatics', 'theology-proper'); setMobileMenuOpen(false); }} className="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 신론 (Theology Proper)</button>
+                      <button onClick={() => { selectFilter('dogmatics', 'anthropology'); setMobileMenuOpen(false); }} className="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 인간론 (Anthropology)</button>
+                      <button onClick={() => { selectFilter('dogmatics', 'christology'); setMobileMenuOpen(false); }} className="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 기독론 (Christology)</button>
+                      <button onClick={() => { selectFilter('dogmatics', 'soteriology'); setMobileMenuOpen(false); }} className="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 구원론 (Soteriology)</button>
+                      <button onClick={() => { selectFilter('dogmatics', 'ecclesiology'); setMobileMenuOpen(false); }} className="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 교회론 (Ecclesiology)</button>
+                      <button onClick={() => { selectFilter('dogmatics', 'eschatology'); setMobileMenuOpen(false); }} className="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 종말론 (Eschatology)</button>
+                    </div>
+                  )}
+                </div>
+
+                {/* 3. 역사신학 */}
+                <button
+                  onClick={() => { selectFilter('historical', 'all'); setMobileMenuOpen(false); }}
+                  className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-semibold"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
+                    <span>역사신학</span>
+                  </span>
+                  <span className="text-xs text-[#7E8694]">교회사</span>
+                </button>
+
+                {/* 4. 크리스천 라이프 */}
+                <button
+                  onClick={() => { selectFilter('christian-life', 'all'); setMobileMenuOpen(false); }}
+                  className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-semibold"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
+                    <span>크리스천 라이프</span>
+                  </span>
+                  <span className="text-xs text-[#7E8694]">경건•성화</span>
+                </button>
+
+                {/* 5. 청교도저작 전집 */}
+                <button
+                  onClick={() => { selectFilter('puritan-works', 'all'); setMobileMenuOpen(false); }}
+                  className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-semibold"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
+                    <span>청교도저작 전집</span>
+                  </span>
+                  <span className="text-[9px] bg-[#C39738] text-[#17191C] px-1 py-0.5 rounded font-bold">정본</span>
+                </button>
+
+                {/* 6. 전자책 */}
+                <button
+                  onClick={() => { selectFilter('ebook', 'all'); setMobileMenuOpen(false); }}
+                  className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-medium"
+                >
+                  <span>전자책 (eBook / ePub)</span>
+                  <span className="text-[9px] bg-[#6E1B2A] text-white px-1.5 py-0.5 rounded font-sans">ePub</span>
+                </button>
+              </div>
+
+              {/* Drawer Footer */}
+              <div className="p-4 border-t border-[#2B2F36] space-y-2 text-xs">
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => { setAuthMode('login'); setAuthModalOpen(true); setMobileMenuOpen(false); }}
+                    className="flex-1 py-2 text-center bg-[#23272D] hover:bg-[#2E333B] rounded text-white font-medium"
+                  >
+                    로그인
+                  </button>
+                  <button 
+                    onClick={() => { setAuthMode('signup'); setAuthModalOpen(true); setMobileMenuOpen(false); }}
+                    className="flex-1 py-2 text-center bg-[#6E1B2A] hover:bg-[#8C2538] rounded text-white font-semibold"
+                  >
+                    회원가입
+                  </button>
+                </div>
+                <a 
+                  href="#about" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-center text-[#A6ADB8] hover:text-[#DFC075] py-1 text-[11px]"
+                >
+                  출판 사명선언문 (Mission)
+                </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 3. HERO EXHIBITION SECTION */}
       <section className="relative bg-[#17191C] text-white overflow-hidden py-12 lg:py-20 border-b-4 border-[#C39738]">
@@ -743,18 +1472,20 @@ export default function PuritanHeritageBooksApp() {
           </p>
         </div>
 
-        <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-3 mb-10">
+        {/* Primary Category Filter Tabs */}
+        <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-3 mb-5">
           {[
             { key: 'all', label: '전체 도서 (All)' },
-            { key: 'puritan-gems', label: '청교도 보화' },
-            { key: 'dogmatics', label: '조직신학 • 교의학' },
-            { key: 'family', label: '가정예배 • 경건' },
-            { key: 'ebook', label: '전자책 (eBook)' },
-            { key: 'new', label: '신간 • 사전예약' }
+            { key: 'commentary', label: '성경주석' },
+            { key: 'dogmatics', label: '조직신학' },
+            { key: 'historical', label: '역사신학' },
+            { key: 'christian-life', label: '크리스천 라이프' },
+            { key: 'puritan-works', label: '청교도저작 전집' },
+            { key: 'ebook', label: '전자책 (eBook)' }
           ].map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setSelectedCategory(tab.key)}
+              onClick={() => selectFilter(tab.key, 'all', false)}
               className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all ${
                 selectedCategory === tab.key
                   ? 'bg-[#6E1B2A] text-white shadow-md font-semibold'
@@ -766,16 +1497,103 @@ export default function PuritanHeritageBooksApp() {
           ))}
         </div>
 
-        {searchQuery && (
-          <div className="mb-6 p-3 bg-white border border-[#E4DFD7] rounded-md text-xs text-[#5E6470] flex items-center justify-between">
-            <span>
-              검색어 <strong>"{searchQuery}"</strong>에 대한 도서 <strong>{filteredBooks.length}권</strong>이 검색되었습니다.
-            </span>
-            <button onClick={() => setSearchQuery('')} className="text-[#6E1B2A] font-semibold hover:underline">
-              검색 초기화
-            </button>
+        {/* Secondary Subcategory Pills for Commentary & Dogmatics */}
+        {(selectedCategory === 'commentary' || selectedCategory === 'dogmatics') && (
+          <div className="flex flex-wrap justify-center items-center gap-2 mb-8">
+            {selectedCategory === 'commentary' && [
+              { key: 'all', label: '전체 주석' },
+              { key: 'set', label: 'Set (세트)' },
+              { key: 'ot', label: '구약' },
+              { key: 'nt', label: '신약' }
+            ].map(sub => (
+              <button
+                key={sub.key}
+                onClick={() => selectFilter('commentary', sub.key, false)}
+                className={`px-3.5 py-1.5 rounded-full text-xs transition-all ${
+                  selectedSubcategory === sub.key
+                    ? 'bg-[#C39738] text-[#17191C] font-bold shadow-xs'
+                    : 'bg-white text-[#5E6470] hover:bg-[#EDE9E1] border border-[#E4DFD7]'
+                }`}
+              >
+                {sub.label}
+              </button>
+            ))}
+
+            {selectedCategory === 'dogmatics' && [
+              { key: 'all', label: '전체 교의학' },
+              { key: 'set', label: 'Set (전집/세트)' },
+              { key: 'theology-proper', label: '신론' },
+              { key: 'anthropology', label: '인간론' },
+              { key: 'christology', label: '기독론' },
+              { key: 'soteriology', label: '구원론' },
+              { key: 'ecclesiology', label: '교회론' },
+              { key: 'eschatology', label: '종말론' }
+            ].map(sub => (
+              <button
+                key={sub.key}
+                onClick={() => selectFilter('dogmatics', sub.key, false)}
+                className={`px-3.5 py-1.5 rounded-full text-xs transition-all ${
+                  selectedSubcategory === sub.key
+                    ? 'bg-[#C39738] text-[#17191C] font-bold shadow-xs'
+                    : 'bg-white text-[#5E6470] hover:bg-[#EDE9E1] border border-[#E4DFD7]'
+                }`}
+              >
+                {sub.label}
+              </button>
+            ))}
           </div>
         )}
+
+        {/* Active Filter Indicator & Search Result Tag */}
+        <div className="mb-8 p-3.5 bg-white border border-[#E4DFD7] rounded-lg text-xs flex flex-wrap items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center space-x-2 text-xs flex-wrap gap-y-1">
+            <span className="text-[#7E8694]">현재 탐색 분류:</span>
+            <span className="font-bold text-[#6E1B2A] bg-[#FAF8F5] px-2.5 py-1 rounded border border-[#E4DFD7] flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
+              <span>
+                {(() => {
+                  const catNames = {
+                    'all': '전체 도서',
+                    'commentary': '성경주석',
+                    'dogmatics': '조직신학',
+                    'historical': '역사신학',
+                    'christian-life': '크리스천 라이프',
+                    'puritan-works': '청교도저작 전집',
+                    'ebook': '전자책(eBook)'
+                  };
+                  const subNames = {
+                    'set': 'Set (전집/세트)',
+                    'ot': '구약',
+                    'nt': '신약',
+                    'theology-proper': '신론',
+                    'anthropology': '인간론',
+                    'christology': '기독론',
+                    'soteriology': '구원론',
+                    'ecclesiology': '교회론',
+                    'eschatology': '종말론'
+                  };
+                  let str = catNames[selectedCategory] || '전체 도서';
+                  if (selectedSubcategory && selectedSubcategory !== 'all' && subNames[selectedSubcategory]) {
+                    str += ` > ${subNames[selectedSubcategory]}`;
+                  }
+                  return str;
+                })()}
+              </span>
+            </span>
+            <span className="text-[#5E6470]">• 총 <strong className="text-[#17191C]">{filteredBooks.length}권</strong>의 추천 도서</span>
+            {searchQuery && (
+              <span className="text-[#7E8694]">(검색어: "{searchQuery}")</span>
+            )}
+          </div>
+          {(selectedCategory !== 'all' || selectedSubcategory !== 'all' || searchQuery) && (
+            <button
+              onClick={() => { selectFilter('all', 'all', false); setSearchQuery(''); }}
+              className="text-xs text-[#8C2538] hover:text-[#6E1B2A] font-semibold underline hover:no-underline"
+            >
+              전체 분류로 초기화
+            </button>
+          )}
+        </div>
 
         {filteredBooks.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-lg border border-[#E4DFD7] p-8">
@@ -1446,6 +2264,8 @@ export default function PuritanHeritageBooksApp() {
             </div>
           </div>
         </div>
+      )}
+
       {/* MODAL 3: LOGIN / SIGN UP AUTH MODAL */}
       {authModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
