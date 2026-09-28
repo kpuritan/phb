@@ -720,7 +720,31 @@ export const CONFESSIONS_MAP = [
 ];
 
 // ==========================================
-// 2. MAIN APPLICATION COMPONENT
+// 2. BOOKSTORE LINK GENERATOR (Paper & e-Book)
+// ==========================================
+export function getStoreLinks(book) {
+  if (!book) return { paper: {}, ebook: {} };
+  const cleanTitle = book.title.split('(')[0].trim();
+  const query = encodeURIComponent(cleanTitle);
+  const custom = book.storeLinks || {};
+
+  return {
+    paper: {
+      naver: custom.naver || `https://search.shopping.naver.com/search/all?query=${encodeURIComponent('퓨리탄 헤리티지 ' + cleanTitle)}`,
+      aladin: custom.aladin || `https://www.aladin.co.kr/search/wsearchresult.aspx?SearchWord=${query}`,
+      kyobo: custom.kyobo || `https://search.kyobobook.co.kr/search?keyword=${query}`,
+      yes24: custom.yes24 || `https://www.yes24.com/Product/Search?domain=BOOK&query=${query}`,
+    },
+    ebook: {
+      aladin: custom.ebookAladin || `https://www.aladin.co.kr/search/wsearchresult.aspx?SearchWord=${query}&SearchTarget=eBook`,
+      yes24: custom.ebookYes24 || `https://www.yes24.com/Product/Search?domain=EBOOK&query=${query}`,
+      kyobo: custom.ebookKyobo || `https://search.kyobobook.co.kr/search?keyword=${query}&gbCode=EBK`,
+    }
+  };
+}
+
+// ==========================================
+// 3. MAIN APPLICATION COMPONENT
 // ==========================================
 export default function PuritanHeritageBooksApp() {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -736,6 +760,7 @@ export default function PuritanHeritageBooksApp() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'signup'
   const [previewBook, setPreviewBook] = useState(null);
+  const [storeCheckoutModalOpen, setStoreCheckoutModalOpen] = useState(false);
   const [currentQuoteIdx, setCurrentQuoteIdx] = useState(0);
   const [activeConfessionTab, setActiveConfessionTab] = useState(0);
   const [newsletterEmail, setNewsletterEmail] = useState('');
@@ -1404,8 +1429,54 @@ export default function PuritanHeritageBooksApp() {
                   className="bg-transparent hover:bg-[#C39738]/10 text-[#DFC075] border border-[#C39738] px-6 py-3.5 rounded font-semibold text-sm transition-all flex items-center space-x-2"
                 >
                   <BookOpen className="w-4 h-4" />
-                  <span>목차 및 서문 미리보기</span>
+                  <span>목차 & 서점 바로가기</span>
                 </button>
+              </div>
+
+              {/* Hero Bookstore Quick Access */}
+              <div className="pt-4 border-t border-[#3A3F4A]/50 space-y-2">
+                <div className="flex items-center gap-1.5 text-xs text-[#DFC075] font-medium">
+                  <span className="font-bold">📖 종이책 바로구매:</span>
+                  <span className="text-[11px] text-[#A6ADB8]">(원하시는 서점을 선택하세요)</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <a
+                    href="https://search.shopping.naver.com/search/all?query=%ED%93%A8%EB%A6%AC%ED%83%84%20%ED%97%A4%EB%A6%AC%ED%8B%B0%EC%A7%80%20%EA%B0%9C%ED%98%81%EC%A3%BC%EC%9D%98%20%EC%A1%B0%EC%A7%81%EC%8B%A0%ED%95%99%20%EC%A0%84%EC%A7%91"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#17191C] hover:bg-[#03C75A] border border-[#03C75A]/40 text-[#03C75A] hover:text-white text-xs font-semibold transition-all shadow-xs"
+                  >
+                    <span className="w-4 h-4 rounded-xs bg-[#03C75A] text-white text-[9px] font-black inline-flex items-center justify-center">N</span>
+                    네이버 스토어
+                  </a>
+                  <a
+                    href="https://www.aladin.co.kr/search/wsearchresult.aspx?SearchWord=%EA%B0%9C%ED%98%81%EC%A3%BC%EC%9D%98%20%EC%A1%B0%EC%A7%81%EC%8B%A0%ED%95%99%20%EC%A0%84%EC%A7%91"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#17191C] hover:bg-[#DF2161] border border-[#DF2161]/40 text-[#DF2161] hover:text-white text-xs font-semibold transition-all shadow-xs"
+                  >
+                    <span className="w-4 h-4 rounded-xs bg-[#DF2161] text-white text-[9px] font-bold inline-flex items-center justify-center">알</span>
+                    알라딘
+                  </a>
+                  <a
+                    href="https://search.kyobobook.co.kr/search?keyword=%EA%B0%9C%ED%98%81%EC%A3%BC%EC%9D%98%20%EC%A1%B0%EC%A7%81%EC%8B%A0%ED%95%99%20%EC%A0%84%EC%A7%91"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#17191C] hover:bg-[#1E5638] border border-[#1E5638]/40 text-[#DFC075] hover:text-white text-xs font-semibold transition-all shadow-xs"
+                  >
+                    <span className="w-4 h-4 rounded-xs bg-[#1E5638] text-white text-[9px] font-bold inline-flex items-center justify-center">교</span>
+                    교보문고
+                  </a>
+                  <a
+                    href="https://www.yes24.com/Product/Search?domain=BOOK&query=%EA%B0%9C%ED%98%81%EC%A3%BC%EC%9D%98%20%EC%A1%B0%EC%A7%81%EC%8B%A0%ED%95%99%20%EC%A0%84%EC%A7%91"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#17191C] hover:bg-[#0070E0] border border-[#0070E0]/40 text-[#0070E0] hover:text-white text-xs font-semibold transition-all shadow-xs"
+                  >
+                    <span className="w-4 h-4 rounded-xs bg-[#0070E0] text-white text-[8px] font-bold inline-flex items-center justify-center">Y24</span>
+                    예스24
+                  </a>
+                </div>
               </div>
 
             </div>
@@ -1657,7 +1728,7 @@ export default function PuritanHeritageBooksApp() {
                       className="w-full bg-[#DFC075] hover:bg-[#C39738] text-[#17191C] text-xs font-semibold py-2 px-3 rounded shadow flex items-center justify-center gap-1.5 transition-colors"
                     >
                       <BookOpen className="w-3.5 h-3.5" />
-                      <span>목차 & 본문 미리보기</span>
+                      <span>목차 & 서점 바로가기</span>
                     </button>
                     <button
                       onClick={() => addToCart(book)}
@@ -2054,6 +2125,141 @@ export default function PuritanHeritageBooksApp() {
                 </div>
               </div>
 
+              {/* ========================================== */}
+              {/* 서점별 구매 바로가기 (종이책 & e-Book) */}
+              {/* ========================================== */}
+              {(() => {
+                const storeLinks = getStoreLinks(previewBook);
+                return (
+                  <div id="jsx-modal-stores-section" className="bg-gradient-to-br from-[#FAF8F5] to-[#F2EFE9] p-5 sm:p-6 rounded-xl border-2 border-[#DFC075]/70 shadow-sm space-y-5">
+                    {/* 1. 종이책 구매처 */}
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#6E1B2A] text-white text-xs shadow-xs">📖</span>
+                          <h4 className="font-serif font-bold text-sm sm:text-base text-[#17191C]">종이책 구매처</h4>
+                          <span className="text-[11px] text-[#7E8694] font-sans hidden sm:inline">(네이버 스마트스토어 & 주요 인터넷 서점)</span>
+                        </div>
+                        <span className="text-[10px] font-semibold text-[#8C2538] bg-[#6E1B2A]/10 px-2 py-0.5 rounded border border-[#6E1B2A]/20">
+                          10% 정가할인 혜택
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        <a
+                          href={storeLinks.paper.naver}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-center justify-center gap-2 p-2.5 rounded-lg bg-white hover:bg-[#03C75A] border border-[#03C75A]/40 text-[#008A3B] hover:text-white transition-all shadow-xs hover:shadow text-center"
+                        >
+                          <span className="w-5 h-5 rounded bg-[#03C75A] text-white font-black text-xs flex items-center justify-center group-hover:bg-white group-hover:text-[#03C75A] transition-colors flex-shrink-0">N</span>
+                          <div className="text-left leading-tight">
+                            <div className="text-[9px] text-[#7E8694] group-hover:text-white/90">공식 직영</div>
+                            <div className="text-xs font-bold">네이버 스토어</div>
+                          </div>
+                        </a>
+
+                        <a
+                          href={storeLinks.paper.aladin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-center justify-center gap-2 p-2.5 rounded-lg bg-white hover:bg-[#DF2161] border border-[#DF2161]/40 text-[#C0154E] hover:text-white transition-all shadow-xs hover:shadow text-center"
+                        >
+                          <span className="w-5 h-5 rounded bg-[#DF2161] text-white font-bold text-xs flex items-center justify-center group-hover:bg-white group-hover:text-[#DF2161] transition-colors flex-shrink-0">알</span>
+                          <div className="text-left leading-tight">
+                            <div className="text-[9px] text-[#7E8694] group-hover:text-white/90">인터넷 서점</div>
+                            <div className="text-xs font-bold">알라딘</div>
+                          </div>
+                        </a>
+
+                        <a
+                          href={storeLinks.paper.kyobo}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-center justify-center gap-2 p-2.5 rounded-lg bg-white hover:bg-[#1E5638] border border-[#1E5638]/40 text-[#1E5638] hover:text-white transition-all shadow-xs hover:shadow text-center"
+                        >
+                          <span className="w-5 h-5 rounded bg-[#1E5638] text-white font-bold text-xs flex items-center justify-center group-hover:bg-white group-hover:text-[#1E5638] transition-colors flex-shrink-0">교</span>
+                          <div className="text-left leading-tight">
+                            <div className="text-[9px] text-[#7E8694] group-hover:text-white/90">인터넷 서점</div>
+                            <div className="text-xs font-bold">교보문고</div>
+                          </div>
+                        </a>
+
+                        <a
+                          href={storeLinks.paper.yes24}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-center justify-center gap-2 p-2.5 rounded-lg bg-white hover:bg-[#0070E0] border border-[#0070E0]/40 text-[#0057B3] hover:text-white transition-all shadow-xs hover:shadow text-center"
+                        >
+                          <span className="w-5 h-5 rounded bg-[#0070E0] text-white font-bold text-[10px] flex items-center justify-center group-hover:bg-white group-hover:text-[#0070E0] transition-colors flex-shrink-0">Y24</span>
+                          <div className="text-left leading-tight">
+                            <div className="text-[9px] text-[#7E8694] group-hover:text-white/90">인터넷 서점</div>
+                            <div className="text-xs font-bold">예스24</div>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* 2. e-Book (전자책) 구매처 */}
+                    <div className="pt-4 border-t border-[#E4DFD7]">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#17191C] text-[#DFC075] text-xs shadow-xs">📱</span>
+                          <h4 className="font-serif font-bold text-sm sm:text-base text-[#17191C]">e-Book (전자책) 구매처</h4>
+                          <span className="text-[11px] text-[#7E8694] font-sans hidden sm:inline">(ePub / PDF 디지털 즉시 열람)</span>
+                        </div>
+                        {previewBook.isEbook ? (
+                          <span className="text-[10px] font-semibold text-[#0057B3] bg-[#0070E0]/10 px-2 py-0.5 rounded border border-[#0070E0]/20">e-Book 발행 도서</span>
+                        ) : (
+                          <span className="text-[10px] text-[#7E8694] bg-[#EDE9E1] px-2 py-0.5 rounded">e-Book 준비중 (조회 가능)</span>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        <a
+                          href={storeLinks.ebook.aladin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-center justify-center gap-2.5 p-2.5 rounded-lg bg-white hover:bg-[#DF2161] border border-[#DF2161]/40 text-[#C0154E] hover:text-white transition-all shadow-xs hover:shadow text-center"
+                        >
+                          <span className="w-5 h-5 rounded bg-[#DF2161] text-white font-bold text-xs flex items-center justify-center group-hover:bg-white group-hover:text-[#DF2161] transition-colors flex-shrink-0">e</span>
+                          <div className="text-left leading-tight">
+                            <div className="text-[9px] text-[#7E8694] group-hover:text-white/90">전자책 스토어</div>
+                            <div className="text-xs font-bold">알라딘 eBook</div>
+                          </div>
+                        </a>
+
+                        <a
+                          href={storeLinks.ebook.yes24}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-center justify-center gap-2.5 p-2.5 rounded-lg bg-white hover:bg-[#0070E0] border border-[#0070E0]/40 text-[#0057B3] hover:text-white transition-all shadow-xs hover:shadow text-center"
+                        >
+                          <span className="w-5 h-5 rounded bg-[#0070E0] text-white font-bold text-[10px] flex items-center justify-center group-hover:bg-white group-hover:text-[#0070E0] transition-colors flex-shrink-0">e</span>
+                          <div className="text-left leading-tight">
+                            <div className="text-[9px] text-[#7E8694] group-hover:text-white/90">전자책 스토어</div>
+                            <div className="text-xs font-bold">예스24 eBook</div>
+                          </div>
+                        </a>
+
+                        <a
+                          href={storeLinks.ebook.kyobo}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-center justify-center gap-2.5 p-2.5 rounded-lg bg-white hover:bg-[#1E5638] border border-[#1E5638]/40 text-[#1E5638] hover:text-white transition-all shadow-xs hover:shadow text-center"
+                        >
+                          <span className="w-5 h-5 rounded bg-[#1E5638] text-white font-bold text-xs flex items-center justify-center group-hover:bg-white group-hover:text-[#1E5638] transition-colors flex-shrink-0">e</span>
+                          <div className="text-left leading-tight">
+                            <div className="text-[9px] text-[#7E8694] group-hover:text-white/90">전자책 스토어</div>
+                            <div className="text-xs font-bold">교보문고 sam/eBook</div>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
               <div className="space-y-2">
                 <h4 className="font-serif font-bold text-base text-[#17191C] flex items-center gap-1.5">
                   <Bookmark className="w-4 h-4 text-[#C39738]" />
@@ -2090,14 +2296,14 @@ export default function PuritanHeritageBooksApp() {
               </div>
             </div>
 
-            <div className="bg-white p-4 px-6 border-t border-[#E4DFD7] flex items-center justify-between">
+            <div className="bg-white p-4 px-6 border-t border-[#E4DFD7] flex flex-col sm:flex-row items-center justify-between gap-3">
               <div>
                 <span className="text-xs text-[#5E6470]">판매가</span>
                 <span className="text-lg font-bold text-[#6E1B2A] ml-2">
                   {previewBook.price.toLocaleString()}원
                 </span>
               </div>
-              <div className="flex space-x-3">
+              <div className="flex flex-wrap items-center gap-2">
                 <button
                   onClick={() => setPreviewBook(null)}
                   className="px-4 py-2 border border-[#E4DFD7] rounded text-xs font-semibold text-[#5E6470] hover:bg-[#EDE9E1]"
@@ -2109,10 +2315,16 @@ export default function PuritanHeritageBooksApp() {
                     addToCart(previewBook);
                     setPreviewBook(null);
                   }}
-                  className="px-6 py-2 bg-[#6E1B2A] hover:bg-[#8C2538] text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow"
+                  className="px-4 py-2 bg-[#FAF8F5] hover:bg-[#EDE9E1] text-[#17191C] border border-[#E4DFD7] rounded text-xs font-semibold flex items-center gap-1.5"
                 >
                   <ShoppingBag className="w-3.5 h-3.5" />
                   <span>장바구니 담기</span>
+                </button>
+                <button
+                  onClick={() => document.getElementById('jsx-modal-stores-section')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="px-5 py-2 bg-[#6E1B2A] hover:bg-[#8C2538] text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow"
+                >
+                  서점 구매처 바로가기 ↓
                 </button>
               </div>
             </div>
@@ -2249,14 +2461,13 @@ export default function PuritanHeritageBooksApp() {
 
                   <button
                     onClick={() => {
-                      alert(`[주문 완료 테스트]\n총 결제금액: ${finalTotal.toLocaleString()}원\n퓨리탄 헤리티지 북스를 애용해 주셔서 감사합니다.`);
-                      setCart([]);
                       setIsCartOpen(false);
+                      setStoreCheckoutModalOpen(true);
                     }}
                     className="w-full bg-[#6E1B2A] hover:bg-[#8C2538] text-white py-3.5 rounded font-semibold text-xs tracking-wider uppercase transition-all shadow-md flex items-center justify-center space-x-2"
                   >
                     <CreditCard className="w-4 h-4" />
-                    <span>주문서 작성 및 결제하기</span>
+                    <span>서점별 주문 및 결제 바로가기</span>
                   </button>
                 </div>
               )}
@@ -2398,6 +2609,165 @@ export default function PuritanHeritageBooksApp() {
               회원가입 시 신간 10% 추가 적립 및 청교도 묵상 칼럼을 무료로 받아보실 수 있습니다.
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 4: ONLINE STORE CHECKOUT MODAL */}
+      {storeCheckoutModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#F8F7F4] text-[#17191C] w-full max-w-2xl rounded-xl border border-[#C39738] shadow-2xl overflow-hidden relative max-h-[90vh] flex flex-col">
+            <div className="bg-[#17191C] text-white p-4 px-6 flex justify-between items-center border-b border-[#C39738]">
+              <div className="flex items-center space-x-2">
+                <span className="font-serif text-xs font-bold text-[#DFC075] tracking-widest uppercase">
+                  Bookstore Ordering
+                </span>
+                <span className="text-[#3A3F4A]">|</span>
+                <span className="text-xs text-[#A6ADB8]">
+                  온라인 서점 & 스마트스토어 주문 안내
+                </span>
+              </div>
+              <button
+                onClick={() => setStoreCheckoutModalOpen(false)}
+                className="text-[#A6ADB8] hover:text-white p-1 rounded transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto space-y-5 flex-1 text-sm font-sans">
+              <div className="bg-white p-4 rounded-lg border border-[#E4DFD7] space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-[#6E1B2A] text-white text-xs flex items-center justify-center font-bold">✓</span>
+                  <h4 className="font-serif font-bold text-sm text-[#17191C]">정식 유통 서점을 통해 안전하게 주문하세요</h4>
+                </div>
+                <p className="text-xs text-[#5E6470] leading-relaxed">
+                  퓨리탄 헤리티지 북스는 독자 여러분께 가장 신속한 당일/익일 총알배송, 도서 소득공제(30%) 혜택 및 전자책 전용 뷰어 환경을 보장하기 위해 <strong>네이버 스마트스토어</strong> 및 <strong>국내 3대 인터넷 서점(교보문고, 알라딘, YES24)</strong>을 통해 도서를 공식 공급하고 있습니다.
+                </p>
+              </div>
+
+              <div>
+                <h5 className="font-serif font-bold text-xs text-[#17191C] mb-2.5 flex items-center gap-1.5">
+                  <span className="text-[#6E1B2A]">●</span> 장바구니 도서 서점별 구매 바로가기
+                </h5>
+                <div className="space-y-3">
+                  {cart.map(({ book, quantity }) => {
+                    const storeLinks = getStoreLinks(book);
+                    return (
+                      <div key={book.id} className="p-4 bg-white rounded-lg border border-[#E4DFD7] space-y-3 shadow-xs">
+                        <div className="flex items-center justify-between border-b border-[#F8F7F4] pb-2">
+                          <div>
+                            <h5 className="font-serif font-bold text-sm text-[#17191C]">{book.title}</h5>
+                            <p className="text-xs text-[#5E6470]">{book.author} | 수량 {quantity}권 | {(book.price * quantity).toLocaleString()}원</p>
+                          </div>
+                          <span className="text-[10px] font-semibold text-[#8C2538] bg-[#6E1B2A]/10 px-2 py-0.5 rounded">
+                            {book.isEbook ? '종이책 / e-Book' : '종이책 전용'}
+                          </span>
+                        </div>
+
+                        {/* 종이책 구매 버튼 */}
+                        <div>
+                          <span className="text-[11px] font-bold text-[#17191C] block mb-1.5">📖 종이책 바로구매:</span>
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            <a
+                              href={storeLinks.paper.naver}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white hover:bg-[#03C75A] border border-[#03C75A]/40 text-[#008A3B] hover:text-white text-xs font-semibold transition-all shadow-xs"
+                            >
+                              <span className="w-4 h-4 rounded-xs bg-[#03C75A] text-white text-[9px] font-black inline-flex items-center justify-center">N</span>
+                              네이버스토어
+                            </a>
+                            <a
+                              href={storeLinks.paper.aladin}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white hover:bg-[#DF2161] border border-[#DF2161]/40 text-[#C0154E] hover:text-white text-xs font-semibold transition-all shadow-xs"
+                            >
+                              <span className="w-4 h-4 rounded-xs bg-[#DF2161] text-white text-[9px] font-bold inline-flex items-center justify-center">알</span>
+                              알라딘
+                            </a>
+                            <a
+                              href={storeLinks.paper.kyobo}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white hover:bg-[#1E5638] border border-[#1E5638]/40 text-[#1E5638] hover:text-white text-xs font-semibold transition-all shadow-xs"
+                            >
+                              <span className="w-4 h-4 rounded-xs bg-[#1E5638] text-white text-[9px] font-bold inline-flex items-center justify-center">교</span>
+                              교보문고
+                            </a>
+                            <a
+                              href={storeLinks.paper.yes24}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white hover:bg-[#0070E0] border border-[#0070E0]/40 text-[#0057B3] hover:text-white text-xs font-semibold transition-all shadow-xs"
+                            >
+                              <span className="w-4 h-4 rounded-xs bg-[#0070E0] text-white text-[8px] font-bold inline-flex items-center justify-center">Y24</span>
+                              예스24
+                            </a>
+                          </div>
+                        </div>
+
+                        {/* 전자책 구매 버튼 */}
+                        <div className="pt-2 border-t border-[#F8F7F4]">
+                          <span className="text-[11px] font-bold text-[#17191C] block mb-1.5">📱 e-Book (전자책) 바로구매:</span>
+                          <div className="grid grid-cols-3 gap-2">
+                            <a
+                              href={storeLinks.ebook.aladin}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white hover:bg-[#DF2161] border border-[#DF2161]/40 text-[#C0154E] hover:text-white text-xs font-semibold transition-all shadow-xs"
+                            >
+                              <span className="w-4 h-4 rounded-xs bg-[#DF2161] text-white text-[9px] font-bold inline-flex items-center justify-center">e</span>
+                              알라딘 eBook
+                            </a>
+                            <a
+                              href={storeLinks.ebook.yes24}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white hover:bg-[#0070E0] border border-[#0070E0]/40 text-[#0057B3] hover:text-white text-xs font-semibold transition-all shadow-xs"
+                            >
+                              <span className="w-4 h-4 rounded-xs bg-[#0070E0] text-white text-[8px] font-bold inline-flex items-center justify-center">e</span>
+                              예스24 eBook
+                            </a>
+                            <a
+                              href={storeLinks.ebook.kyobo}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white hover:bg-[#1E5638] border border-[#1E5638]/40 text-[#1E5638] hover:text-white text-xs font-semibold transition-all shadow-xs"
+                            >
+                              <span className="w-4 h-4 rounded-xs bg-[#1E5638] text-white text-[9px] font-bold inline-flex items-center justify-center">e</span>
+                              교보문고 eBook
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="bg-[#EDE9E1] p-4 rounded-lg border border-[#E4DFD7] text-xs space-y-2 text-[#5E6470]">
+                <p className="font-semibold text-[#17191C] flex items-center gap-1.5">
+                  <span>💡</span> 서점별 맞춤 혜택 안내
+                </p>
+                <ul className="list-disc list-inside space-y-1 text-[11px]">
+                  <li><strong>네이버 스마트스토어:</strong> 네이버페이 포인트 추가 적립 & 원클릭 간편결제</li>
+                  <li><strong>교보문고 / 알라딘 / YES24:</strong> 도서 소득공제, 회원 등급 마일리지, 주말/심야 배송</li>
+                  <li><strong>e-Book (전자책):</strong> 교보문고 sam/eBook, 알라딘 eBook, YES24 eBook 뷰어로 결제 즉시 열람</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="bg-white p-4 px-6 border-t border-[#E4DFD7] flex items-center justify-between">
+              <span className="text-xs text-[#7E8694]">각 서점 버튼을 클릭하시면 해당 도서 페이지로 바로 이동합니다.</span>
+              <button
+                onClick={() => setStoreCheckoutModalOpen(false)}
+                className="px-5 py-2 bg-[#17191C] hover:bg-[#23272D] text-white rounded text-xs font-semibold"
+              >
+                닫기
+              </button>
+            </div>
           </div>
         </div>
       )}
