@@ -2302,24 +2302,30 @@
         <div class="bg-white rounded-lg border border-[#E4DFD7] overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
           <div class="p-6 bg-[#F8F7F4] flex justify-center items-center relative border-b border-[#E4DFD7] overflow-hidden">
             
-            <div onclick="openBookPreview('${book.id}')" class="cursor-pointer w-44 h-64 bg-gradient-to-br ${book.coverGradient} rounded-r-md rounded-l-xs shadow-book book-spine-effect p-4 flex flex-col justify-between transform transition-all duration-300 group-hover:scale-105 group-hover:-rotate-1 relative">
-              <div class="absolute inset-2 border border-[#C39738]/30 pointer-events-none"></div>
-              <div class="relative z-10 text-center">
-                <span class="font-cinzel text-[8px] tracking-wider text-[#DFC075] uppercase block truncate">
-                  ${book.series.split('(')[0]}
-                </span>
+            ${book.coverUrl ? `
+              <div onclick="openBookPreview('${book.id}')" class="cursor-pointer w-44 h-64 rounded-r-md rounded-l-xs shadow-book book-spine-effect overflow-hidden transform transition-all duration-300 group-hover:scale-105 group-hover:-rotate-1 relative bg-white border border-[#C39738]/40 flex items-center justify-center">
+                <img src="${book.coverUrl}" alt="${book.title}" class="w-full h-full object-cover" onerror="this.parentElement.className='cursor-pointer w-44 h-64 bg-gradient-to-br ${book.coverGradient} rounded-r-md rounded-l-xs shadow-book book-spine-effect p-4 flex flex-col justify-between transform transition-all duration-300 group-hover:scale-105 group-hover:-rotate-1 relative';">
               </div>
-              <div class="relative z-10 text-center my-auto space-y-1">
-                <h3 class="font-serifKr text-base font-bold text-white leading-snug">
-                  ${book.title.split('(')[0]}
-                </h3>
-                <p class="font-serifEn italic text-[9px] text-[#DFC075]/70 truncate">${book.originalTitle}</p>
+            ` : `
+              <div onclick="openBookPreview('${book.id}')" class="cursor-pointer w-44 h-64 bg-gradient-to-br ${book.coverGradient} rounded-r-md rounded-l-xs shadow-book book-spine-effect p-4 flex flex-col justify-between transform transition-all duration-300 group-hover:scale-105 group-hover:-rotate-1 relative">
+                <div class="absolute inset-2 border border-[#C39738]/30 pointer-events-none"></div>
+                <div class="relative z-10 text-center">
+                  <span class="font-cinzel text-[8px] tracking-wider text-[#DFC075] uppercase block truncate">
+                    ${book.series.split('(')[0]}
+                  </span>
+                </div>
+                <div class="relative z-10 text-center my-auto space-y-1">
+                  <h3 class="font-serifKr text-base font-bold text-white leading-snug">
+                    ${book.title.split('(')[0]}
+                  </h3>
+                  <p class="font-serifEn italic text-[9px] text-[#DFC075]/70 truncate">${book.originalTitle}</p>
+                </div>
+                <div class="relative z-10 text-center border-t border-[#C39738]/20 pt-2">
+                  <p class="text-[10px] font-serifKr text-[#E4DFD7] font-medium">${book.author}</p>
+                  <span class="font-cinzel text-[7px] text-[#A6ADB8] tracking-widest">PHB CLASSICS</span>
+                </div>
               </div>
-              <div class="relative z-10 text-center border-t border-[#C39738]/20 pt-2">
-                <p class="text-[10px] font-serifKr text-[#E4DFD7] font-medium">${book.author}</p>
-                <span class="font-cinzel text-[7px] text-[#A6ADB8] tracking-widest">PHB CLASSICS</span>
-              </div>
-            </div>
+            `}
 
             <div class="absolute top-3 left-3 flex flex-col gap-1 z-20">
               ${book.isPreorder ? '<span class="bg-[#6E1B2A] text-white text-[9px] font-bold px-2 py-0.5 rounded shadow">사전예약</span>' : ''}
@@ -2717,11 +2723,17 @@
       body.innerHTML = `
         <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 items-start pb-6 border-b border-[#E4DFD7]">
           <div class="sm:col-span-4 flex justify-center">
-            <div class="w-36 h-52 bg-gradient-to-br ${book.coverGradient} rounded shadow-book p-3 flex flex-col justify-between text-center relative">
-              <span class="text-[7px] font-cinzel text-[#DFC075] tracking-wider uppercase block">${book.series.split('(')[0]}</span>
-              <h4 class="text-xs font-serifKr font-bold text-white leading-snug">${book.title.split('(')[0]}</h4>
-              <span class="text-[8px] font-serifKr text-[#E4DFD7]">${book.author}</span>
-            </div>
+            ${book.coverUrl ? `
+              <div class="w-36 h-52 rounded overflow-hidden shadow-book border border-[#C39738]/50 bg-white flex items-center justify-center">
+                <img src="${book.coverUrl}" alt="${book.title}" class="w-full h-full object-cover">
+              </div>
+            ` : `
+              <div class="w-36 h-52 bg-gradient-to-br ${book.coverGradient} rounded shadow-book p-3 flex flex-col justify-between text-center relative">
+                <span class="text-[7px] font-cinzel text-[#DFC075] tracking-wider uppercase block">${book.series.split('(')[0]}</span>
+                <h4 class="text-xs font-serifKr font-bold text-white leading-snug">${book.title.split('(')[0]}</h4>
+                <span class="text-[8px] font-serifKr text-[#E4DFD7]">${book.author}</span>
+              </div>
+            `}
           </div>
           <div class="sm:col-span-8 space-y-2">
             <span class="text-xs font-semibold text-[#8C2538] block">${book.series}</span>
@@ -3046,6 +3058,8 @@
         document.getElementById('form-book-original-price').value = book.originalPrice || '';
         document.getElementById('form-book-price').value = book.price || '';
         document.getElementById('form-book-gradient').value = book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]';
+        if (document.getElementById('form-book-cover-url')) document.getElementById('form-book-cover-url').value = book.coverUrl || '';
+        if (document.getElementById('form-book-cover-file')) document.getElementById('form-book-cover-file').value = '';
         document.getElementById('form-book-pages').value = book.pages || '';
         document.getElementById('form-book-pubdate').value = book.pubDate || '';
         document.getElementById('form-book-isnew').checked = !!book.isNew;
@@ -3115,6 +3129,7 @@
             price,
             discountRate: Math.max(0, discountRate),
             coverGradient,
+            coverUrl: (document.getElementById('form-book-cover-url')?.value.trim()) || (existingBook ? existingBook.coverUrl : ''),
             pages,
             pubDate,
             isNew,
