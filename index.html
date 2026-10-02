@@ -92,6 +92,9 @@
       border-radius: 4px;
     }
   </style>
+  <!-- Firebase SDK for Real-time Books Sync -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-[#FAF8F5] selection:bg-[#6E1B2A] selection:text-white">
 
@@ -391,6 +394,11 @@
             </button>
             <span class="text-[#3A3F4A]">|</span>
             <a href="#about" class="hover:text-[#DFC075] transition-colors">PHB 소개</a>
+            <span class="text-[#3A3F4A]">|</span>
+            <a href="admin.html" class="text-[#DFC075] hover:text-white font-semibold flex items-center gap-1 transition-colors">
+              <i class="fas fa-cog text-[10px]"></i>
+              <span>도서 관리</span>
+            </a>
           </div>
 
         </div>
@@ -1131,7 +1139,22 @@
   <!-- JAVASCRIPT LOGIC -->
   <!-- ========================================== -->
   <script>
-    const BOOKS_DATA = [
+        // Firebase Config for Realtime Sync
+    const firebaseConfig = {
+      apiKey: "AIzaSyCJbOaiElCypwgtPgbwdnudn3VC737fMrs",
+      authDomain: "kpuritan-home.firebaseapp.com",
+      projectId: "kpuritan-home",
+      storageBucket: "kpuritan-home.firebasestorage.app",
+      messagingSenderId: "1071220455502",
+      appId: "1:1071220455502:web:7f6f59b48c48a73437f8f0"
+    };
+    if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = (typeof firebase !== 'undefined') ? firebase.firestore() : null;
+
+    let BOOKS_DATA = [];
+    const DEFAULT_BOOKS_DATA = [
       {
         id: 'phb-001',
         title: '개혁주의 조직신학 전집 (전4권 세트)',
@@ -2613,7 +2636,47 @@
     }
 
     // Initial Load
+    
+    // Load Custom Books from Firestore & LocalStorage
+    async function syncDynamicBooks() {
+      // 1. Initialize with default catalog
+      const mergedMap = new Map();
+      DEFAULT_BOOKS_DATA.forEach(b => mergedMap.set(b.id, b));
+
+      // 2. Check LocalStorage
+      try {
+        const localCustom = localStorage.getItem('phb_custom_books');
+        if (localCustom) {
+          const parsed = JSON.parse(localCustom);
+          parsed.forEach(b => mergedMap.set(b.id, b));
+        }
+      } catch (e) {}
+
+      // 3. Check Firestore
+      if (db) {
+        try {
+          const snapshot = await db.collection("phb_books").get();
+          if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+              mergedMap.set(doc.id, { id: doc.id, ...doc.data() });
+            });
+          } else if (DEFAULT_BOOKS_DATA.length > 0) {
+            // Initial seed to Firestore so admin has instant access
+            DEFAULT_BOOKS_DATA.forEach(b => {
+              db.collection("phb_books").doc(b.id).set(b, { merge: true }).catch(() => {});
+            });
+          }
+        } catch (err) {
+          console.warn("Firestore sync offline:", err);
+        }
+      }
+
+      BOOKS_DATA = Array.from(mergedMap.values());
+      renderBooksGrid();
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+      syncDynamicBooks();
       renderCategoryTabs();
       renderBooksGrid();
       renderQuote();
