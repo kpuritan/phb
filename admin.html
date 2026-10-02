@@ -1406,8 +1406,7 @@
 
         document.getElementById('form-tagline').value = book.tagline || '';
         document.getElementById('form-description').value = book.description || '';
-        document.getElementById('form-toc').value = Array.isArray(book.toc) ? book.toc.join('
-') : (book.toc || '');
+        document.getElementById('form-toc').value = Array.isArray(book.toc) ? book.toc.join('\n') : (book.toc || '');
         document.getElementById('form-excerpt').value = book.excerpt || '';
       } else {
         document.getElementById('book-modal-mode-title').innerText = '새 도서 등록';
@@ -1458,8 +1457,7 @@
       const id = existingId || `phb-${Date.now()}`;
 
       const tocVal = document.getElementById('form-toc').value.trim();
-      const tocArray = tocVal ? tocVal.split('
-').map(s => s.trim()).filter(Boolean) : [];
+      const tocArray = tocVal ? tocVal.split('\n').map(s => s.trim()).filter(Boolean) : [];
 
       const bookData = {
         id,
