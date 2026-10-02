@@ -136,7 +136,7 @@
           </div>
         </div>
 
-        <button type="submit" class="w-full py-3 bg-[#6E1B2A] hover:bg-[#8C2538] text-white rounded-lg text-xs font-semibold shadow-md transition-all flex items-center justify-center gap-2">
+        <button type="button" onclick="handleLoginSubmit(event)" class="w-full py-3 bg-[#6E1B2A] hover:bg-[#8C2538] text-white rounded-lg text-xs font-semibold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">
           <span>관리자 모드 접속</span>
           <i class="fas fa-arrow-right"></i>
         </button>
@@ -562,7 +562,558 @@
       }, 3000);
     }
 
-    // 1. Check Admin Auth State
+    
+    const DEFAULT_BOOKS_DATA = [
+      {
+        id: 'phb-001',
+        title: '개혁주의 조직신학 전집 (전4권 세트)',
+        originalTitle: 'Reformed Systematic Theology (4 Volumes Set)',
+        author: '조엘 비키 & 폴 스몰리',
+        translator: '조계광, 손현선 공역',
+        series: '개혁교의학 대계 (Reformed Dogmatics Series)',
+        category: 'dogmatics',
+        subCategory: 'set',
+        isNew: true,
+        isPreorder: true,
+        isHardcover: true,
+        isEbook: false,
+        price: 198000,
+        originalPrice: 220000,
+        discountRate: 10,
+        pages: '4,480쪽',
+        isbn: '979-11-984501-0-1',
+        pubDate: '2026. 10. 15 (출간예정)',
+        tagline: '신학과 경건, 학문성과 목회적 적용이 완벽하게 융화된 21세기 최고의 개혁주의 교의학 기념비적 대작',
+        coverGradient: 'from-[#1a1c20] via-[#2d1b24] to-[#121417]',
+        confessionTag: '웨스트민스터 신앙고백서 1~33장 전편 해설',
+        description: '역사적 개혁주의 전통과 청교도 체험적 영성을 평생 연구해 온 조엘 비키 박사와 폴 스몰리 교수가 완성한 4부작 조직신학 전집입니다. 계시론과 신론, 인간론과 기독론, 구원론과 교회론, 종말론에 이르는 기독교 교리 전체를 개혁신학적 정합성과 청교도적 영성으로 풀어내었습니다.',
+        toc: [
+          '제1권: 계시론과 신론 (Revelation and God)',
+          '제2권: 인간론과 기독론 (Man and Christ)',
+          '제3권: 성령론과 구원론 (Holy Spirit and Salvation)',
+          '제4권: 교회론과 종말론 (Church and Last Things)'
+        ],
+        excerpt: '“신학이란 하나님을 아는 지식이며, 그분을 경외하고 사랑함으로 예배에 이르게 하는 가장 거룩한 학문이다. 머리로만 체계화된 교리는 죽은 정통에 불과하지만, 성령의 조명 안에서 마음을 뜨겁게 달구는 참된 교의는 영혼을 살리고 하나님을 찬양하게 만든다.”'
+      },
+      {
+        id: 'phb-002',
+        title: '죄와 유혹 (청교도 정본 완역판)',
+        originalTitle: 'Overcoming Sin and Temptation',
+        author: '존 오웬',
+        translator: '서문강 역',
+        series: '오늘을 위한 청교도 보화 01',
+        category: 'christian-life',
+        subCategory: null,
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 31500,
+        originalPrice: 35000,
+        discountRate: 10,
+        pages: '584쪽',
+        isbn: '979-11-984501-1-8',
+        pubDate: '2026. 03. 20',
+        tagline: '영적 전쟁과 신자의 내면을 해부하는 청교도 최고의 영혼의 외과의사 존 오웬의 불후의 고전',
+        coverGradient: 'from-[#4a121c] via-[#2a0b11] to-[#170508]',
+        confessionTag: 'WCF 제13장 성화 / 하이델베르크 제126~127문',
+        description: '존 오웬의 3대 영적 전쟁 명저인 『신자 안에 남아있는 죄』, 『죄 죽이기』, 『유혹론』을 한 권으로 엮은 정본 완역판입니다.',
+        toc: [
+          '제1부 신자 안에 거하는 죄의 권세와 속임수',
+          '제2부 육신의 행실을 죽이는 성령의 사역',
+          '제3부 유혹의 본질과 파수하는 경건의 방책'
+        ],
+        excerpt: '“죄를 죽이지 않으면 죄가 당신을 죽일 것이다. 성령의 권능 없이 자신의 결단이나 도덕적 노력만으로 죄와 싸우려는 자는 풀을 베어 독초를 박멸하려는 어리석은 농부와 같다.”'
+      },
+      {
+        id: 'phb-003',
+        title: '신자의 위로 (하나님의 모든 섭리)',
+        originalTitle: 'A Divine Cordial (All Things for Good)',
+        author: '토마스 왓슨',
+        translator: '백금산 역',
+        series: '오늘을 위한 청교도 보화 02',
+        category: 'christian-life',
+        subCategory: null,
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 19800,
+        originalPrice: 22000,
+        discountRate: 10,
+        pages: '272쪽',
+        isbn: '979-11-984501-2-5',
+        pubDate: '2026. 01. 10',
+        tagline: '로마서 8장 28절에 담긴 하나님의 주권적 사랑과 섭리를 맛보게 하는 가장 감미로운 위로의 샘물',
+        coverGradient: 'from-[#1b2b3a] via-[#111e2b] to-[#0a121b]',
+        confessionTag: '하이델베르크 요리문답 제1문 / WCF 제5장 섭리',
+        description: '고난과 시련, 심지어 성도의 연약함과 실패까지도 하나님께서 합력하여 영원한 유익을 이루신다는 영광스러운 진리를 선포합니다.',
+        toc: [
+          '제1장 최상의 약효를 지닌 영적 강장제',
+          '제2장 최선의 것들이 신자에게 유익이 되는 방식',
+          '제3장 환난조차 신자에게 선을 이루는 섭리'
+        ],
+        excerpt: '“의사의 손에 들린 메스는 살을 에는 고통을 주지만, 그 목적은 고름을 짜내고 생명을 살리는 데 있다.”'
+      },
+      {
+        id: 'phb-004',
+        title: '가정예배 성경 가이드 (양장본 완역)',
+        originalTitle: 'Family Worship Bible Guide',
+        author: '조엘 비키 & 마이클 배럿 외',
+        translator: '이원택 역',
+        series: '가정예배와 거룩한 유산 01',
+        category: 'christian-life',
+        subCategory: null,
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 49500,
+        originalPrice: 55000,
+        discountRate: 10,
+        pages: '960쪽',
+        isbn: '979-11-984501-3-2',
+        pubDate: '2026. 05. 12',
+        tagline: '창세기부터 요한계시록까지 성경 1,189장 전 장에 대한 가정예배 묵상과 나눔 질문 완벽 수록',
+        coverGradient: 'from-[#2e261d] via-[#1f1912] to-[#120e0a]',
+        confessionTag: '웨스트민스터 예배지침 (가정예배 규범)',
+        description: '매일 가정예배를 어떻게 인도해야 할지 막막한 부모와 목회자를 위한 최고의 길잡이입니다.',
+        toc: [
+          '제1부 구약 성경 39권 매 장 강해 및 가정 나눔 가이드',
+          '제2부 신약 성경 27권 매 장 강해 및 가정 나눔 가이드'
+        ],
+        excerpt: '“가정은 교회의 작은 묘목장이며, 가정예배는 다음 세대의 마음에 하나님의 진리를 새기는 거룩한 제단이다.”'
+      },
+      {
+        id: 'phb-005',
+        title: '상한 갈대 (The Bruised Reed)',
+        originalTitle: 'The Bruised Reed and Smoking Flax',
+        author: '리처드 십스',
+        translator: '장호연 역',
+        series: '개혁파 영성 클래식 01',
+        category: 'christian-life',
+        subCategory: null,
+        isNew: false,
+        isPreorder: false,
+        isHardcover: false,
+        isEbook: true,
+        price: 16200,
+        originalPrice: 18000,
+        discountRate: 10,
+        pages: '224쪽',
+        isbn: '979-11-984501-4-9',
+        pubDate: '2025. 11. 30',
+        tagline: '‘달콤한 십스’가 전하는 상하고 꺾인 영혼을 향한 그리스도의 한없는 자비',
+        coverGradient: 'from-[#1c2c26] via-[#101c18] to-[#070e0b]',
+        confessionTag: 'WCF 제14장 구원에 이르는 믿음',
+        description: '자신의 무가치함으로 인해 꺾여버린 상한 갈대 같은 신자들을 결코 꺾지 않으시는 그리스도의 온유함을 전합니다.',
+        toc: [
+          '제1장 상한 갈대: 그리스도께서 꺾지 않으시는 자들',
+          '제2장 꺼져가는 심지: 그리스도께서 끄지 않으시는 은혜'
+        ],
+        excerpt: '“우리의 연약함이 그리스도의 긍휼을 막지 못하며, 우리의 불완전함이 그분의 사랑을 식게 하지 못한다.”'
+      },
+      {
+        id: 'phb-006',
+        title: '언약신학 탐구 (The Economy of Covenants)',
+        originalTitle: 'The Economy of the Covenants between God and Man',
+        author: '헤르만 위트시우스',
+        translator: '박태현 역 / 김남준 목사 해제',
+        series: '개혁교의학 대계 (Reformed Dogmatics Series)',
+        category: 'dogmatics',
+        subCategory: 'soteriology',
+        isNew: true,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: false,
+        price: 68400,
+        originalPrice: 76000,
+        discountRate: 10,
+        pages: '1,120쪽',
+        isbn: '979-11-984501-5-6',
+        pubDate: '2026. 08. 10',
+        tagline: '네덜란드 제2종교개혁의 정수이자 성경 전체를 꿰뚫는 언약의 웅장한 체계',
+        coverGradient: 'from-[#3a201b] via-[#241310] to-[#120806]',
+        confessionTag: 'WCF 제7장 하나님과 인간의 언약',
+        description: '행위언약과 은혜언약, 구속언약의 삼중적 구조를 통해 구속사의 통일성을 해명한 최고봉 저작입니다.',
+        toc: [
+          '제1권 행위언약',
+          '제2권 영원한 구속언약',
+          '제3권 은혜언약의 본질'
+        ],
+        excerpt: '“언약은 하나님께서 피조물인 인간과 나누시는 가장 친밀하고 복된 사귐의 통로이다.”'
+      },
+      {
+        id: 'phb-007',
+        title: '거룩과 확신 (Holiness & Assurance)',
+        originalTitle: 'Holiness: Its Nature, Hindrances, Difficulties, and Roots',
+        author: 'J. C. 라일',
+        translator: '정성욱 역',
+        series: '개혁파 영성 클래식 02',
+        category: 'christian-life',
+        subCategory: null,
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 27000,
+        originalPrice: 30000,
+        discountRate: 10,
+        pages: '512쪽',
+        isbn: '979-11-984501-6-3',
+        pubDate: '2025. 10. 05',
+        tagline: '19세기 청교도라 불린 J.C. 라일 주교가 선포하는 실천적 성화와 진정한 영적 싸움의 본질',
+        coverGradient: 'from-[#1f2633] via-[#121824] to-[#0a0d14]',
+        confessionTag: 'WCF 제18장 은혜와 구원의 확신',
+        description: '값싼 은혜에 빠진 현대 교회를 향한 날카로운 경종이자 참된 거룩의 표지를 제시합니다.',
+        toc: [
+          '제1장 죄의 실재와 심각성',
+          '제2장 성화: 거룩함의 본질과 특성',
+          '제3장 영적 전쟁'
+        ],
+        excerpt: '“거룩은 구원의 조건이 아니라 구원받은 영혼의 필연적 열매이다.”'
+      },
+      {
+        id: 'phb-008',
+        title: '그리스도의 영광 (The Glory of Christ)',
+        originalTitle: 'Meditations and Discourses on the Glory of Christ',
+        author: '존 오웬',
+        translator: '김홍만 역',
+        series: '오늘을 위한 청교도 보화 03',
+        category: 'dogmatics',
+        subCategory: 'christology',
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 24300,
+        originalPrice: 27000,
+        discountRate: 10,
+        pages: '384쪽',
+        isbn: '979-11-984501-7-0',
+        pubDate: '2026. 02. 14',
+        tagline: '존 오웬이 임종 직전 병상에서 구술한 영혼의 백미이자 기독론 묵상의 절정',
+        coverGradient: 'from-[#3a1a2b] via-[#240e1b] to-[#14060e]',
+        confessionTag: 'WCF 제8장 중보자 그리스도',
+        description: '성자 하나님의 영원한 신성과 성육신하신 그리스도의 인격, 그리고 중보하시는 영광을 묵상합니다.',
+        toc: [
+          '제1장 믿음으로 바라보는 그리스도의 인격의 영광',
+          '제2장 그리스도의 지혜와 사랑'
+        ],
+        excerpt: '“믿음으로 그리스도의 영광을 바라보는 것은 우리 영혼이 이 땅에서 누릴 수 있는 가장 고귀한 특권이다.”'
+      },
+      {
+        id: 'phb-009',
+        title: '매튜 풀 성경주석 완간 세트 (신구약 전3권)',
+        originalTitle: "Matthew Poole's Commentary on the Holy Bible",
+        author: '매튜 풀',
+        translator: '박문재 역',
+        series: '개혁주의 성경주석 대계 01',
+        category: 'commentary',
+        subCategory: 'set',
+        isNew: true,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: false,
+        price: 180000,
+        originalPrice: 200000,
+        discountRate: 10,
+        pages: '3,850쪽',
+        isbn: '979-11-984501-8-7',
+        pubDate: '2026. 04. 15',
+        tagline: '스펄전이 ‘목회자의 서재에 가장 먼저 꽂혀 있어야 할 주석’으로 격찬한 청교도 주석학의 기념비',
+        coverGradient: 'from-[#19232d] via-[#101920] to-[#090e13]',
+        confessionTag: 'WCF 제1장 성경 (성경 해석의 규범)',
+        description: '원문 언어에 대한 탁월한 분석과 교리적 정합성, 명쾌한 본문 해설을 결합하여 개혁교회 400년간 사랑받아 온 신구약 성경 주석의 최고 권위서입니다.',
+        toc: [
+          '제1권 구약 모세오경 및 역사서 (창세기~에스더)',
+          '제2권 구약 시가서 및 선지서 (욥기~말라기)',
+          '제3권 신약성경 전체 (마태복음~요한계시록)'
+        ],
+        excerpt: '“성경은 성경 자체로 해석되어야 하며, 기록된 하나님의 말씀은 신자의 믿음과 순종을 위한 유일무이하고 무오한 표준이다.”'
+      },
+      {
+        id: 'phb-010',
+        title: '시편 강해: 다윗의 보고 (전3권 세트)',
+        originalTitle: 'The Treasury of David (Exposition of the Psalms)',
+        author: '찰스 스펄전',
+        translator: '서문강 역',
+        series: '개혁주의 성경주석 대계 02',
+        category: 'commentary',
+        subCategory: 'ot',
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 108000,
+        originalPrice: 120000,
+        discountRate: 10,
+        pages: '2,640쪽',
+        isbn: '979-11-984501-9-4',
+        pubDate: '2025. 12. 01',
+        tagline: '20여 년에 걸쳐 완성된 시편 주석의 불후의 금자탑, 청교도 거장들의 주해가 총망라된 영혼의 보고',
+        coverGradient: 'from-[#2b1f14] via-[#1c130b] to-[#0e0905]',
+        confessionTag: '웨스트민스터 예배지침 (시편 찬송과 기도)',
+        description: '설교자의 황태자 스펄전이 20년의 목회적 열정을 바쳐 시편 150편 전편을 주해하고 수백 명의 역사적 청교도 주해를 집대성한 역작입니다.',
+        toc: [
+          '제1권 시편 1편~52편 강해 및 청교도 주해선집',
+          '제2권 시편 53편~103편 강해 및 영적 적용',
+          '제3권 시편 104편~150편 강해 및 할렐루야 찬양'
+        ],
+        excerpt: '“시편은 성도의 모든 슬픔과 환희, 회개와 찬양이 녹아있는 심장의 거울이다. 그리스도는 시편 모든 구절 속에서 살아 숨 쉬고 계신다.”'
+      },
+      {
+        id: 'phb-011',
+        title: '히브리서 주석 정본 (전7권 완간 세트)',
+        originalTitle: 'An Exposition of the Epistle to the Hebrews',
+        author: '존 오웬',
+        translator: '조계광 역',
+        series: '개혁주의 성경주석 대계 03',
+        category: 'commentary',
+        subCategory: 'nt',
+        isNew: true,
+        isPreorder: true,
+        isHardcover: true,
+        isEbook: false,
+        price: 252000,
+        originalPrice: 280000,
+        discountRate: 10,
+        pages: '4,960쪽',
+        isbn: '979-11-984502-0-0',
+        pubDate: '2026. 11. 20 (출간예정)',
+        tagline: '청교도의 황태자 존 오웬이 16년간 평생의 학문과 경건을 쏟아부은 신약 주석 사상 최대의 역작',
+        coverGradient: 'from-[#331822] via-[#210c14] to-[#100509]',
+        confessionTag: 'WCF 제8장 중보자 그리스도 / 히브리서 대제사장직',
+        description: '더 우월하신 대제사장 예수 그리스도와 더 좋은 언약의 영광을 구약의 제사 제도와 비교하며 심오하게 밝혀낸 교회사 불후의 신약 주석입니다.',
+        toc: [
+          '제1~2권 서론적 연구 및 그리스도의 탁월하신 신성과 인격 (히 1~3장)',
+          '제3~4권 멜기세덱의 반차를 따른 영원한 대제사장 (히 4~7장)',
+          '제5~6권 더 좋은 언약과 단번의 온전한 제사 (히 8~10장)',
+          '제7권 믿음의 선진들과 흔들리지 않는 나라 (히 11~13장)'
+        ],
+        excerpt: '“그리스도의 보혈은 영원한 단번의 제사로서 신자의 양심을 죽은 행실에서 깨끗하게 하며, 살아 계신 하나님을 담대히 섬기게 하는 유일한 능력이다.”'
+      },
+      {
+        id: 'phb-012',
+        title: '하나님의 존재와 속성 (전2권 완역 세트)',
+        originalTitle: 'Discourses upon the Existence and Attributes of God',
+        author: '스티븐 차녹',
+        translator: '김남준 목사 감수, 손현선 역',
+        series: '개혁교의학 대계 (신론편)',
+        category: 'dogmatics',
+        subCategory: 'theology-proper',
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 88200,
+        originalPrice: 98000,
+        discountRate: 10,
+        pages: '1,720쪽',
+        isbn: '979-11-984502-1-7',
+        pubDate: '2025. 09. 15',
+        tagline: '하나님의 무한성, 영원성, 주권, 전지하심과 거룩하심을 가장 웅장하고 심오하게 해명한 불멸의 신론 대작',
+        coverGradient: 'from-[#172228] via-[#0e171c] to-[#060b0e]',
+        confessionTag: 'WCF 제2장 하나님과 거룩하신 삼위일체',
+        description: '무신론에 대한 강력한 성경적 논박과 함께 전능하심, 거룩하심, 자비하심 등 하나님의 신적 속성을 하나하나 눈부시게 밝혀 신자를 경배로 인도합니다.',
+        toc: [
+          '제1부 하나님의 실재와 무신론 비판',
+          '제2부 하나님의 영성과 편재성, 영원성과 불변성',
+          '제3부 하나님의 전지와 지혜, 권능과 거룩하심',
+          '제4부 하나님의 선하심, 공의와 주권적 통치'
+        ],
+        excerpt: '“하나님의 속성을 깊이 묵상하는 영혼은 세상의 모든 환난 앞에서도 요동하지 않는 영원한 반석 위에 서게 된다.”'
+      },
+      {
+        id: 'phb-013',
+        title: '인간의 사중 상태 (Human Nature in Its Fourfold State)',
+        originalTitle: 'Human Nature in Its Fourfold State',
+        author: '토마스 보스턴',
+        translator: '정성욱 역',
+        series: '개혁교의학 대계 (인간론편)',
+        category: 'dogmatics',
+        subCategory: 'anthropology',
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 28800,
+        originalPrice: 32000,
+        discountRate: 10,
+        pages: '480쪽',
+        isbn: '979-11-984502-2-4',
+        pubDate: '2026. 02. 01',
+        tagline: '원초적 무죄, 타락과 전적 부패, 중생과 은혜, 영원한 영화의 상태로 조명하는 성경적 인간 본성의 완전한 해부',
+        coverGradient: 'from-[#2e1d16] via-[#1d110c] to-[#0f0705]',
+        confessionTag: 'WCF 제6장 인간의 타락과 죄와 형벌 / 제9장 자유의지',
+        description: '에덴동산의 원초적 무죄 상태부터 타락 후 전적 부패, 그리스도 안에서의 은혜 상태, 내세의 영원한 상태에 이르는 인간의 실존을 명징하게 해부합니다.',
+        toc: [
+          '제1부 무죄의 상태: 창조 시 인간의 본래적 의와 영광',
+          '제2부 타락의 상태: 죄의 지배와 전적 무능력',
+          '제3부 은혜의 상태: 그리스도와의 연합과 중생',
+          '제4부 영원한 상태: 의인의 부활과 악인의 영원한 심판'
+        ],
+        excerpt: '“우리의 옛 본성은 아담 안에서 완전히 파선하였으나, 복음의 은혜는 둘째 아담이신 그리스도 안에서 우리를 새로운 피조물로 빚으신다.”'
+      },
+      {
+        id: 'phb-014',
+        title: '개혁교회론과 성례전 (Reformed Ecclesiology)',
+        originalTitle: 'Institutes of Elenctic Theology: The Church and Sacraments',
+        author: '프란키스쿠스 튜레틴',
+        translator: '박태현 역',
+        series: '개혁교의학 대계 (교회론편)',
+        category: 'dogmatics',
+        subCategory: 'ecclesiology',
+        isNew: true,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: false,
+        price: 45000,
+        originalPrice: 50000,
+        discountRate: 10,
+        pages: '720쪽',
+        isbn: '979-11-984502-3-1',
+        pubDate: '2026. 07. 01',
+        tagline: '참된 교회의 표지와 그리스도의 몸 된 교회의 직분, 세례와 성찬의 영광스러운 은혜를 규명한 정통 교의학',
+        coverGradient: 'from-[#1a2c26] via-[#101c18] to-[#070e0b]',
+        confessionTag: 'WCF 제25장 교회 / 제27~29장 성례, 세례, 성찬',
+        description: '제네바 아카데미의 최고 스콜라 신학자 튜레틴이 로마 가톨릭의 교권주의와 열광주의를 성경적으로 반박하고 참된 교회의 본질을 정립한 고전입니다.',
+        toc: [
+          '제1부 교회의 본질, 통일성, 거룩성과 보편성',
+          '제2부 참된 교회의 참된 표지: 말씀 전파와 권징',
+          '제3부 교회의 직분과 영적 치리',
+          '제4부 은혜의 외적 방편: 말씀과 세례, 주의 성찬'
+        ],
+        excerpt: '“교회는 인간의 인위적 결사체가 아니라 오직 영원한 대제사장이신 그리스도의 음성을 듣고 따르는 양들의 거룩한 회중이다.”'
+      },
+      {
+        id: 'phb-015',
+        title: '성도의 영원한 안식 (The Saints\' Everlasting Rest)',
+        originalTitle: 'The Saints\' Everlasting Rest',
+        author: '리처드 백스터',
+        translator: '백금산 역',
+        series: '개혁교의학 대계 (종말론편)',
+        category: 'dogmatics',
+        subCategory: 'eschatology',
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 32400,
+        originalPrice: 36000,
+        discountRate: 10,
+        pages: '640쪽',
+        isbn: '979-11-984502-4-8',
+        pubDate: '2025. 08. 20',
+        tagline: '장차 그리스도와 함께 누릴 천국의 영광스러운 안식과 부활의 소망을 사모하게 하는 종말론적 경건의 정수',
+        coverGradient: 'from-[#2c1d2e] via-[#1c111e] to-[#0e070f]',
+        confessionTag: 'WCF 제32장 사후 상태와 부활 / 제33장 최후 심판',
+        description: '질병으로 생사의 기로에 섰던 백스터가 천국의 지복직관(Beatific Vision)과 그리스도인의 궁극적 소망을 영혼의 벅찬 감격으로 써내려간 걸작입니다.',
+        toc: [
+          '제1부 성도들에게 예비된 영원한 안식의 탁월함',
+          '제2부 이 안식을 잃어버리는 자들의 비참과 경고',
+          '제3부 천국 안식을 사모하며 누리는 영혼의 훈련',
+          '제4부 믿음의 눈으로 바라보는 영광스러운 부활의 날'
+        ],
+        excerpt: '“우리의 순례길이 험난할수록 저 영원한 본향에서 기다리고 있는 안식은 더욱 달콤할 것이다. 마음의 닻을 천국 보좌에 굳게 내리라.”'
+      },
+      {
+        id: 'phb-016',
+        title: '16세기 종교개혁사 (전5권 세트)',
+        originalTitle: 'History of the Reformation in the Sixteenth Century (5 Vols)',
+        author: 'J. H. 메를 도비녜',
+        translator: '이원택 역',
+        series: '역사신학 대계 01',
+        category: 'historical',
+        subCategory: null,
+        isNew: true,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: false,
+        price: 225000,
+        originalPrice: 250000,
+        discountRate: 10,
+        pages: '3,400쪽',
+        isbn: '979-11-984502-5-5',
+        pubDate: '2026. 06. 10',
+        tagline: '루터, 츠빙글리, 칼빈으로 이어지는 종교개혁의 불꽃과 섭리의 역사를 웅장한 필치로 기록한 역사신학의 불후의 고전',
+        coverGradient: 'from-[#3a2818] via-[#24170c] to-[#120a05]',
+        confessionTag: '오직 성경, 오직 은혜, 오직 믿음 (Five Solas)',
+        description: '스위스 제네바의 개혁주의 교회사학자 도비녜가 방대한 1차 사료를 바탕으로 하나님의 주권적 손길이 역사의 물줄기를 바꾼 종교개혁의 파노라마를 생생히 복원합니다.',
+        toc: [
+          '제1~2권 루터와 독일 종교개혁의 여명 (보름스 제국의회)',
+          '제3권 츠빙글리와 스위스 종교개혁의 발흥',
+          '제4권 칼빈과 제네바의 거룩한 개혁',
+          '제5권 영국 및 스코틀랜드 종교개혁과 순교자들의 피'
+        ],
+        excerpt: '“종교개혁은 인간 영웅의 업적이 아니요, 하나님의 생명의 말씀이 어둠 속에 갇힌 교회를 깨우고 부활시킨 성령의 기적이었다.”'
+      },
+      {
+        id: 'phb-017',
+        title: '존 오웬 전집 (Works of John Owen, 전16권 정본 완역판)',
+        originalTitle: 'The Works of John Owen (16 Volumes Complete Set)',
+        author: '존 오웬',
+        translator: 'PHB 청교도원전번역위원회 공역',
+        series: '청교도저작 전집 대계 01',
+        category: 'puritan-works',
+        subCategory: null,
+        isNew: true,
+        isPreorder: true,
+        isHardcover: true,
+        isEbook: false,
+        price: 720000,
+        originalPrice: 800000,
+        discountRate: 10,
+        pages: '10,800쪽',
+        isbn: '979-11-984502-6-2',
+        pubDate: '2026. 12. 15 (한정판 사전예약)',
+        tagline: '영국 최고의 신학자 존 오웬의 교의학, 성령론, 성화론, 교회론 문헌 전체를 망라한 역사적 정본 전집',
+        coverGradient: 'from-[#22161b] via-[#160d11] to-[#0b0508]',
+        confessionTag: '웨스트민스터 총회 신학의 정점',
+        description: '삼위일체론, 성령론 대작, 그리스도의 죽으심의 효능, 죄 죽이기, 배교론 등 오웬이 남긴 16권의 전집 전체를 17세기 원문 대조로 정밀하게 완역한 한국 출판 사상 초유의 기념비적 전집입니다.',
+        toc: [
+          '제1~3권 기독론 및 삼위일체 하나님과의 교제',
+          '제4~5권 성령론 대계 (The Holy Spirit)',
+          '제6~7권 성화론과 영적 전쟁 (죄 죽이기, 유혹, 내주하는 죄)',
+          '제8~9권 그리스도의 구속 사역의 완전성 (제한속죄론)',
+          '제10~16권 교회론, 배교론 및 학술 논단'
+        ],
+        excerpt: '“우리가 그리스도를 닮아가는 유일한 길은 날마다 믿음의 눈으로 그분의 영광을 바라보는 것이다. 이 바라봄이 우리 영혼을 변화시킨다.”'
+      },
+      {
+        id: 'phb-018',
+        title: '토마스 굿윈 전집 (Works of Thomas Goodwin, 전12권 세트)',
+        originalTitle: 'The Works of Thomas Goodwin (12 Volumes Set)',
+        author: '토마스 굿윈',
+        translator: 'PHB 청교도원전번역위원회 공역',
+        series: '청교도저작 전집 대계 02',
+        category: 'puritan-works',
+        subCategory: null,
+        isNew: true,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: false,
+        price: 540000,
+        originalPrice: 600000,
+        discountRate: 10,
+        pages: '8,400쪽',
+        isbn: '979-11-984502-7-9',
+        pubDate: '2026. 09. 30',
+        tagline: '하늘에 계신 그리스도의 마음과 성령의 인치심, 영원한 선택의 영광을 가장 깊이 있게 논증한 청교도 거장의 전집',
+        coverGradient: 'from-[#1c2230] via-[#111722] to-[#070b12]',
+        confessionTag: '웨스트민스터 독립파 위원 대표작',
+        description: '웨스트민스터 총회 핵심 주역이자 옥스퍼드 모들린 칼리지 학장이었던 토마스 굿윈의 에베소서 강해, 그리스도의 심장, 성령의 사역, 지혜론 등을 총망라한 전집입니다.',
+        toc: [
+          '제1~2권 에베소서 강해 (창세 전 선택과 예정의 영광)',
+          '제3~4권 하늘에 계신 그리스도의 심장과 중보의 사랑',
+          '제5~7권 성령의 역사와 신자의 인치심, 구원의 확신',
+          '제8~12권 의인의 보상, 정당한 권징과 개혁교회 질서'
+        ],
+        excerpt: '“그리스도의 마음은 지금도 하늘 보좌에서 상처 입고 연약한 지상 성도들을 향해 가장 부드럽고 긍휼한 사랑으로 박동하고 있다.”'
+      }
+    ];
+
+    // Check Admin Auth State
     function checkAdminState() {
       const isAdmin = localStorage.getItem('phb_is_admin') === 'true' || localStorage.getItem('isAdmin') === 'true';
       const loginView = document.getElementById('admin-login-view');
@@ -570,32 +1121,56 @@
       const authControls = document.getElementById('auth-header-controls');
 
       if (isAdmin) {
-        loginView.classList.add('hidden');
-        dashboardView.classList.remove('hidden');
-        authControls.classList.remove('hidden');
-        authControls.classList.add('flex');
+        if (loginView) loginView.style.display = 'none';
+        if (dashboardView) {
+          dashboardView.classList.remove('hidden');
+          dashboardView.style.display = 'block';
+        }
+        if (authControls) {
+          authControls.classList.remove('hidden');
+          authControls.style.display = 'flex';
+        }
         loadBooksData();
       } else {
-        loginView.classList.remove('hidden');
-        dashboardView.classList.add('hidden');
-        authControls.classList.add('hidden');
-        authControls.classList.remove('flex');
+        if (loginView) {
+          loginView.classList.remove('hidden');
+          loginView.style.display = 'flex';
+        }
+        if (dashboardView) {
+          dashboardView.classList.add('hidden');
+          dashboardView.style.display = 'none';
+        }
+        if (authControls) {
+          authControls.classList.add('hidden');
+          authControls.style.display = 'none';
+        }
       }
     }
 
-    function handleLoginSubmit(e) {
-      e.preventDefault();
-      const id = document.getElementById('admin-id').value.trim();
-      const pw = document.getElementById('admin-pw').value.trim();
+    async function handleLoginSubmit(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const idInput = document.getElementById('admin-id');
+      const pwInput = document.getElementById('admin-pw');
+      const id = idInput ? idInput.value.trim() : '';
+      const pw = pwInput ? pwInput.value.trim() : '';
 
       if (id === 'admin' && pw === '1234') {
         localStorage.setItem('phb_is_admin', 'true');
         localStorage.setItem('isAdmin', 'true');
+        try {
+          if (typeof firebase !== 'undefined' && firebase.auth) {
+            await firebase.auth().signInAnonymously().catch(function() {});
+          }
+        } catch (err) {}
         showToast('관리자 인증에 성공했습니다.');
         checkAdminState();
       } else {
-        alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+        alert('아이디 또는 비밀번호가 올바르지 않습니다.\n(기본 계정: admin / 1234)');
       }
+      return false;
     }
 
     function handleLogout() {
@@ -607,45 +1182,41 @@
       }
     }
 
-    // 2. Load Books Data (Firestore + Local Storage sync)
+    // Load Books Data with seed fallback
     async function loadBooksData() {
       const refreshIcon = document.getElementById('refresh-icon');
       if (refreshIcon) refreshIcon.classList.add('fa-spin');
 
+      const mergedMap = new Map();
+      DEFAULT_BOOKS_DATA.forEach(function(b) { mergedMap.set(b.id, b); });
+
       try {
-        // Fetch from Firestore collection "phb_books"
-        const snapshot = await db.collection("phb_books").get();
-        
-        if (!snapshot.empty) {
-          allBooks = [];
-          snapshot.forEach(doc => {
-            allBooks.push({ id: doc.id, ...doc.data() });
-          });
-        } else {
-          // Fallback to local stored custom books if available
-          const localCustom = localStorage.getItem('phb_custom_books');
-          if (localCustom) {
-            allBooks = JSON.parse(localCustom);
-          } else {
-            allBooks = [];
+        const localCustom = localStorage.getItem('phb_custom_books');
+        if (localCustom) {
+          const parsed = JSON.parse(localCustom);
+          parsed.forEach(function(b) { mergedMap.set(b.id, b); });
+        }
+      } catch (e) {}
+
+      try {
+        if (db) {
+          const snapshot = await db.collection("phb_books").get();
+          if (!snapshot.empty) {
+            snapshot.forEach(function(doc) {
+              mergedMap.set(doc.id, Object.assign({ id: doc.id }, doc.data()));
+            });
           }
         }
       } catch (err) {
-        console.warn("Firestore load error (fallback to local):", err);
-        const localCustom = localStorage.getItem('phb_custom_books');
-        if (localCustom) allBooks = JSON.parse(localCustom);
-      } finally {
-        if (refreshIcon) refreshIcon.classList.remove('fa-spin');
-        renderAdminBooks();
+        console.warn("Firestore offline fallback:", err);
       }
+
+      allBooks = Array.from(mergedMap.values());
+      if (refreshIcon) refreshIcon.classList.remove('fa-spin');
+      renderAdminBooks();
     }
 
-    function refreshData() {
-      loadBooksData();
-      showToast('도서 목록 데이터를 갱신했습니다.');
-    }
-
-    // 3. Render Books in Admin Table
+// 3. Render Books in Admin Table
     function renderAdminBooks() {
       const tbody = document.getElementById('admin-books-table-body');
       const countBadge = document.getElementById('books-count-badge');
