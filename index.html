@@ -1,950 +1,2630 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>한국청교도연구소 | Korea Puritan Institute</title>
-    <meta name="description" content="청교도 신학과 개혁주의 신념을 연구하고 성경적인 자료를 제공하는 한국청교도연구소입니다.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>퓨리탄 헤리티지 북스 | Puritan Heritage Books (PHB)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Fonts: Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
-    <!-- Open Graph / KakaoTalk / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://kpuritan.com/">
-    <meta property="og:title" content="한국청교도연구소 | Korea Puritan Institute">
-    <meta property="og:description" content="청교도 신학과 개혁주의 신념을 연구하고 성경적인 자료를 제공하는 한국청교도연구소입니다.">
-    <meta property="og:image" content="og-image.png?v=4">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://kpuritan.com/">
-    <meta property="twitter:title" content="한국청교도연구소 | Korea Puritan Institute">
-    <meta property="twitter:description" content="청교도 신학과 개혁주의 신념을 연구하고 성경적인 자료를 제공하는 한국청교도연구소입니다.">
-    <meta property="twitter:image" content="og-image.png?v=4">
-
-    <link rel="stylesheet" href="style.css?v=20261002_v3">
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
-    <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
-    <link rel="icon" type="image/png" href="favicon.png?v=2">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2">
-    <!-- Font Awesome for Search Icon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- PDF.js for PDF thumbnail rendering -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <script>
-        // PDF.js worker 설정
-        if (typeof pdfjsLib !== 'undefined') {
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            phb: {
+              charcoal: '#17191C',
+              charcoalLight: '#23272D',
+              burgundy: '#6E1B2A',
+              burgundyDark: '#52131F',
+              burgundyLight: '#8C2538',
+              gold: '#C39738',
+              goldLight: '#DFC075',
+              goldDark: '#9A7424',
+              parchment: '#F8F7F4',
+              parchmentDark: '#EDE9E1',
+              border: '#E4DFD7',
+              slate: '#5E6470',
+              muted: '#7E8694',
+            }
+          },
+          fontFamily: {
+            serifKr: ['"Noto Serif KR"', 'KoPubWorldBatang', 'serif'],
+            serifEn: ['"Cormorant Garamond"', '"Cinzel"', 'serif'],
+            cinzel: ['"Cinzel"', 'serif'],
+            sans: ['"Noto Sans KR"', 'Pretendard', '-apple-system', 'sans-serif'],
+          },
+          boxShadow: {
+            'book': '-6px 6px 18px rgba(0, 0, 0, 0.22), -2px 2px 6px rgba(0, 0, 0, 0.12)',
+            'book-lg': '-12px 14px 28px rgba(23, 25, 28, 0.35), -4px 4px 10px rgba(0, 0, 0, 0.15)',
+            'parchment': '0 4px 20px -2px rgba(94, 100, 112, 0.08), 0 2px 6px -1px rgba(94, 100, 112, 0.04)',
+          }
         }
+      }
+    }
+  </script>
 
-        // Inline Fail-Safe Mobile Menu Toggle (Runs immediately on touch/click before main.js)
-        window.toggleMobileMenu = function(e) {
-            if (e) {
-                try { if (typeof e.preventDefault === 'function') e.preventDefault(); } catch (err) {}
-                try { if (typeof e.stopPropagation === 'function') e.stopPropagation(); } catch (err) {}
-            }
-            var targetNav = document.querySelector('header nav, .nav-container nav, nav');
-            var mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-            var navOverlay = document.querySelector('.nav-overlay');
-
-            if (!navOverlay) {
-                navOverlay = document.createElement('div');
-                navOverlay.className = 'nav-overlay';
-                document.body.appendChild(navOverlay);
-            }
-
-            if (targetNav) {
-                var isActive = targetNav.classList.toggle('active');
-                if (mobileMenuToggle) {
-                    mobileMenuToggle.setAttribute('aria-expanded', isActive ? 'true' : 'false');
-                    var icon = mobileMenuToggle.querySelector('i');
-                    if (icon) {
-                        icon.className = isActive ? 'fas fa-times' : 'fas fa-bars';
-                    }
-                }
-                if (isActive) {
-                    document.body.style.overflow = 'hidden';
-                    navOverlay.classList.add('active');
-                } else {
-                    document.body.style.overflow = '';
-                    navOverlay.classList.remove('active');
-                }
-            }
-        };
-    </script>
+  <style>
+    body {
+      background-color: #FAF8F5;
+      color: #17191C;
+      font-family: 'Noto Sans KR', -apple-system, sans-serif;
+      overflow-x: hidden;
+    }
+    .book-spine-effect {
+      position: relative;
+    }
+    .book-spine-effect::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 14px;
+      background: linear-gradient(to right, rgba(0,0,0,0.35) 0%, rgba(255,255,255,0.15) 30%, rgba(0,0,0,0.1) 60%, transparent 100%);
+      pointer-events: none;
+      z-index: 10;
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+    .gold-foil-text {
+      background: linear-gradient(135deg, #9A7424 0%, #C39738 50%, #7A5B18 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .luxury-ambient-glow {
+      background: radial-gradient(circle at 50% 30%, rgba(195,151,56,0.09) 0%, rgba(110,27,42,0.03) 45%, transparent 75%);
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FAF8F5;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #C39738;
+      border-radius: 4px;
+    }
+  </style>
 </head>
+<body class="bg-[#FAF8F5] selection:bg-[#6E1B2A] selection:text-white">
 
-<body>
-    <div class="nav-overlay"></div>
+  <!-- ========================================== -->
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <!-- ========================================== -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 bg-[#17191C] text-[#F8F7F4] border-l-4 border-[#C39738] px-5 py-3.5 rounded shadow-2xl flex items-center space-x-3 text-sm transition-all duration-300 opacity-0 translate-y-4 pointer-events-none">
+    <svg class="w-5 h-5 text-[#C39738]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <span id="toast-message" class="font-medium"></span>
+  </div>
 
-    <header>
-        <div class="nav-container">
-            <a href="index.html" class="logo">
-                <span class="logo-eng">KPI</span>
-                <span class="logo-kor">한국청교도연구소</span>
-                <span class="logo-since">Since 2001</span>
-            </a>
-            <button class="mobile-menu-toggle" aria-label="메뉴 열기" aria-expanded="false" onclick="window.toggleMobileMenu(event)">
-                <i class="fas fa-bars"></i>
-            </button>
-            <nav>
-                <ul>
-                    <li class="dropdown">
-                        <a href="index.html">HOME <i class="fas fa-chevron-down"></i></a>
-                        <div class="dropdown-content" id="home-dropdown">
-                            <ul class="dropdown-list">
-                                <li><a href="about.html">1. 연구소 소개</a></li>
-                                <li><a href="who.html">2. 섬기는 사람들</a></li>
-                                <li><a href="https://smartstore.naver.com/kpuritan_phb" target="_blank">3. PHB 출판사</a></li>
-                                <li><a href="seminary.html">4. SRS 신학대학원</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="dropdown">
-                        <a href="resources.html?cat=%EC%84%B1%EA%B2%BD">성경 강해&주석 <i class="fas fa-chevron-down"></i></a>
-                        <div class="dropdown-content" id="bible-dropdown">
-                            <ul class="dropdown-list">
-                                <li><a href="resources.html?cat=%EC%84%B1%EA%B2%BD" style="font-weight: 800; border-bottom: 1px dashed var(--secondary-color);">성경 전체보기</a></li>
-                                <li><a href="resources.html?cat=%EA%B0%95%ED%95%B4%EC%84%A4%EA%B5%90">1. 강해설교</a></li>
-                                <li><a href="resources.html?cat=%EC%84%B1%EA%B2%BD%EC%A3%BC%EC%84%9D">2. 성경주석</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="dropdown mega-dropdown">
-                        <a href="resources.html?cat=%EC%B2%AD%EA%B5%90%EB%8F%84%20%EC%8B%A0%ED%95%99">청교도 신학 <i class="fas fa-chevron-down"></i></a>
-                        <div class="dropdown-content" id="puritan-dropdown">
-                            <ul class="dropdown-list">
-                                <li><a href="resources.html?cat=%EC%B2%AD%EA%B5%90%EB%8F%84%20%EC%8B%A0%ED%95%99" style="font-weight: 800; border-bottom: 1px dashed var(--secondary-color);">청교도 신학 전체보기</a></li>
-                                <li><a href="resources.html?cat=%EC%B2%AD%EA%B5%90%EB%8F%84%20%EC%8B%A0%ED%95%99&s=%EC%8B%A0%EB%A1%A0">1. 신론</a></li>
-                                <li><a href="resources.html?cat=%EC%B2%AD%EA%B5%90%EB%8F%84%20%EC%8B%A0%ED%95%99&s=%EC%9D%B8%EA%B0%84%EB%A1%A0">2. 인간론</a></li>
-                                <li><a href="resources.html?cat=%EC%B2%AD%EA%B5%90%EB%8F%84%20%EC%8B%A0%ED%95%99&s=%EA%B8%B0%EB%8F%85%EB%A1%A0">3. 기독론</a></li>
-                                <li><a href="resources.html?cat=%EC%B2%AD%EA%B5%90%EB%8F%84%20%EC%8B%A0%ED%95%99&s=%EA%B5%AC%EC%9B%90%EB%A1%A0">4. 구원론</a></li>
-                                <li><a href="resources.html?cat=%EC%B2%AD%EA%B5%90%EB%8F%84%20%EC%8B%A0%ED%95%99&s=%EA%B5%90%ED%9A%8C%EB%A1%A0">5. 교회론</a></li>
-                                <li><a href="resources.html?cat=%EC%B2%AD%EA%B5%90%EB%8F%84%20%EC%8B%A0%ED%95%99&s=%EC%A2%85%EB%A7%90%EB%A1%A0">6. 종말론</a></li>
-                                <li><a href="resources.html?cat=%EC%B2%AD%EA%B5%90%EB%8F%84%20%EC%8B%A0%ED%95%99&s=%EC%97%AD%EC%82%AC%EC%8B%A0%ED%95%99">7. 역사신학</a></li>
-                                <li><a href="resources.html?cat=%EC%B2%AD%EA%B5%90%EB%8F%84%20%EC%8B%A0%ED%95%99&s=%EC%9E%98%EB%AA%BB%EB%90%9C%20%EC%8B%A0%ED%95%99">8. 잘못된 신학</a></li>
-                                <li><a href="resources.html?cat=%EC%B2%AD%EA%B5%90%EB%8F%84%20%EC%8B%A0%ED%95%99&s=%EC%A0%84%EB%8F%84%2C%20%EB%B6%80%ED%9D%A5%2C%20%EC%84%A0%EA%B5%90">9. 전도, 부흥, 선교</a></li>
-                                <li><a href="resources.html?cat=%EC%B2%AD%EA%B5%90%EB%8F%84%20%EC%8B%A0%ED%95%99&s=%EC%A0%84%EB%8F%84%EB%A7%8C%ED%99%94">10. 전도만화</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="dropdown">
-                        <a href="resources.html?cat=%EC%B2%AD%EA%B5%90%EB%8F%84%20%EC%84%A4%EA%B5%90">청교도 설교 <i class="fas fa-chevron-down"></i></a>
-                        <div class="dropdown-content" id="puritan-sermons-dropdown">
-                            <ul class="dropdown-list">
-                                <li><a href="resources.html?cat=%EC%B2%AD%EA%B5%90%EB%8F%84%20%EC%84%A4%EA%B5%90" style="font-weight: 800; border-bottom: 1px dashed var(--secondary-color);">청교도 설교 전체보기</a></li>
-                                <li><a href="resources.html?cat=%EC%B2%AD%EA%B5%90%EB%8F%84%20%EC%84%A4%EA%B5%90&s=%EB%B2%A0%EB%93%9C%EB%A1%9C%EC%A0%84%EC%84%9C">1. 베드로전서 강해설교</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-            <div class="header-right">
-                <a href="resources.html?type=latest" class="header-latest-btn">
-                    <i class="fas fa-clock"></i> <span>최신 업데이트</span>
-                </a>
-                <a href="resources.html?cat=%EC%84%B8%EB%AF%B8%EB%82%98%2C%20%EA%B0%95%EC%9D%98" class="header-seminar-btn">
-                    <i class="fas fa-video"></i> <span>세미나 · 강의</span>
-                </a>
-                <div class="search-bar" onclick="openAllTopicsModal()" style="cursor: pointer; user-select: none;">
-                    <i class="fas fa-search search-icon" style="color: var(--secondary-color);"></i>
-                    <span style="padding-left: 0.5rem; font-size: 0.85rem; color: #555; font-weight: 500;">주제별 신학 검색...</span>
-                </div>
+  <!-- ========================================== -->
+  <!-- 1. TOP UTILITY BANNER -->
+  <!-- ========================================== -->
+  <div class="bg-[#52131F] text-[#F5EDE8] text-xs py-2 px-4 border-b border-[#731D2D]">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+      <div class="flex items-center space-x-2">
+        <span class="bg-[#C39738] text-[#17191C] text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase font-cinzel">
+          신간 예약
+        </span>
+        <p class="truncate text-[#F5EDE8] text-[11px] sm:text-xs">
+          조엘 비키 & 폴 스몰리 『개혁주의 조직신학 전집 (전4권)』 완간 세트 특별 사전예약 접수 중
+        </p>
+      </div>
+      <div class="flex items-center space-x-4 text-[11px] text-[#E0D5CF]">
+        <a href="#shipping" class="hover:text-[#DFC075] transition-colors">주문/배송조회</a>
+        <span class="text-[#80313E]">|</span>
+        <a href="#about" class="hover:text-[#DFC075] transition-colors font-serifKr font-semibold text-white">
+          출판 사명선언문
+        </a>
+        <span class="text-[#80313E]">|</span>
+        <span class="text-[#DFC075] font-cinzel font-semibold tracking-wider">KR / EN</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 2. MAIN HEADER & BRAND IDENTITY -->
+  <!-- ========================================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#EAE5DC] shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div class="flex items-center justify-between h-20 gap-3 xl:gap-8">
+        
+        <!-- Brand Logo & Seal -->
+        <a href="#" class="flex items-center space-x-3 flex-shrink-0 group">
+          <div class="w-11 h-11 sm:w-12 sm:h-12 rounded bg-[#17191C] border-2 border-[#C39738] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform flex-shrink-0">
+            <div class="text-center text-[#DFC075]">
+              <span class="font-cinzel text-base sm:text-lg font-black leading-none block">PHB</span>
+              <span class="text-[7px] tracking-widest text-[#E4DFD7] uppercase font-bold">Veritas</span>
             </div>
+          </div>
+          <div class="flex-shrink-0">
+            <div class="font-cinzel text-base sm:text-lg lg:text-xl xl:text-2xl font-bold tracking-tight text-[#17191C] group-hover:text-[#6E1B2A] transition-colors whitespace-nowrap">
+              PURITAN HERITAGE BOOKS
+            </div>
+            <div class="text-[11px] text-[#5E6470] tracking-wider font-serifKr flex items-center space-x-1.5 whitespace-nowrap">
+              <span>퓨리탄 헤리티지 북스</span>
+              <span class="text-[#C39738]">•</span>
+              <span class="font-sans text-[10px] text-[#8C2538] font-semibold">역사적 개혁주의 & 청교도 정본 출판사</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Right Controls: Search, Login, Sign Up, Cart, Mobile Menu Toggle -->
+        <div class="flex items-center space-x-2 sm:space-x-3.5 flex-shrink-0">
+          
+          <!-- Search Input Box -->
+          <div class="relative hidden lg:block w-40 xl:w-56 flex-shrink-0">
+            <input
+              id="header-search-input"
+              type="text"
+              placeholder="도서명, 저자, 역자 검색..."
+              oninput="handleSearch(this.value)"
+              class="w-full bg-[#FAF8F5] border border-[#E4DFD7] text-xs rounded-full pl-8 pr-7 py-2 focus:outline-none focus:border-[#C39738] focus:ring-1 focus:ring-[#C39738] transition-all"
+            />
+            <div class="absolute left-2.5 top-2.5 text-[#5E6470]">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+          </div>
+
+          <!-- Login & Sign Up Actions -->
+          <div class="hidden sm:flex items-center space-x-1.5 sm:space-x-2 text-xs font-medium">
+            <button onclick="openAuthModal('login')" class="text-[#17191C] hover:text-[#6E1B2A] px-2 py-1.5 rounded transition-colors whitespace-nowrap font-medium">
+              로그인
+            </button>
+            <span class="text-[#E4DFD7]">|</span>
+            <button onclick="openAuthModal('signup')" class="bg-[#6E1B2A] hover:bg-[#8C2538] text-white px-3 py-1.5 rounded text-xs font-semibold transition-all shadow-xs hover:shadow whitespace-nowrap border border-[#8C2538]">
+              회원가입
+            </button>
+          </div>
+
+          <!-- Cart Drawer Trigger -->
+          <button
+            onclick="toggleCart(true)"
+            class="relative p-2 sm:p-2.5 rounded-full bg-[#FAF8F5] hover:bg-[#EDE9E1] border border-[#E4DFD7] text-[#17191C] transition-all group flex-shrink-0"
+            aria-label="장바구니 열기"
+          >
+            <svg class="w-5 h-5 text-[#17191C] group-hover:text-[#6E1B2A] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+            <span id="header-cart-count" class="absolute -top-1 -right-1 bg-[#6E1B2A] text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+              2
+            </span>
+          </button>
+
+          <!-- Mobile Hamburger Menu Button -->
+          <button
+            onclick="toggleMobileMenu(true)"
+            class="md:hidden p-2 rounded-lg bg-[#FAF8F5] hover:bg-[#EDE9E1] border border-[#E4DFD7] text-[#17191C] transition-all"
+            aria-label="전체 메뉴 열기"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          </button>
         </div>
-    </header>
 
-    <main>
-        <!-- ═══════════════════════════════════════════════
-             HERO CAROUSEL SECTION
-             슬라이드 데이터 → heroSlides 배열 (body 하단 script)
-             검색창은 슬라이드와 독립 고정 — main.js 코드 변경 없음
-        ═══════════════════════════════════════════════ -->
-        <section class="hero hero-carousel-section" id="hero-section">
+      </div>
+    </div>
 
-            <!-- ── 슬라이드 트랙 (움직이는 영역) ── -->
-            <div class="hero-slider-track" id="hero-slider-track">
-                <!-- JS가 heroSlides 배열 기반으로 슬라이드를 동적 생성 -->
-            </div>
-
-            <!-- ── 좌우 내비게이션 버튼 ── -->
-            <button class="hero-nav-btn hero-prev" id="hero-prev" aria-label="이전 슬라이드">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="hero-nav-btn hero-next" id="hero-next" aria-label="다음 슬라이드">
-                <i class="fas fa-chevron-right"></i>
+    <!-- GLOBAL NAVIGATION BAR (GNB) - DESKTOP -->
+    <nav class="bg-[#17191C] text-[#E4DFD7] border-t border-[#2B2F36] hidden md:block">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-12">
+          
+          <!-- Category Menus -->
+          <div class="flex items-center space-x-1 lg:space-x-2 text-xs font-medium">
+            
+            <!-- 0. 전체 도서 -->
+            <button
+              onclick="setFilter('all', 'all')"
+              class="px-3 py-2 rounded font-serifKr text-white hover:text-[#DFC075] hover:bg-[#23272D] transition-colors"
+            >
+              전체도서
             </button>
 
-            <!-- ── Dot indicator ── -->
-            <div class="hero-dots" id="hero-dots" role="tablist" aria-label="슬라이드 선택"></div>
+            <!-- 1. 성경주석 Dropdown (Set, 구약, 신약) -->
+            <div class="relative group">
+              <button
+                onclick="setFilter('commentary', 'all')"
+                class="flex items-center space-x-1 px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serifKr font-semibold"
+              >
+                <span>성경주석</span>
+                <svg class="w-3.5 h-3.5 text-[#C39738] group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              </button>
 
-            <!-- ══════════════════════════════════════════
-                 고정 검색창 및 Explore Resources 버튼
-                 ⚠ id="main-search-input" / id="main-search-btn" 절대 변경 금지
-            ══════════════════════════════════════════ -->
-            <div class="hero-search-fixed">
-                <div class="main-search-wrapper">
-                    <div class="main-search-box">
-                        <i class="fas fa-search main-search-icon"></i>
-                        <input type="text" id="main-search-input" placeholder="신학 주제, 설교, 도서 검색..." autocomplete="off">
-                        <button id="main-search-btn" aria-label="검색"><i class="fas fa-search"></i> 검색</button>
-                    </div>
+              <div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50 min-w-[210px] animate-fadeIn">
+                <div class="bg-[#17191C] border border-[#C39738]/50 rounded-b-lg shadow-2xl py-2 px-1 text-xs divide-y divide-[#2B2F36]">
+                  <div class="px-3 py-1.5 flex items-center justify-between text-[10px] font-cinzel text-[#DFC075] tracking-wider uppercase">
+                    <span>Commentaries</span>
+                    <span class="text-[#7E8694]">정본 주석</span>
+                  </div>
+                  <div class="py-1">
+                    <button
+                      onclick="setFilter('commentary', 'all')"
+                      class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between"
+                    >
+                      <span class="font-medium text-white">성경주석 전체보기</span>
+                      <span class="text-[10px] text-[#A6ADB8]">All</span>
+                    </button>
+                    <button
+                      onclick="setFilter('commentary', 'set')"
+                      class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between"
+                    >
+                      <span class="font-medium text-white">Set (전집/세트)</span>
+                      <span class="text-[10px] bg-[#6E1B2A] text-[#DFC075] px-1.5 py-0.5 rounded font-cinzel">완간</span>
+                    </button>
+                    <button
+                      onclick="setFilter('commentary', 'ot')"
+                      class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between"
+                    >
+                      <span class="font-medium text-white">구약 (Old Testament)</span>
+                      <span class="text-[10px] text-[#7E8694]">시편•예언서</span>
+                    </button>
+                    <button
+                      onclick="setFilter('commentary', 'nt')"
+                      class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between"
+                    >
+                      <span class="font-medium text-white">신약 (New Testament)</span>
+                      <span class="text-[10px] text-[#7E8694]">복음•서신서</span>
+                    </button>
+                  </div>
                 </div>
+              </div>
             </div>
 
-        </section>
+            <!-- 2. 조직신학 Dropdown (Set, 신론, 인간론, 기독론, 구원론, 교회론, 종말론) -->
+            <div class="relative group">
+              <button
+                onclick="setFilter('dogmatics', 'all')"
+                class="flex items-center space-x-1 px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serifKr font-semibold"
+              >
+                <span>조직신학</span>
+                <svg class="w-3.5 h-3.5 text-[#C39738] group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              </button>
 
-    </main>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>Korea Puritan Institute</h4>
-                <p>한국청교도연구소는 청교도 신학과 개혁주의 신념을 연구하고 성경적인 자료를 제공합니다.</p>
-                <div class="social-links">
-                    <a href="https://www.youtube.com/@kpuritan" title="YouTube" target="_blank"
-                        rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
-                    <a href="https://www.instagram.com/k_puritan_?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
-                        target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-                    <!-- 네이버 블로그 링크: 주소 확정 후 href에 입력하세요
-                    <a href="https://blog.naver.com/YOUR_BLOG_ID" title="Naver Blog" class="naver-link" target="_blank" rel="noopener noreferrer">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845z" />
-                        </svg>
-                    </a>
-                    -->
+              <div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50 min-w-[310px] animate-fadeIn">
+                <div class="bg-[#17191C] border border-[#C39738]/50 rounded-b-lg shadow-2xl py-2 px-1 text-xs divide-y divide-[#2B2F36]">
+                  <div class="px-3 py-1.5 flex items-center justify-between text-[10px] font-cinzel text-[#DFC075] tracking-wider uppercase">
+                    <span>Reformed Dogmatics</span>
+                    <span class="text-[#7E8694]">개혁교의학</span>
+                  </div>
+                  <div class="py-1">
+                    <button
+                      onclick="setFilter('dogmatics', 'all')"
+                      class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors font-medium text-white"
+                    >
+                      조직신학 전체보기
+                    </button>
+                    <button
+                      onclick="setFilter('dogmatics', 'set')"
+                      class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between"
+                    >
+                      <span class="font-medium text-white">Set (전집/세트)</span>
+                      <span class="text-[10px] bg-[#6E1B2A] text-white px-1.5 py-0.5 rounded font-sans">교의학 대계</span>
+                    </button>
+                  </div>
+                  <div class="grid grid-cols-2 gap-0.5 py-1 px-1">
+                    <button
+                      onclick="setFilter('dogmatics', 'theology-proper')"
+                      class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors"
+                    >
+                      <span class="block font-medium text-white">신론</span>
+                      <span class="block text-[9px] text-[#7E8694]">하나님의 존재•속성</span>
+                    </button>
+                    <button
+                      onclick="setFilter('dogmatics', 'anthropology')"
+                      class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors"
+                    >
+                      <span class="block font-medium text-white">인간론</span>
+                      <span class="block text-[9px] text-[#7E8694]">창조•타락•사중상태</span>
+                    </button>
+                    <button
+                      onclick="setFilter('dogmatics', 'christology')"
+                      class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors"
+                    >
+                      <span class="block font-medium text-white">기독론</span>
+                      <span class="block text-[9px] text-[#7E8694]">그리스도의 인격•영광</span>
+                    </button>
+                    <button
+                      onclick="setFilter('dogmatics', 'soteriology')"
+                      class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors"
+                    >
+                      <span class="block font-medium text-white">구원론</span>
+                      <span class="block text-[9px] text-[#7E8694]">언약신학•구원의 서정</span>
+                    </button>
+                    <button
+                      onclick="setFilter('dogmatics', 'ecclesiology')"
+                      class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors"
+                    >
+                      <span class="block font-medium text-white">교회론</span>
+                      <span class="block text-[9px] text-[#7E8694]">참된 교회표지•성례</span>
+                    </button>
+                    <button
+                      onclick="setFilter('dogmatics', 'eschatology')"
+                      class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors"
+                    >
+                      <span class="block font-medium text-white">종말론</span>
+                      <span class="block text-[9px] text-[#7E8694]">재림•성도의 영원한 안식</span>
+                    </button>
+                  </div>
                 </div>
+              </div>
             </div>
-            <div class="footer-section">
-                <h4>Contact Us</h4>
-                <p>Email: kpuritan.phb@gmail.com</p>
-            </div>
+
+            <!-- 3. 역사신학 -->
+            <button
+              onclick="setFilter('historical', 'all')"
+              class="px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serifKr font-semibold"
+            >
+              역사신학
+            </button>
+
+            <!-- 4. 크리스천 라이프 -->
+            <button
+              onclick="setFilter('christian-life', 'all')"
+              class="px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serifKr font-semibold"
+            >
+              크리스천 라이프
+            </button>
+
+            <!-- 5. 청교도저작 전집 -->
+            <button
+              onclick="setFilter('puritan-works', 'all')"
+              class="px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serifKr font-semibold flex items-center gap-1.5"
+            >
+              <span>청교도저작 전집</span>
+              <span class="text-[9px] bg-[#C39738] text-[#17191C] px-1 py-0.2 rounded font-bold">정본</span>
+            </button>
+
+          </div>
+
+          <!-- Utility Quick Links on Right of GNB -->
+          <div class="hidden lg:flex items-center space-x-4 text-xs text-[#A6ADB8]">
+            <button
+              onclick="setFilter('ebook', 'all')"
+              class="hover:text-[#DFC075] flex items-center gap-1.5 transition-colors"
+            >
+              <span>전자책 (eBook)</span>
+              <span class="text-[9px] bg-[#6E1B2A] text-white px-1.5 py-0.2 rounded font-sans">ePub</span>
+            </button>
+            <span class="text-[#3A3F4A]">|</span>
+            <a href="#about" class="hover:text-[#DFC075] transition-colors">PHB 소개</a>
+          </div>
+
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Korea Puritan Institute. All rights reserved.</p>
-            <p style="margin-top: 10px; font-size: 0.8rem;">
-                <a href="admin.html"
-                    style="color: #666; text-decoration: none;">관리자 로그인</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- MOBILE SLIDE-OVER NAVIGATION DRAWER -->
+  <!-- ========================================== -->
+  <div id="mobile-menu-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <!-- Backdrop Overlay -->
+    <div onclick="toggleMobileMenu(false)" class="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"></div>
+    
+    <div class="fixed inset-y-0 left-0 max-w-full flex pr-10">
+      <div class="w-80 bg-[#17191C] text-[#F8F7F4] shadow-2xl flex flex-col justify-between border-r border-[#C39738]/40">
+        
+        <!-- Drawer Header -->
+        <div class="p-5 border-b border-[#2B2F36] flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded bg-[#23272D] border border-[#C39738] flex items-center justify-center font-cinzel text-xs text-[#DFC075] font-black">
+              PHB
+            </div>
+            <div>
+              <span class="font-cinzel text-sm font-bold block text-white">PURITAN HERITAGE</span>
+              <span class="text-[10px] text-[#A6ADB8]">도서 카테고리 전체 메뉴</span>
+            </div>
+          </div>
+          <button onclick="toggleMobileMenu(false)" class="p-1 text-[#A6ADB8] hover:text-white" aria-label="메뉴 닫기">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+
+        <!-- Drawer Accordion Navigation -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-1 text-sm font-serifKr">
+          
+          <button
+            onclick="setFilter('all', 'all'); toggleMobileMenu(false);"
+            class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-medium"
+          >
+            <span>전체 도서 둘러보기</span>
+            <span class="text-xs text-[#7E8694]">All</span>
+          </button>
+
+          <!-- Accordion 1: 성경주석 (Set, 구약, 신약) -->
+          <div class="border border-[#2B2F36] rounded-lg overflow-hidden bg-[#1F2228]">
+            <button
+              onclick="toggleMobileAccordion('commentary')"
+              class="w-full text-left px-3.5 py-2.5 flex items-center justify-between text-white font-semibold hover:text-[#DFC075]"
+            >
+              <span class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
+                <span>성경주석</span>
+              </span>
+              <svg id="mobile-arrow-commentary" class="w-4 h-4 text-[#C39738] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div id="mobile-sub-commentary" class="hidden px-4 pb-2.5 pt-1 space-y-1 text-xs border-t border-[#2B2F36] bg-[#17191C]">
+              <button onclick="setFilter('commentary', 'all'); toggleMobileMenu(false);" class="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 성경주석 전체보기</button>
+              <button onclick="setFilter('commentary', 'set'); toggleMobileMenu(false);" class="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• Set (전집 및 완간 세트)</button>
+              <button onclick="setFilter('commentary', 'ot'); toggleMobileMenu(false);" class="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 구약 주석 (Old Testament)</button>
+              <button onclick="setFilter('commentary', 'nt'); toggleMobileMenu(false);" class="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 신약 주석 (New Testament)</button>
+            </div>
+          </div>
+
+          <!-- Accordion 2: 조직신학 (Set, 신론, 인간론, 기독론, 구원론, 교회론, 종말론) -->
+          <div class="border border-[#2B2F36] rounded-lg overflow-hidden bg-[#1F2228]">
+            <button
+              onclick="toggleMobileAccordion('dogmatics')"
+              class="w-full text-left px-3.5 py-2.5 flex items-center justify-between text-white font-semibold hover:text-[#DFC075]"
+            >
+              <span class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
+                <span>조직신학</span>
+              </span>
+              <svg id="mobile-arrow-dogmatics" class="w-4 h-4 text-[#C39738] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div id="mobile-sub-dogmatics" class="hidden px-4 pb-2.5 pt-1 space-y-1 text-xs border-t border-[#2B2F36] bg-[#17191C]">
+              <button onclick="setFilter('dogmatics', 'all'); toggleMobileMenu(false);" class="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 조직신학 전체보기</button>
+              <button onclick="setFilter('dogmatics', 'set'); toggleMobileMenu(false);" class="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• Set (교의학 전집 세트)</button>
+              <button onclick="setFilter('dogmatics', 'theology-proper'); toggleMobileMenu(false);" class="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 신론 (Theology Proper)</button>
+              <button onclick="setFilter('dogmatics', 'anthropology'); toggleMobileMenu(false);" class="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 인간론 (Anthropology)</button>
+              <button onclick="setFilter('dogmatics', 'christology'); toggleMobileMenu(false);" class="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 기독론 (Christology)</button>
+              <button onclick="setFilter('dogmatics', 'soteriology'); toggleMobileMenu(false);" class="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 구원론 (Soteriology)</button>
+              <button onclick="setFilter('dogmatics', 'ecclesiology'); toggleMobileMenu(false);" class="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 교회론 (Ecclesiology)</button>
+              <button onclick="setFilter('dogmatics', 'eschatology'); toggleMobileMenu(false);" class="w-full text-left py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 종말론 (Eschatology)</button>
+            </div>
+          </div>
+
+          <!-- 3. 역사신학 -->
+          <button
+            onclick="setFilter('historical', 'all'); toggleMobileMenu(false);"
+            class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-semibold"
+          >
+            <span class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
+              <span>역사신학</span>
+            </span>
+            <span class="text-xs text-[#7E8694]">교회사</span>
+          </button>
+
+          <!-- 4. 크리스천 라이프 -->
+          <button
+            onclick="setFilter('christian-life', 'all'); toggleMobileMenu(false);"
+            class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-semibold"
+          >
+            <span class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
+              <span>크리스천 라이프</span>
+            </span>
+            <span class="text-xs text-[#7E8694]">경건•성화</span>
+          </button>
+
+          <!-- 5. 청교도저작 전집 -->
+          <button
+            onclick="setFilter('puritan-works', 'all'); toggleMobileMenu(false);"
+            class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-semibold"
+          >
+            <span class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
+              <span>청교도저작 전집</span>
+            </span>
+            <span class="text-[9px] bg-[#C39738] text-[#17191C] px-1 py-0.5 rounded font-bold">정본</span>
+          </button>
+
+          <!-- 6. 전자책 -->
+          <button
+            onclick="setFilter('ebook', 'all'); toggleMobileMenu(false);"
+            class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-medium"
+          >
+            <span>전자책 (eBook / ePub)</span>
+            <span class="text-[9px] bg-[#6E1B2A] text-white px-1.5 py-0.5 rounded font-sans">ePub</span>
+          </button>
+
+        </div>
+
+        <!-- Drawer Footer -->
+        <div class="p-4 border-t border-[#2B2F36] space-y-2 text-xs">
+          <div class="flex items-center gap-2">
+            <button onclick="openAuthModal('login'); toggleMobileMenu(false);" class="flex-1 py-2 text-center bg-[#23272D] hover:bg-[#2E333B] rounded text-white font-medium">
+              로그인
+            </button>
+            <button onclick="openAuthModal('signup'); toggleMobileMenu(false);" class="flex-1 py-2 text-center bg-[#6E1B2A] hover:bg-[#8C2538] rounded text-white font-semibold">
+              회원가입
+            </button>
+          </div>
+          <a href="#about" onclick="toggleMobileMenu(false)" class="block text-center text-[#A6ADB8] hover:text-[#DFC075] py-1 text-[11px]">
+            출판 사명선언문 (Mission)
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 3. BRIGHT & LUXURIOUS HERO EXHIBITION -->
+  <!-- ========================================== -->
+  <section class="relative bg-gradient-to-b from-[#F5F0E6] via-[#FAF7F2] to-[#FAF8F5] text-[#17191C] overflow-hidden py-14 lg:py-24 border-b border-[#EAE5DC] luxury-ambient-glow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Left Content -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="bg-[#6E1B2A] text-white text-xs font-semibold px-3 py-1 rounded tracking-wide uppercase shadow-xs">
+              2026 기념비적 완간 역작
+            </span>
+            <span class="bg-white text-[#9A7424] text-xs font-semibold px-3 py-1 rounded border border-[#C39738]/50 flex items-center gap-1.5 font-cinzel shadow-xs">
+              SOLI DEO GLORIA
+            </span>
+            <span class="text-[#5E6470] text-xs font-medium">
+              양장 금박 한정판 • 정본 완역
+            </span>
+          </div>
+
+          <div class="space-y-2">
+            <p class="text-xs sm:text-sm font-cinzel tracking-[0.25em] text-[#9A7424] font-bold uppercase">
+              Monumental Publication • Reformed Systematic Theology
             </p>
-        </div>
-    </footer>
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-serifKr font-bold text-[#17191C] leading-tight tracking-tight">
+              개혁주의 조직신학 전집 <br class="hidden sm:inline" />
+              <span class="text-[#6E1B2A] font-normal text-2xl sm:text-3xl lg:text-4xl">
+                (전 4권 완간 세트)
+              </span>
+            </h1>
+          </div>
 
+          <div class="border-l-3 border-[#C39738] pl-4 space-y-1 text-sm text-[#5E6470]">
+            <p class="font-medium text-base text-[#17191C]">
+              저자: <span class="text-[#6E1B2A] font-bold">조엘 비키 & 폴 스몰리</span> (Joel R. Beeke & Paul M. Smalley)
+            </p>
+            <p class="text-xs text-[#7E8694]">
+              역자: 조계광, 손현선 공역 • 한국개혁주의신학회 추천도서
+            </p>
+          </div>
 
+          <p class="text-[#4A505C] text-sm sm:text-base leading-relaxed max-w-2xl font-sans">
+            16~17세기 정통 청교도 신학과 역사적 개혁교의학의 정수를 21세기 현대 언어로 집대성한 필생의 대작. 
+            단순한 학문적 체계를 넘어, 모든 교리를 <strong class="text-[#17191C] font-serifKr font-bold">“하나님을 아는 지식과 뜨거운 찬양, 거룩한 순종”</strong>으로 승화시킨 기념비적 전집입니다.
+          </p>
 
-    <!-- About Modal -->
-    <div id="about-modal" class="modal">
-        <div class="modal-content about-modal-content">
-            <span class="close-btn" id="about-close-btn">&times;</span>
-            <div class="about-container modal-style">
-                <div class="about-text">
-                    <div class="section-title left">
-                        <h2>연구소 소개</h2>
-                    </div>
-                    <p>한국청교도연구소는 성경의 절대적 권위와 하나님의 주권을 중심으로 한 개혁주의 신앙 전통 위에서, 청교도들의 신학과 경건, 그리고 목회적 유산을 연구하고 소개하기 위해
-                        설립되었습니다.</p>
-                    <p>청교도들은 단순한 과거의 신학자들이 아니라, 말씀에 의해 형성된 삶을 추구했던 신앙의 증인들이었습니다. 그들은 교리와 삶, 신학과 경건, 공적 예배와 개인의 신앙을 분리하지
-                        않았으며, 오직 하나님의 영광(Soli Deo Gloria)을 목적으로 교회와 성도의 삶을 개혁하고자 했습니다.</p>
-
-                    <p class="about-description-large">본 연구소는 청교도들의 설교, 신학 저작, 경건 문헌들을 번역·소개하고, 그 신학적 깊이와 목회적 통찰을 오늘의 한국
-                        교회와 성도들에게 바르게 전달하고자 합니다.</p>
-
-                    <p>우리는 청교도 신학이 단지 학문적 연구의 대상이 아니라, 오늘날에도 교회를 새롭게 하고 성도를 거룩으로 이끄는 살아 있는 유산임을 확신합니다.</p>
-                    <p>한국청교도연구소는 웨스트민스터 신앙고백과 대·소요리문답으로 대표되는 개혁주의 신앙 고백 전통을 존중하며, 성경 중심적 설교, 언약 신학, 구원의 은혜 교리, 성화와 경건의
-                        균형을 강조합니다.</p>
-                    <p>우리는 새로운 것을 만들어내기보다, 이미 하나님께서 교회를 위해 허락하신 신실한 신앙의 유산을 다시 발견하고 충실히 계승하는 일에 헌신하고자 합니다. 오직 성경으로 돌아가고,
-                        성경이 가르치는 바른 교리와 거룩한 삶을 회복하기를 소망합니다.</p>
-                </div>
-
-                <div class="about-right">
-                    <!-- Background Illustration (Grayscale, Transparent, Frameless via crop) -->
-                    <img src="images/puritan-study.png" class="about-bg-image" alt="Background Study Scene" loading="lazy">
-
-                    <!-- 소장 프로필 카드 (NEW) -->
-                    <div class="about-director-card"
-                        style="display: flex; align-items: center; gap: 18px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(8px); padding: 16px 20px; border-radius: 14px; border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06); position: relative; z-index: 1;">
-                        <img src="images/pastor_kim.png" alt="한국청교도연구소 소장 김홍만 목사"
-                            style="width: 105px; height: 115px; object-fit: cover; object-position: top center; border-radius: 12px; border: 2px solid var(--secondary-color); box-shadow: 0 4px 12px rgba(0,0,0,0.12); flex-shrink: 0;">
-                        <div style="flex: 1;">
-                            <span style="display: inline-block; font-size: 0.8rem; font-weight: 700; color: var(--secondary-color); letter-spacing: 0.05em; margin-bottom: 2px;">한국청교도연구소 소장</span>
-                            <h3 style="margin: 0 0 6px 0; font-size: 1.25rem; font-weight: 800; color: var(--primary-color); font-family: 'Nanum Myeongjo', serif;">
-                                김홍만 목사 <span style="font-size: 0.85rem; font-weight: normal; color: #666; font-family: 'Montserrat', sans-serif;">Ph.D.</span>
-                            </h3>
-                            <p style="margin: 0; font-size: 0.88rem; color: #444; line-height: 1.5;">
-                                <span style="color: #777; font-size: 0.8rem;">간사:</span> <strong>배가현 전도사</strong>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="about-goals-container">
-                        <h4>연구소의 지향점</h4>
-                        <ul class="about-goals">
-                            <li><i class="fas fa-check"></i> 설교자들이 성경을 더 깊이 이해하도록 돕습니다.</li>
-                            <li><i class="fas fa-check"></i> 성도들이 하나님 앞에 경건하게 살도록 격려합니다.</li>
-                            <li><i class="fas fa-check"></i> 한국 교회가 개혁주의 신앙의 뿌리를 회복하도록 섬깁니다.</li>
-                        </ul>
-                    </div>
-
-                    <div class="about-team">
-                        <span class="team-title">섬기는 이들</span>
-                        <p class="team-name">청교도 개혁교회 연합회 복음 사역자들</p>
-                        <span class="eng-team">The Alliance of Puritan and Reformed Churches</span>
-                    </div>
-                </div>
+          <div class="bg-white/95 border border-[#C39738]/40 rounded-xl p-5 inline-flex flex-wrap items-center gap-6 shadow-sm">
+            <div>
+              <span class="text-xs text-[#7E8694] block">사전예약 10% 특별 혜택가</span>
+              <div class="flex items-baseline space-x-2">
+                <span class="text-2xl sm:text-3xl font-bold text-[#6E1B2A] font-cinzel">198,000원</span>
+                <span class="text-xs text-[#A6ADB8] line-through">220,000원</span>
+              </div>
             </div>
+            <div class="border-l border-[#EAE5DC] pl-6 text-xs text-[#5E6470] space-y-1">
+              <p class="text-[#9A7424] font-semibold flex items-center gap-1">
+                ★ 한정 특전: 원전 대조 요약 소책자 증정
+              </p>
+              <p class="text-[#7E8694]">전국 무료 배송 • 고급 양장 하드커버 슬립케이스</p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-4 pt-2">
+            <button
+              onclick="addToCart('phb-001')"
+              class="bg-[#6E1B2A] hover:bg-[#8C2538] text-white px-7 py-3.5 rounded-lg font-semibold text-sm transition-all shadow-md hover:shadow-lg flex items-center space-x-2 border border-[#8C2538]"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+              <span>사전예약 구매하기 (담기)</span>
+            </button>
+
+            <button
+              onclick="openBookPreview('phb-001')"
+              class="bg-white hover:bg-[#FAF7F2] text-[#9A7424] border border-[#C39738] px-6 py-3.5 rounded-lg font-semibold text-sm transition-all flex items-center space-x-2 shadow-xs"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+              <span>목차 & 서점 바로가기</span>
+            </button>
+          </div>
+
+          <!-- Hero Bookstore Quick Access -->
+          <div class="pt-4 border-t border-[#EAE5DC] space-y-2">
+            <div class="flex items-center gap-1.5 text-xs text-[#5E6470] font-medium">
+              <span class="text-[#6E1B2A] font-bold">📖 종이책 바로구매:</span>
+              <span class="text-[11px] text-[#A6ADB8]">(원하시는 서점을 선택하세요)</span>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <a href="https://search.shopping.naver.com/search/all?query=%ED%93%A8%EB%A6%AC%ED%83%84%20%ED%97%A4%EB%A6%AC%ED%8B%B0%EC%A7%80%20%EA%B0%9C%ED%98%81%EC%A3%BC%EC%9D%98%20%EC%A1%B0%EC%A7%81%EC%8B%A0%ED%95%99%20%EC%A0%84%EC%A7%91" target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-[#03C75A] border border-[#03C75A]/40 text-[#008A3B] hover:text-white text-xs font-semibold transition-all shadow-xs">
+                <span class="w-4 h-4 rounded-xs bg-[#03C75A] text-white text-[9px] font-black inline-flex items-center justify-center">N</span>
+                네이버 스토어
+              </a>
+              <a href="https://www.aladin.co.kr/search/wsearchresult.aspx?SearchWord=%EA%B0%9C%ED%98%81%EC%A3%BC%EC%9D%98%20%EC%A1%B0%EC%A7%81%EC%8B%A0%ED%95%99%20%EC%A0%84%EC%A7%91" target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-[#DF2161] border border-[#DF2161]/40 text-[#C0154E] hover:text-white text-xs font-semibold transition-all shadow-xs">
+                <span class="w-4 h-4 rounded-xs bg-[#DF2161] text-white text-[9px] font-bold inline-flex items-center justify-center">알</span>
+                알라딘
+              </a>
+              <a href="https://search.kyobobook.co.kr/search?keyword=%EA%B0%9C%ED%98%81%EC%A3%BC%EC%9D%98%20%EC%A1%B0%EC%A7%81%EC%8B%A0%ED%95%99%20%EC%A0%84%EC%A7%91" target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-[#1E5638] border border-[#1E5638]/40 text-[#1E5638] hover:text-white text-xs font-semibold transition-all shadow-xs">
+                <span class="w-4 h-4 rounded-xs bg-[#1E5638] text-white text-[9px] font-bold inline-flex items-center justify-center">교</span>
+                교보문고
+              </a>
+              <a href="https://www.yes24.com/Product/Search?domain=BOOK&query=%EA%B0%9C%ED%98%81%EC%A3%BC%EC%9D%98%20%EC%A1%B0%EC%A7%81%EC%8B%A0%ED%95%99%20%EC%A0%84%EC%A7%91" target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-[#0070E0] border border-[#0070E0]/40 text-[#0057B3] hover:text-white text-xs font-semibold transition-all shadow-xs">
+                <span class="w-4 h-4 rounded-xs bg-[#0070E0] text-white text-[8px] font-bold inline-flex items-center justify-center">Y24</span>
+                예스24
+              </a>
+            </div>
+          </div>
         </div>
+
+        <!-- Right 3D Book Mockup -->
+        <div class="lg:col-span-5 flex justify-center">
+          <div class="relative group cursor-pointer" onclick="openBookPreview('phb-001')">
+            <div class="absolute -inset-2 bg-gradient-to-r from-[#C39738] to-[#6E1B2A] rounded-xl blur-xl opacity-20 group-hover:opacity-35 transition duration-500"></div>
+
+            <div class="relative w-64 sm:w-72 md:w-80 h-[400px] sm:h-[450px] md:h-[480px] bg-gradient-to-br from-[#1c1e23] via-[#241a1f] to-[#121417] rounded-r-lg rounded-l-sm shadow-book-lg border border-[#C39738]/40 book-spine-effect p-6 flex flex-col justify-between transform transition-transform duration-500 group-hover:-translate-y-2 group-hover:rotate-1">
+              <div class="absolute inset-3 border border-[#C39738]/40 rounded-sm pointer-events-none"></div>
+              
+              <div class="relative z-10 text-center space-y-1">
+                <span class="font-cinzel text-[10px] tracking-[0.3em] text-[#DFC075] uppercase block">
+                  Puritan Heritage Classics
+                </span>
+                <div class="w-12 h-0.5 bg-[#C39738] mx-auto opacity-70"></div>
+              </div>
+
+              <div class="relative z-10 text-center space-y-3">
+                <p class="font-serifEn italic text-xs text-[#DFC075]/80">Reformed Systematic Theology</p>
+                <h2 class="font-serifKr text-2xl sm:text-3xl font-bold text-white tracking-tight leading-snug">
+                  개혁주의<br />조직신학 전집
+                </h2>
+                <span class="inline-block px-2.5 py-0.5 bg-[#6E1B2A]/80 border border-[#C39738]/40 text-[#DFC075] text-[10px] font-semibold tracking-wider uppercase rounded">
+                  완간 4권 세트 (정본 완역)
+                </span>
+              </div>
+
+              <div class="relative z-10 text-center pt-4 border-t border-[#C39738]/30">
+                <p class="text-xs font-serifKr text-[#E4DFD7] font-medium">조엘 비키 • 폴 스몰리 지음</p>
+                <p class="font-cinzel text-[9px] text-[#A6ADB8] tracking-widest uppercase mt-0.5">Puritan Heritage Books</p>
+              </div>
+
+              <div class="absolute bottom-16 right-6 w-12 h-12 rounded-full border-2 border-[#C39738] bg-[#17191C]/90 flex items-center justify-center shadow-lg transform rotate-12">
+                <span class="text-[7px] font-cinzel font-bold text-[#DFC075] text-center leading-tight">PHB<br />MASTER</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 4. CURATED CATALOG & TABBED BOOK GRID -->
+  <!-- ========================================== -->
+  <section id="catalog-section" class="py-18 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+    <div class="text-center max-w-3xl mx-auto mb-12 space-y-3">
+      <span class="font-cinzel text-xs font-bold tracking-[0.25em] text-[#6E1B2A] uppercase">
+        Scholarly Editions & Classic Literature
+      </span>
+      <h2 class="text-3xl font-serifKr font-bold text-[#17191C]">
+        PHB 출간 도서 및 전집 아카이브
+      </h2>
+      <div class="w-16 h-1 bg-[#C39738] mx-auto mt-2"></div>
+      <p class="text-sm text-[#5E6470] font-sans leading-relaxed">
+        바른 신학과 뜨거운 경건이 결합된 16~17세기 청교도 거장들의 불후의 원전과 현대 최고 석학들의 개혁신학 표준서를 만나보십시오.
+      </p>
     </div>
 
-
-
-
-    <!-- Resource List Modal -->
-    <div id="resource-modal" class="modal">
-        <div class="modal-content resource-modal-content">
-            <span class="close-btn" id="resource-close-btn">&times;</span>
-            <h2 id="resource-modal-title">자료 목록</h2>
-
-            <!-- 필터링 섹션 -->
-            <div id="modal-filter-section"
-                style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: #f8f9fa; padding: 12px; border-radius: 10px; border: 1px solid #eee;">
-                <div style="flex: 1; min-width: 150px;">
-                    <label style="font-size: 0.75rem; color: #888; display: block; margin-bottom: 4px;">주제별 필터</label>
-                    <select id="modal-filter-topic"
-                        style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 0.9rem;">
-                        <option value="">모든 주제</option>
-                    </select>
-                </div>
-                <div style="flex: 1; min-width: 150px;">
-                    <label style="font-size: 0.75rem; color: #888; display: block; margin-bottom: 4px;">저자별 필터</label>
-                    <select id="modal-filter-author"
-                        style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 0.9rem;">
-                        <option value="">모든 저자</option>
-                    </select>
-                </div>
-                <div style="flex: 2; min-width: 200px;">
-                    <label style="font-size: 0.75rem; color: #888; display: block; margin-bottom: 4px;">자료 검색</label>
-                    <input type="text" id="modal-search-input" placeholder="제목이나 내용을 입력하세요..."
-                        style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 0.9rem;">
-                </div>
-            </div>
-            <div id="resource-modal-admin-header"
-                style="display: none; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-weight: 700; color: var(--secondary-color);"><i class="fas fa-plus-circle"></i> 이
-                        폴더에 새 자료 추가</span>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="cta-btn" id="sort-alpha-btn"
-                            style="padding: 5px 15px; font-size: 0.8rem; background: #eee; color: #333; border: 1px solid #ddd;">
-                            <i class="fas fa-sort-alpha-down"></i> 가나다순 정렬</button>
-                        <button class="cta-btn primary" id="toggle-modal-upload"
-                            style="padding: 5px 15px; font-size: 0.8rem;">업로드 창 열기</button>
-                    </div>
-                </div>
-
-                <form id="modal-upload-form" class="upload-form"
-                    style="display: none; margin-top: 15px; background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #ddd;">
-                    <input type="text" id="modal-post-title" placeholder="자료 제목"
-                        style="width:100%; margin-bottom:10px;">
-                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <input type="text" id="modal-post-series" placeholder="시리즈 이름 (자동 입력됨)" style="flex: 2;">
-                        <select id="modal-post-lang" style="flex: 1; display: none;">
-                            <option value="한국어">한국어</option>
-                            <option value="English">English</option>
-                            <option value="Spanish">Spanish</option>
-                            <option value="Japanese">Japanese</option>
-                            <option value="Arabic">Arabic</option>
-                            <option value="Chinese">Chinese</option>
-                        </select>
-                        <input type="number" id="modal-post-order" value="0" style="flex: 1;" placeholder="순서">
-                        <input type="text" id="modal-post-price" placeholder="가격 (도서 전용)"
-                            style="flex: 1; display: none;">
-                    </div>
-                    <textarea id="modal-post-content" rows="3" placeholder="내용 또는 유튜브 링크"
-                        style="width:100%; margin-bottom:10px;"></textarea>
-                    <div id="modal-post-category-fields"
-                        style="display: none; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px;">
-                        <div class="input-group">
-                            <label style="font-size: 0.8rem; color: #666; display: block; margin-bottom: 5px;">주제별
-                                분류</label>
-                            <select id="modal-post-topic" style="width: 100%;">
-                                <option value="">-- 선택 안함 --</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label style="font-size: 0.8rem; color: #666; display: block; margin-bottom: 5px;">저자별
-                                분류</label>
-                            <select id="modal-post-author" style="width: 100%;">
-                                <option value="">-- 선택 안함 --</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label style="font-size: 0.8rem; color: #666; display: block; margin-bottom: 5px;">기타
-                                분류</label>
-                            <select id="modal-post-other-category" style="width: 100%;">
-                                <option value="">-- 선택 안함 --</option>
-                                <option value="기타">기타 자료</option>
-                                <option value="도서 목록">도서 목록</option>
-                                <option value="전도 소책자">전도 소책자</option>
-                                <option value="강해설교">강해설교</option>
-                                <option value="신학강론">신학강론</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <label style="font-size: 0.8rem; color: #666; width: 80px;">상세 파일</label>
-                            <input type="file" id="modal-post-file" style="font-size: 0.8rem; flex: 1;">
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <label style="font-size: 0.8rem; color: #666; width: 80px;">썸네일</label>
-                            <input type="file" id="modal-post-cover" accept="image/*"
-                                style="font-size: 0.8rem; flex: 1;">
-                        </div>
-                    </div>
-                    <button type="submit" class="cta-btn primary" style="width: 100%; padding: 12px;">게시하기</button>
-                    <div id="modal-upload-progress"
-                        style="display:none; margin-top:10px; height:4px; background:#eee; border-radius:2px; overflow:hidden;">
-                        <div id="modal-upload-bar"
-                            style="width:0%; height:100%; background:var(--secondary-color); transition:width 0.3s;">
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <div class="resource-list-wrapper">
-                <ul id="resource-list-container" class="resource-list">
-                    <!-- Content injected via JS -->
-                </ul>
-            </div>
-        </div>
+    <!-- Category Tabs -->
+    <div id="category-tabs-container" class="flex flex-wrap justify-center items-center gap-2 sm:gap-3 mb-5">
+      <!-- Injected by JavaScript -->
     </div>
 
-    <!-- Music Player Container (Left) -->
-    <div class="bgm-player" id="bgm-player"
-        style="position: fixed; bottom: 2rem; left: 2rem; z-index: 1500; pointer-events: none;">
-        <button id="bgm-toggle-btn" class="bgm-control" onclick="if(window.toggleBGM) window.toggleBGM(event)"
-            style="pointer-events: auto;">
-            <span class="music-icon"><i class="fas fa-music"></i></span>
+    <!-- Subcategory Pills (for 성경주석 & 조직신학) -->
+    <div id="subcategory-pills-container" class="flex flex-wrap justify-center items-center gap-2 mb-8 hidden">
+      <!-- Injected by JavaScript -->
+    </div>
+
+    <!-- Active Filter Status & Breadcrumb -->
+    <div id="active-filter-indicator" class="mb-8 p-3.5 bg-white border border-[#E4DFD7] rounded-lg text-xs flex flex-wrap items-center justify-between gap-3 shadow-xs">
+      <!-- Injected by JavaScript -->
+    </div>
+
+    <!-- Books Grid Container -->
+    <div id="books-grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Injected by JavaScript -->
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 5. EXPERIENTIAL RELIGION & CONFESSIONAL ANCHOR -->
+  <!-- ========================================== -->
+  <section id="quotes" class="bg-[#F4EFEB] py-18 border-y border-[#EAE5DC] relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+        
+        <!-- Quote Box -->
+        <div class="lg:col-span-6 bg-white p-8 sm:p-10 rounded-xl border border-[#E4DFD7] shadow-sm flex flex-col justify-between relative">
+          <div class="absolute top-4 right-6 font-serifEn text-7xl text-[#E8E2D5] select-none pointer-events-none font-bold">“</div>
+          <div>
+            <div class="flex items-center space-x-2 mb-6">
+              <span class="w-2 h-2 rounded-full bg-[#C39738]"></span>
+              <span class="text-xs font-cinzel font-bold text-[#6E1B2A] tracking-wider uppercase">
+                Weekly Puritan Excerpt • 주간 청교도 묵상
+              </span>
+            </div>
+            <blockquote id="puritan-quote-text" class="font-serifKr text-lg sm:text-xl text-[#17191C] leading-relaxed font-normal mb-6 min-h-[100px]">
+              <!-- Injected -->
+            </blockquote>
+          </div>
+          <div class="border-t border-[#EAE5DC] pt-4 flex items-center justify-between">
+            <div>
+              <p id="puritan-quote-author" class="font-serifKr font-semibold text-sm text-[#17191C]"></p>
+              <p id="puritan-quote-source" class="text-xs text-[#5E6470]"></p>
+            </div>
+            <div id="quote-dots-container" class="flex space-x-1.5">
+              <!-- Dots -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Confessions Anchor Box -->
+        <div id="confessions" class="lg:col-span-6 bg-white text-[#17191C] p-8 sm:p-10 rounded-xl border border-[#C39738]/40 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center space-x-2">
+                <span class="text-xs font-cinzel font-bold text-[#6E1B2A] tracking-wider uppercase">
+                  Confessional Anchor • 표준 신앙고백 연계
+                </span>
+              </div>
+              <span class="text-[11px] text-[#7E8694]">웨스트민스터 & 하이델베르크</span>
+            </div>
+
+            <h3 class="font-serifKr text-xl font-bold text-[#17191C] mb-4">
+              교리와 문답으로 만나는 PHB 추천 도서
+            </h3>
+
+            <div id="confession-tabs-container" class="grid grid-cols-2 gap-2 mb-6">
+              <!-- Injected -->
+            </div>
+
+            <div id="confession-detail-container" class="bg-[#FAF8F5] border border-[#EAE5DC] rounded-lg p-4 space-y-3">
+              <!-- Injected -->
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-[#EAE5DC] flex items-center justify-between">
+            <span class="text-xs text-[#7E8694]">개혁교회 역사적 표준문서 정본 완역 출판</span>
+            <button id="confession-view-book-btn" class="text-xs font-semibold text-[#6E1B2A] hover:text-[#9A7424] flex items-center gap-1 transition-colors">
+              <span>해당 도서 상세보기 →</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 6. BRAND STORY & MISSION STATEMENT STRIP -->
+  <!-- ========================================== -->
+  <section id="about" class="py-18 bg-[#FAF8F5] border-b border-[#EAE5DC] text-center">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="w-12 h-12 mx-auto rounded-full bg-[#6E1B2A] text-[#DFC075] flex items-center justify-center font-cinzel font-bold text-lg mb-4 shadow-md">
+        PHB
+      </div>
+      <span class="font-cinzel text-xs font-bold tracking-[0.3em] text-[#6E1B2A] uppercase block mb-2">
+        Publishing Mission Statement • 사명선언문
+      </span>
+      <h2 class="text-lg sm:text-2xl lg:text-[23px] font-serifKr font-bold text-[#17191C] mb-6 leading-relaxed">
+        “오직 성경(Sola Scriptura) · 오직 믿음(Sola Fide) · 오직 은혜(Sola Gratia)<br class="hidden sm:inline" /> · 오직 그리스도(Solus Christus) · 오직 하나님께 영광(Soli Deo Gloria)”
+      </h2>
+      <p class="text-sm sm:text-base text-[#5E6470] font-serifKr leading-loose max-w-3xl mx-auto mb-10">
+        퓨리탄 헤리티지 북스(Puritan Heritage Books)는 바른 교리와 뜨거운 경건이 결합된 역사적 개혁주의와 청교도 고전 문헌을 한국 교회와 성도들에게 가장 신실한 원전 번역과 단정한 만듦새로 전합니다. 
+        영혼을 각성시키고 교회를 견고히 세우는 신학적 보화를 다음 세대에게 변함없이 전수하겠습니다.
+      </p>
+
+      <!-- 5 Solas (종교개혁 5대 강령) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 text-left mb-8">
+        <div class="bg-white border border-[#EAE5DC] rounded-xl p-4 shadow-xs hover:border-[#C39738] transition-all">
+          <span class="text-[10px] font-cinzel font-bold text-[#6E1B2A] tracking-wider uppercase block mb-1">01 · Sola Scriptura</span>
+          <h3 class="text-sm font-serifKr font-bold text-[#17191C] mb-1">오직 성경</h3>
+          <p class="text-[11px] text-[#7E8694] leading-relaxed">신앙과 삶, 구원의 유일무이한 최고 권위 규범</p>
+        </div>
+        <div class="bg-white border border-[#EAE5DC] rounded-xl p-4 shadow-xs hover:border-[#C39738] transition-all">
+          <span class="text-[10px] font-cinzel font-bold text-[#6E1B2A] tracking-wider uppercase block mb-1">02 · Sola Fide</span>
+          <h3 class="text-sm font-serifKr font-bold text-[#17191C] mb-1">오직 믿음</h3>
+          <p class="text-[11px] text-[#7E8694] leading-relaxed">의롭다 하심을 얻는 유일한 통로이자 수단</p>
+        </div>
+        <div class="bg-white border border-[#EAE5DC] rounded-xl p-4 shadow-xs hover:border-[#C39738] transition-all">
+          <span class="text-[10px] font-cinzel font-bold text-[#6E1B2A] tracking-wider uppercase block mb-1">03 · Sola Gratia</span>
+          <h3 class="text-sm font-serifKr font-bold text-[#17191C] mb-1">오직 은혜</h3>
+          <p class="text-[11px] text-[#7E8694] leading-relaxed">자격 없는 자에게 거저 주시는 하나님의 주권적 구원</p>
+        </div>
+        <div class="bg-white border border-[#EAE5DC] rounded-xl p-4 shadow-xs hover:border-[#C39738] transition-all">
+          <span class="text-[10px] font-cinzel font-bold text-[#6E1B2A] tracking-wider uppercase block mb-1">04 · Solus Christus</span>
+          <h3 class="text-sm font-serifKr font-bold text-[#17191C] mb-1">오직 그리스도</h3>
+          <p class="text-[11px] text-[#7E8694] leading-relaxed">하나님과 사람 사이의 영원하고 유일한 참 중보자</p>
+        </div>
+        <div class="bg-white border border-[#EAE5DC] rounded-xl p-4 shadow-xs hover:border-[#C39738] transition-all">
+          <span class="text-[10px] font-cinzel font-bold text-[#6E1B2A] tracking-wider uppercase block mb-1">05 · Soli Deo Gloria</span>
+          <h3 class="text-sm font-serifKr font-bold text-[#17191C] mb-1">오직 하나님께 영광</h3>
+          <p class="text-[11px] text-[#7E8694] leading-relaxed">창조와 구속, 모든 만물의 궁극적 목적이자 찬송</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-3 text-xs text-[#5E6470]">
+        <span class="bg-white border border-[#EAE5DC] px-3.5 py-1.5 rounded-full shadow-xs">웨스트민스터 표준문서 (Westminster Standards)</span>
+        <span class="bg-white border border-[#EAE5DC] px-3.5 py-1.5 rounded-full shadow-xs">일치 신조 삼형식 (Three Forms of Unity)</span>
+        <span class="bg-white border border-[#EAE5DC] px-3.5 py-1.5 rounded-full shadow-xs">종교개혁 5대 솔라 (Five Solas)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 7. GLOBAL FOOTER -->
+  <!-- ========================================== -->
+  <footer class="bg-[#17191C] text-[#A6ADB8] pt-16 pb-12 text-xs border-t-2 border-[#C39738]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-[#2B2F36]">
+        <div class="lg:col-span-5 space-y-4">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded bg-[#23272D] border border-[#C39738] flex items-center justify-center font-cinzel font-bold text-[#C39738] text-sm">
+              PHB
+            </div>
+            <div>
+              <span class="font-cinzel text-base font-bold text-white tracking-wider block">PURITAN HERITAGE BOOKS</span>
+              <span class="text-[10px] text-[#A6ADB8] font-serifKr">도서출판 퓨리탄 헤리티지 북스</span>
+            </div>
+          </div>
+          <p class="text-xs text-[#7E8694] leading-relaxed">
+            본 출판사는 16~17세기 역사적 개혁교의학과 청교도 체험적 신앙 문헌을 정본 완역하여 보급하는 기독교 학술 출판사입니다.
+          </p>
+          <div class="text-[11px] text-[#5E6470] space-y-1">
+            <p>대표자: 김은총 | 출판사 신고번호: 제2026-000142호</p>
+            <p>사업자등록번호: 120-88-00000 | 통신판매업신고: 2026-서울마포-0000</p>
+            <p>본사: 서울특별시 마포구 독막로 120 헤리티지빌딩 4층 | 파주 물류센터 운영</p>
+            <p>고객지원: 02-334-1616 (평일 09:00~17:00) | contact@puritanheritage.kr</p>
+          </div>
+        </div>
+
+        <div class="lg:col-span-3 space-y-3">
+          <h4 class="font-cinzel text-xs font-bold text-white uppercase tracking-wider">Publishing Archives</h4>
+          <ul class="space-y-2 text-[11px]">
+            <li><a href="#" class="hover:text-[#DFC075] transition-colors">청교도 보화 시리즈 (Puritan Gems)</a></li>
+            <li><a href="#" class="hover:text-[#DFC075] transition-colors">개혁교의학 대계 (Reformed Dogmatics)</a></li>
+            <li><a href="#" class="hover:text-[#DFC075] transition-colors">가정예배와 거룩한 유산 시리즈</a></li>
+            <li><a href="#" class="hover:text-[#DFC075] transition-colors">존 오웬 전집 (Works of John Owen)</a></li>
+            <li><a href="#" class="hover:text-[#DFC075] transition-colors">전자책(ePub / PDF) 아카이브</a></li>
+          </ul>
+        </div>
+
+        <div class="lg:col-span-4 space-y-4">
+          <h4 class="font-cinzel text-xs font-bold text-white uppercase tracking-wider">PHB Theological Letter</h4>
+          <p class="text-xs text-[#7E8694] leading-relaxed">
+            PHB의 신간 출간 소식, 청교도 묵상 서신 및 학술 할인 이벤트를 이메일로 가장 먼저 받아보세요.
+          </p>
+          <form onsubmit="handleNewsletter(event)" class="space-y-2">
+            <div class="flex">
+              <input
+                type="email"
+                required
+                placeholder="이메일 주소를 입력하십시오"
+                class="bg-[#23272D] border border-[#3A3F4A] text-xs text-white rounded-l px-3.5 py-2.5 w-full focus:outline-none focus:border-[#C39738]"
+              />
+              <button
+                type="submit"
+                class="bg-[#6E1B2A] hover:bg-[#8C2538] text-white text-xs font-semibold px-4 py-2.5 rounded-r transition-colors border border-[#8C2538]"
+              >
+                구독
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row justify-between items-center text-[11px] text-[#5E6470] gap-3">
+        <p>© 2026 Puritan Heritage Books. All rights reserved. Soli Deo Gloria.</p>
+        <div class="flex space-x-4">
+          <a href="admin.html" class="text-[#C39738] hover:underline font-semibold"><i class="fas fa-lock mr-1"></i>관리자 로그인</a>
+          <a href="#privacy" class="hover:text-white">개인정보처리방침</a>
+          <a href="#terms" class="hover:text-white">이용약관</a>
+          <a href="#about" class="hover:text-white">도서출판 사명문</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- MODAL 1: BOOK PREVIEW MODAL -->
+  <!-- ========================================== -->
+  <div id="book-preview-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#F8F7F4] text-[#17191C] w-full max-w-3xl rounded-xl border border-[#C39738] shadow-2xl overflow-hidden relative max-h-[90vh] flex flex-col">
+      <div class="bg-[#17191C] text-white p-4 px-6 flex justify-between items-center border-b border-[#C39738]">
+        <div class="flex items-center space-x-2">
+          <span class="font-cinzel text-xs font-bold text-[#DFC075] tracking-widest uppercase">Book Preview</span>
+          <span class="text-[#3A3F4A]">|</span>
+          <span id="preview-modal-header-title" class="text-xs text-[#A6ADB8] truncate max-w-xs"></span>
+        </div>
+        <button onclick="closeBookPreview()" class="text-[#A6ADB8] hover:text-white p-1 rounded">✕</button>
+      </div>
+
+      <div id="preview-modal-body" class="p-6 sm:p-8 overflow-y-auto space-y-6 flex-1 text-sm font-sans">
+        <!-- Injected -->
+      </div>
+
+      <div class="bg-white p-4 px-6 border-t border-[#E4DFD7] flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div>
+          <span class="text-xs text-[#5E6470]">판매가</span>
+          <span id="preview-modal-price" class="text-lg font-bold text-[#6E1B2A] ml-2"></span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="closeBookPreview()" class="px-4 py-2 border border-[#E4DFD7] rounded text-xs font-semibold text-[#5E6470] hover:bg-[#EDE9E1]">닫기</button>
+          <button id="preview-modal-add-cart-btn" class="px-4 py-2 bg-[#FAF8F5] hover:bg-[#EDE9E1] text-[#17191C] border border-[#E4DFD7] rounded text-xs font-semibold flex items-center gap-1.5">
+            장바구니 담기
+          </button>
+          <button onclick="document.getElementById('modal-stores-section')?.scrollIntoView({behavior:'smooth'})" class="px-5 py-2 bg-[#6E1B2A] hover:bg-[#8C2538] text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow">
+            서점 구매처 바로가기 ↓
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL 2: CART SLIDE-OVER DRAWER -->
+  <!-- ========================================== -->
+  <div id="cart-drawer-modal" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-xs" onclick="toggleCart(false)"></div>
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-white border-l border-[#E4DFD7] shadow-2xl flex flex-col justify-between">
+        <div class="p-5 bg-[#17191C] text-white flex items-center justify-between border-b border-[#C39738]">
+          <h3 id="cart-drawer-title" class="font-serifKr font-bold text-base text-white">장바구니</h3>
+          <button onclick="toggleCart(false)" class="text-[#A6ADB8] hover:text-white p-1 text-lg">✕</button>
+        </div>
+
+        <div id="cart-shipping-notice" class="bg-[#F8F7F4] p-3.5 px-5 border-b border-[#E4DFD7] text-xs">
+          <!-- Shipping progress -->
+        </div>
+
+        <div id="cart-items-list" class="flex-1 overflow-y-auto p-5 divide-y divide-[#E4DFD7]">
+          <!-- Items injected -->
+        </div>
+
+        <div id="cart-footer-summary" class="p-5 bg-[#F8F7F4] border-t border-[#E4DFD7] space-y-3">
+          <!-- Total and checkout button -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL 3: LOGIN / SIGN UP AUTH MODAL -->
+  <!-- ========================================== -->
+  <div id="auth-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#F8F7F4] text-[#17191C] w-full max-w-md rounded-xl border border-[#C39738] shadow-2xl overflow-hidden relative">
+      <div class="bg-[#17191C] text-white p-4 px-6 flex justify-between items-center border-b border-[#C39738]">
+        <span class="font-cinzel text-xs font-bold text-[#DFC075] tracking-widest uppercase">PURITAN HERITAGE BOOKS</span>
+        <button onclick="closeAuthModal()" class="text-[#A6ADB8] hover:text-white p-1 text-base">✕</button>
+      </div>
+
+      <div class="flex border-b border-[#E4DFD7] bg-[#EDE9E1]">
+        <button id="auth-tab-login" onclick="switchAuthTab('login')" class="flex-1 py-3 text-xs sm:text-sm font-semibold transition-all bg-white text-[#6E1B2A] border-b-2 border-[#6E1B2A]">
+          로그인 (Sign In)
         </button>
-        <div id="yt-player-container" style="display: none;"></div>
+        <button id="auth-tab-signup" onclick="switchAuthTab('signup')" class="flex-1 py-3 text-xs sm:text-sm font-semibold transition-all text-[#5E6470] hover:text-[#17191C]">
+          회원가입 (Sign Up)
+        </button>
+      </div>
+
+      <div class="p-6 sm:p-8 space-y-4">
+        <!-- Login Form -->
+        <form id="auth-form-login" onsubmit="handleAuthSubmit(event, 'login')" class="space-y-4">
+          <div>
+            <label class="block text-xs font-medium text-[#5E6470] mb-1">이메일 계정</label>
+            <input type="email" required placeholder="example@heritagebooks.kr" class="w-full bg-white border border-[#E4DFD7] rounded px-3.5 py-2.5 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-[#5E6470] mb-1">비밀번호</label>
+            <input type="password" required placeholder="비밀번호를 입력해 주세요" class="w-full bg-white border border-[#E4DFD7] rounded px-3.5 py-2.5 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]" />
+          </div>
+          <div class="flex items-center justify-between text-[11px] text-[#5E6470]">
+            <label class="flex items-center space-x-1.5 cursor-pointer">
+              <input type="checkbox" class="rounded text-[#6E1B2A]" />
+              <span>로그인 상태 유지</span>
+            </label>
+            <a href="#forgot" class="text-[#6E1B2A] hover:underline">비밀번호 찾기</a>
+          </div>
+          <button type="submit" class="w-full bg-[#6E1B2A] hover:bg-[#8C2538] text-white py-3 rounded text-xs font-semibold uppercase tracking-wider transition-all shadow-md mt-2">
+            로그인
+          </button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="auth-form-signup" onsubmit="handleAuthSubmit(event, 'signup')" class="space-y-3.5 hidden">
+          <div>
+            <label class="block text-xs font-medium text-[#5E6470] mb-1">성명</label>
+            <input type="text" required placeholder="홍길동" class="w-full bg-white border border-[#E4DFD7] rounded px-3.5 py-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-[#5E6470] mb-1">이메일 계정</label>
+            <input type="email" required placeholder="example@heritagebooks.kr" class="w-full bg-white border border-[#E4DFD7] rounded px-3.5 py-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-[#5E6470] mb-1">비밀번호</label>
+            <input type="password" required placeholder="영문, 숫자 포함 8자리 이상" class="w-full bg-white border border-[#E4DFD7] rounded px-3.5 py-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]" />
+          </div>
+          <div class="text-[11px] text-[#7E8694] space-y-1 pt-1">
+            <label class="flex items-center space-x-1.5 cursor-pointer">
+              <input type="checkbox" required class="rounded text-[#6E1B2A]" />
+              <span>이용약관 및 개인정보처리방침 동의 (필수)</span>
+            </label>
+          </div>
+          <button type="submit" class="w-full bg-[#6E1B2A] hover:bg-[#8C2538] text-white py-3 rounded text-xs font-semibold uppercase tracking-wider transition-all shadow-md mt-2">
+            신규 회원가입 완료
+          </button>
+        </form>
+      </div>
+
+      <div class="bg-[#EDE9E1] px-6 py-3 text-center text-[11px] text-[#7E8694] border-t border-[#E4DFD7]">
+        회원가입 시 신간 10% 추가 적립 및 청교도 묵상 칼럼을 무료로 받아보실 수 있습니다.
+      </div>
     </div>
+  </div>
 
+  <!-- ========================================== -->
+  <!-- MODAL 4: ONLINE STORE CHECKOUT MODAL -->
+  <!-- ========================================== -->
+  <div id="store-checkout-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#F8F7F4] text-[#17191C] w-full max-w-2xl rounded-xl border border-[#C39738] shadow-2xl overflow-hidden relative max-h-[90vh] flex flex-col">
+      <div class="bg-[#17191C] text-white p-4 px-6 flex justify-between items-center border-b border-[#C39738]">
+        <div class="flex items-center space-x-2">
+          <span class="font-cinzel text-xs font-bold text-[#DFC075] tracking-widest uppercase">Bookstore Ordering</span>
+          <span class="text-[#3A3F4A]">|</span>
+          <span class="text-xs text-[#A6ADB8]">온라인 서점 & 스마트스토어 주문 안내</span>
+        </div>
+        <button onclick="closeStoreCheckoutModal()" class="text-[#A6ADB8] hover:text-white p-1 rounded">✕</button>
+      </div>
 
+      <div class="p-6 overflow-y-auto space-y-5 flex-1 text-sm font-sans">
+        <div class="bg-white p-4 rounded-lg border border-[#E4DFD7] space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-[#6E1B2A] text-white text-xs flex items-center justify-center font-bold">✓</span>
+            <h4 class="font-serifKr font-bold text-sm text-[#17191C]">정식 유통 서점을 통해 안전하게 주문하세요</h4>
+          </div>
+          <p class="text-xs text-[#5E6470] leading-relaxed">
+            퓨리탄 헤리티지 북스는 독자 여러분께 가장 신속한 당일/익일 총알배송, 도서 소득공제(30%) 혜택 및 전자책 전용 뷰어 환경을 보장하기 위해 <strong>네이버 스마트스토어</strong> 및 <strong>국내 3대 인터넷 서점(교보문고, 알라딘, YES24)</strong>을 통해 도서를 공식 공급하고 있습니다.
+          </p>
+        </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+        <div>
+          <h5 class="font-serifKr font-bold text-xs text-[#17191C] mb-2.5 flex items-center gap-1.5">
+            <span class="text-[#6E1B2A]">●</span> 장바구니 도서 서점별 구매 바로가기
+          </h5>
+          <div id="store-checkout-items-list" class="space-y-3">
+            <!-- Injected with cart items and store links -->
+          </div>
+        </div>
 
-    <!-- PortOne SDK for actual payments -->
-    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
-    <script src="data.js?v=20260912_v1"></script>
-    <script src="all_posts_dump_data.js?v=20260925_v2"></script>
-    <script>
-        // --- Firebase Configuration (Migrated to HTML for Safety) ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyCJbOaiElCypwgtPgbwdnudn3VC737fMrs",
-            authDomain: "kpuritan-home.firebaseapp.com",
-            projectId: "kpuritan-home",
-            storageBucket: "kpuritan-home.firebasestorage.app",
-            messagingSenderId: "1071220455502",
-            appId: "1:1071220455502:web:7f6f59b48c48a73437f8f0"
-        };
+        <div class="bg-[#EDE9E1] p-4 rounded-lg border border-[#E4DFD7] text-xs space-y-2 text-[#5E6470]">
+          <p class="font-semibold text-[#17191C] flex items-center gap-1.5">
+            <span>💡</span> 서점별 맞춤 혜택 안내
+          </p>
+          <ul class="list-disc list-inside space-y-1 text-[11px]">
+            <li><strong>네이버 스마트스토어:</strong> 네이버페이 포인트 추가 적립 & 원클릭 간편결제</li>
+            <li><strong>교보문고 / 알라딘 / YES24:</strong> 도서 소득공제, 회원 등급 마일리지, 주말/심야 배송</li>
+            <li><strong>e-Book (전자책):</strong> 교보문고 sam/eBook, 알라딘 eBook, YES24 eBook 뷰어로 결제 즉시 열람</li>
+          </ul>
+        </div>
+      </div>
 
-        // Initialize Firebase Global Variables
-        window.db = null;
-        window.storage = null;
-        window.isAdmin = localStorage.getItem('isAdmin') === 'true';
-        window.useMock = false;
+      <div class="bg-white p-4 px-6 border-t border-[#E4DFD7] flex items-center justify-between">
+        <span class="text-xs text-[#7E8694]">각 서점 버튼을 클릭하시면 해당 도서 페이지로 바로 이동합니다.</span>
+        <button onclick="closeStoreCheckoutModal()" class="px-5 py-2 bg-[#17191C] hover:bg-[#23272D] text-white rounded text-xs font-semibold">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
 
-        try {
-            if (firebase.apps.length === 0) {
-                firebase.initializeApp(firebaseConfig);
-                window.db = firebase.firestore();
-                window.storage = firebase.storage();
-                window.auth = firebase.auth();
-                console.log("✅ Firebase (HTML) 연결 성공! Auth 추가됨");
-            }
-        } catch (e) {
-            console.error("❌ Firebase 초기화 실패:", e);
-            window.useMock = true;
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT LOGIC -->
+  <!-- ========================================== -->
+  <script>
+    const BOOKS_DATA = [
+      {
+        id: 'phb-001',
+        title: '개혁주의 조직신학 전집 (전4권 세트)',
+        originalTitle: 'Reformed Systematic Theology (4 Volumes Set)',
+        author: '조엘 비키 & 폴 스몰리',
+        translator: '조계광, 손현선 공역',
+        series: '개혁교의학 대계 (Reformed Dogmatics Series)',
+        category: 'dogmatics',
+        subCategory: 'set',
+        isNew: true,
+        isPreorder: true,
+        isHardcover: true,
+        isEbook: false,
+        price: 198000,
+        originalPrice: 220000,
+        discountRate: 10,
+        pages: '4,480쪽',
+        isbn: '979-11-984501-0-1',
+        pubDate: '2026. 10. 15 (출간예정)',
+        tagline: '신학과 경건, 학문성과 목회적 적용이 완벽하게 융화된 21세기 최고의 개혁주의 교의학 기념비적 대작',
+        coverGradient: 'from-[#1a1c20] via-[#2d1b24] to-[#121417]',
+        confessionTag: '웨스트민스터 신앙고백서 1~33장 전편 해설',
+        description: '역사적 개혁주의 전통과 청교도 체험적 영성을 평생 연구해 온 조엘 비키 박사와 폴 스몰리 교수가 완성한 4부작 조직신학 전집입니다. 계시론과 신론, 인간론과 기독론, 구원론과 교회론, 종말론에 이르는 기독교 교리 전체를 개혁신학적 정합성과 청교도적 영성으로 풀어내었습니다.',
+        toc: [
+          '제1권: 계시론과 신론 (Revelation and God)',
+          '제2권: 인간론과 기독론 (Man and Christ)',
+          '제3권: 성령론과 구원론 (Holy Spirit and Salvation)',
+          '제4권: 교회론과 종말론 (Church and Last Things)'
+        ],
+        excerpt: '“신학이란 하나님을 아는 지식이며, 그분을 경외하고 사랑함으로 예배에 이르게 하는 가장 거룩한 학문이다. 머리로만 체계화된 교리는 죽은 정통에 불과하지만, 성령의 조명 안에서 마음을 뜨겁게 달구는 참된 교의는 영혼을 살리고 하나님을 찬양하게 만든다.”'
+      },
+      {
+        id: 'phb-002',
+        title: '죄와 유혹 (청교도 정본 완역판)',
+        originalTitle: 'Overcoming Sin and Temptation',
+        author: '존 오웬',
+        translator: '서문강 역',
+        series: '오늘을 위한 청교도 보화 01',
+        category: 'christian-life',
+        subCategory: null,
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 31500,
+        originalPrice: 35000,
+        discountRate: 10,
+        pages: '584쪽',
+        isbn: '979-11-984501-1-8',
+        pubDate: '2026. 03. 20',
+        tagline: '영적 전쟁과 신자의 내면을 해부하는 청교도 최고의 영혼의 외과의사 존 오웬의 불후의 고전',
+        coverGradient: 'from-[#4a121c] via-[#2a0b11] to-[#170508]',
+        confessionTag: 'WCF 제13장 성화 / 하이델베르크 제126~127문',
+        description: '존 오웬의 3대 영적 전쟁 명저인 『신자 안에 남아있는 죄』, 『죄 죽이기』, 『유혹론』을 한 권으로 엮은 정본 완역판입니다.',
+        toc: [
+          '제1부 신자 안에 거하는 죄의 권세와 속임수',
+          '제2부 육신의 행실을 죽이는 성령의 사역',
+          '제3부 유혹의 본질과 파수하는 경건의 방책'
+        ],
+        excerpt: '“죄를 죽이지 않으면 죄가 당신을 죽일 것이다. 성령의 권능 없이 자신의 결단이나 도덕적 노력만으로 죄와 싸우려는 자는 풀을 베어 독초를 박멸하려는 어리석은 농부와 같다.”'
+      },
+      {
+        id: 'phb-003',
+        title: '신자의 위로 (하나님의 모든 섭리)',
+        originalTitle: 'A Divine Cordial (All Things for Good)',
+        author: '토마스 왓슨',
+        translator: '백금산 역',
+        series: '오늘을 위한 청교도 보화 02',
+        category: 'christian-life',
+        subCategory: null,
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 19800,
+        originalPrice: 22000,
+        discountRate: 10,
+        pages: '272쪽',
+        isbn: '979-11-984501-2-5',
+        pubDate: '2026. 01. 10',
+        tagline: '로마서 8장 28절에 담긴 하나님의 주권적 사랑과 섭리를 맛보게 하는 가장 감미로운 위로의 샘물',
+        coverGradient: 'from-[#1b2b3a] via-[#111e2b] to-[#0a121b]',
+        confessionTag: '하이델베르크 요리문답 제1문 / WCF 제5장 섭리',
+        description: '고난과 시련, 심지어 성도의 연약함과 실패까지도 하나님께서 합력하여 영원한 유익을 이루신다는 영광스러운 진리를 선포합니다.',
+        toc: [
+          '제1장 최상의 약효를 지닌 영적 강장제',
+          '제2장 최선의 것들이 신자에게 유익이 되는 방식',
+          '제3장 환난조차 신자에게 선을 이루는 섭리'
+        ],
+        excerpt: '“의사의 손에 들린 메스는 살을 에는 고통을 주지만, 그 목적은 고름을 짜내고 생명을 살리는 데 있다.”'
+      },
+      {
+        id: 'phb-004',
+        title: '가정예배 성경 가이드 (양장본 완역)',
+        originalTitle: 'Family Worship Bible Guide',
+        author: '조엘 비키 & 마이클 배럿 외',
+        translator: '이원택 역',
+        series: '가정예배와 거룩한 유산 01',
+        category: 'christian-life',
+        subCategory: null,
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 49500,
+        originalPrice: 55000,
+        discountRate: 10,
+        pages: '960쪽',
+        isbn: '979-11-984501-3-2',
+        pubDate: '2026. 05. 12',
+        tagline: '창세기부터 요한계시록까지 성경 1,189장 전 장에 대한 가정예배 묵상과 나눔 질문 완벽 수록',
+        coverGradient: 'from-[#2e261d] via-[#1f1912] to-[#120e0a]',
+        confessionTag: '웨스트민스터 예배지침 (가정예배 규범)',
+        description: '매일 가정예배를 어떻게 인도해야 할지 막막한 부모와 목회자를 위한 최고의 길잡이입니다.',
+        toc: [
+          '제1부 구약 성경 39권 매 장 강해 및 가정 나눔 가이드',
+          '제2부 신약 성경 27권 매 장 강해 및 가정 나눔 가이드'
+        ],
+        excerpt: '“가정은 교회의 작은 묘목장이며, 가정예배는 다음 세대의 마음에 하나님의 진리를 새기는 거룩한 제단이다.”'
+      },
+      {
+        id: 'phb-005',
+        title: '상한 갈대 (The Bruised Reed)',
+        originalTitle: 'The Bruised Reed and Smoking Flax',
+        author: '리처드 십스',
+        translator: '장호연 역',
+        series: '개혁파 영성 클래식 01',
+        category: 'christian-life',
+        subCategory: null,
+        isNew: false,
+        isPreorder: false,
+        isHardcover: false,
+        isEbook: true,
+        price: 16200,
+        originalPrice: 18000,
+        discountRate: 10,
+        pages: '224쪽',
+        isbn: '979-11-984501-4-9',
+        pubDate: '2025. 11. 30',
+        tagline: '‘달콤한 십스’가 전하는 상하고 꺾인 영혼을 향한 그리스도의 한없는 자비',
+        coverGradient: 'from-[#1c2c26] via-[#101c18] to-[#070e0b]',
+        confessionTag: 'WCF 제14장 구원에 이르는 믿음',
+        description: '자신의 무가치함으로 인해 꺾여버린 상한 갈대 같은 신자들을 결코 꺾지 않으시는 그리스도의 온유함을 전합니다.',
+        toc: [
+          '제1장 상한 갈대: 그리스도께서 꺾지 않으시는 자들',
+          '제2장 꺼져가는 심지: 그리스도께서 끄지 않으시는 은혜'
+        ],
+        excerpt: '“우리의 연약함이 그리스도의 긍휼을 막지 못하며, 우리의 불완전함이 그분의 사랑을 식게 하지 못한다.”'
+      },
+      {
+        id: 'phb-006',
+        title: '언약신학 탐구 (The Economy of Covenants)',
+        originalTitle: 'The Economy of the Covenants between God and Man',
+        author: '헤르만 위트시우스',
+        translator: '박태현 역 / 김남준 목사 해제',
+        series: '개혁교의학 대계 (Reformed Dogmatics Series)',
+        category: 'dogmatics',
+        subCategory: 'soteriology',
+        isNew: true,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: false,
+        price: 68400,
+        originalPrice: 76000,
+        discountRate: 10,
+        pages: '1,120쪽',
+        isbn: '979-11-984501-5-6',
+        pubDate: '2026. 08. 10',
+        tagline: '네덜란드 제2종교개혁의 정수이자 성경 전체를 꿰뚫는 언약의 웅장한 체계',
+        coverGradient: 'from-[#3a201b] via-[#241310] to-[#120806]',
+        confessionTag: 'WCF 제7장 하나님과 인간의 언약',
+        description: '행위언약과 은혜언약, 구속언약의 삼중적 구조를 통해 구속사의 통일성을 해명한 최고봉 저작입니다.',
+        toc: [
+          '제1권 행위언약',
+          '제2권 영원한 구속언약',
+          '제3권 은혜언약의 본질'
+        ],
+        excerpt: '“언약은 하나님께서 피조물인 인간과 나누시는 가장 친밀하고 복된 사귐의 통로이다.”'
+      },
+      {
+        id: 'phb-007',
+        title: '거룩과 확신 (Holiness & Assurance)',
+        originalTitle: 'Holiness: Its Nature, Hindrances, Difficulties, and Roots',
+        author: 'J. C. 라일',
+        translator: '정성욱 역',
+        series: '개혁파 영성 클래식 02',
+        category: 'christian-life',
+        subCategory: null,
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 27000,
+        originalPrice: 30000,
+        discountRate: 10,
+        pages: '512쪽',
+        isbn: '979-11-984501-6-3',
+        pubDate: '2025. 10. 05',
+        tagline: '19세기 청교도라 불린 J.C. 라일 주교가 선포하는 실천적 성화와 진정한 영적 싸움의 본질',
+        coverGradient: 'from-[#1f2633] via-[#121824] to-[#0a0d14]',
+        confessionTag: 'WCF 제18장 은혜와 구원의 확신',
+        description: '값싼 은혜에 빠진 현대 교회를 향한 날카로운 경종이자 참된 거룩의 표지를 제시합니다.',
+        toc: [
+          '제1장 죄의 실재와 심각성',
+          '제2장 성화: 거룩함의 본질과 특성',
+          '제3장 영적 전쟁'
+        ],
+        excerpt: '“거룩은 구원의 조건이 아니라 구원받은 영혼의 필연적 열매이다.”'
+      },
+      {
+        id: 'phb-008',
+        title: '그리스도의 영광 (The Glory of Christ)',
+        originalTitle: 'Meditations and Discourses on the Glory of Christ',
+        author: '존 오웬',
+        translator: '김홍만 역',
+        series: '오늘을 위한 청교도 보화 03',
+        category: 'dogmatics',
+        subCategory: 'christology',
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 24300,
+        originalPrice: 27000,
+        discountRate: 10,
+        pages: '384쪽',
+        isbn: '979-11-984501-7-0',
+        pubDate: '2026. 02. 14',
+        tagline: '존 오웬이 임종 직전 병상에서 구술한 영혼의 백미이자 기독론 묵상의 절정',
+        coverGradient: 'from-[#3a1a2b] via-[#240e1b] to-[#14060e]',
+        confessionTag: 'WCF 제8장 중보자 그리스도',
+        description: '성자 하나님의 영원한 신성과 성육신하신 그리스도의 인격, 그리고 중보하시는 영광을 묵상합니다.',
+        toc: [
+          '제1장 믿음으로 바라보는 그리스도의 인격의 영광',
+          '제2장 그리스도의 지혜와 사랑'
+        ],
+        excerpt: '“믿음으로 그리스도의 영광을 바라보는 것은 우리 영혼이 이 땅에서 누릴 수 있는 가장 고귀한 특권이다.”'
+      },
+      {
+        id: 'phb-009',
+        title: '매튜 풀 성경주석 완간 세트 (신구약 전3권)',
+        originalTitle: "Matthew Poole's Commentary on the Holy Bible",
+        author: '매튜 풀',
+        translator: '박문재 역',
+        series: '개혁주의 성경주석 대계 01',
+        category: 'commentary',
+        subCategory: 'set',
+        isNew: true,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: false,
+        price: 180000,
+        originalPrice: 200000,
+        discountRate: 10,
+        pages: '3,850쪽',
+        isbn: '979-11-984501-8-7',
+        pubDate: '2026. 04. 15',
+        tagline: '스펄전이 ‘목회자의 서재에 가장 먼저 꽂혀 있어야 할 주석’으로 격찬한 청교도 주석학의 기념비',
+        coverGradient: 'from-[#19232d] via-[#101920] to-[#090e13]',
+        confessionTag: 'WCF 제1장 성경 (성경 해석의 규범)',
+        description: '원문 언어에 대한 탁월한 분석과 교리적 정합성, 명쾌한 본문 해설을 결합하여 개혁교회 400년간 사랑받아 온 신구약 성경 주석의 최고 권위서입니다.',
+        toc: [
+          '제1권 구약 모세오경 및 역사서 (창세기~에스더)',
+          '제2권 구약 시가서 및 선지서 (욥기~말라기)',
+          '제3권 신약성경 전체 (마태복음~요한계시록)'
+        ],
+        excerpt: '“성경은 성경 자체로 해석되어야 하며, 기록된 하나님의 말씀은 신자의 믿음과 순종을 위한 유일무이하고 무오한 표준이다.”'
+      },
+      {
+        id: 'phb-010',
+        title: '시편 강해: 다윗의 보고 (전3권 세트)',
+        originalTitle: 'The Treasury of David (Exposition of the Psalms)',
+        author: '찰스 스펄전',
+        translator: '서문강 역',
+        series: '개혁주의 성경주석 대계 02',
+        category: 'commentary',
+        subCategory: 'ot',
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 108000,
+        originalPrice: 120000,
+        discountRate: 10,
+        pages: '2,640쪽',
+        isbn: '979-11-984501-9-4',
+        pubDate: '2025. 12. 01',
+        tagline: '20여 년에 걸쳐 완성된 시편 주석의 불후의 금자탑, 청교도 거장들의 주해가 총망라된 영혼의 보고',
+        coverGradient: 'from-[#2b1f14] via-[#1c130b] to-[#0e0905]',
+        confessionTag: '웨스트민스터 예배지침 (시편 찬송과 기도)',
+        description: '설교자의 황태자 스펄전이 20년의 목회적 열정을 바쳐 시편 150편 전편을 주해하고 수백 명의 역사적 청교도 주해를 집대성한 역작입니다.',
+        toc: [
+          '제1권 시편 1편~52편 강해 및 청교도 주해선집',
+          '제2권 시편 53편~103편 강해 및 영적 적용',
+          '제3권 시편 104편~150편 강해 및 할렐루야 찬양'
+        ],
+        excerpt: '“시편은 성도의 모든 슬픔과 환희, 회개와 찬양이 녹아있는 심장의 거울이다. 그리스도는 시편 모든 구절 속에서 살아 숨 쉬고 계신다.”'
+      },
+      {
+        id: 'phb-011',
+        title: '히브리서 주석 정본 (전7권 완간 세트)',
+        originalTitle: 'An Exposition of the Epistle to the Hebrews',
+        author: '존 오웬',
+        translator: '조계광 역',
+        series: '개혁주의 성경주석 대계 03',
+        category: 'commentary',
+        subCategory: 'nt',
+        isNew: true,
+        isPreorder: true,
+        isHardcover: true,
+        isEbook: false,
+        price: 252000,
+        originalPrice: 280000,
+        discountRate: 10,
+        pages: '4,960쪽',
+        isbn: '979-11-984502-0-0',
+        pubDate: '2026. 11. 20 (출간예정)',
+        tagline: '청교도의 황태자 존 오웬이 16년간 평생의 학문과 경건을 쏟아부은 신약 주석 사상 최대의 역작',
+        coverGradient: 'from-[#331822] via-[#210c14] to-[#100509]',
+        confessionTag: 'WCF 제8장 중보자 그리스도 / 히브리서 대제사장직',
+        description: '더 우월하신 대제사장 예수 그리스도와 더 좋은 언약의 영광을 구약의 제사 제도와 비교하며 심오하게 밝혀낸 교회사 불후의 신약 주석입니다.',
+        toc: [
+          '제1~2권 서론적 연구 및 그리스도의 탁월하신 신성과 인격 (히 1~3장)',
+          '제3~4권 멜기세덱의 반차를 따른 영원한 대제사장 (히 4~7장)',
+          '제5~6권 더 좋은 언약과 단번의 온전한 제사 (히 8~10장)',
+          '제7권 믿음의 선진들과 흔들리지 않는 나라 (히 11~13장)'
+        ],
+        excerpt: '“그리스도의 보혈은 영원한 단번의 제사로서 신자의 양심을 죽은 행실에서 깨끗하게 하며, 살아 계신 하나님을 담대히 섬기게 하는 유일한 능력이다.”'
+      },
+      {
+        id: 'phb-012',
+        title: '하나님의 존재와 속성 (전2권 완역 세트)',
+        originalTitle: 'Discourses upon the Existence and Attributes of God',
+        author: '스티븐 차녹',
+        translator: '김남준 목사 감수, 손현선 역',
+        series: '개혁교의학 대계 (신론편)',
+        category: 'dogmatics',
+        subCategory: 'theology-proper',
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 88200,
+        originalPrice: 98000,
+        discountRate: 10,
+        pages: '1,720쪽',
+        isbn: '979-11-984502-1-7',
+        pubDate: '2025. 09. 15',
+        tagline: '하나님의 무한성, 영원성, 주권, 전지하심과 거룩하심을 가장 웅장하고 심오하게 해명한 불멸의 신론 대작',
+        coverGradient: 'from-[#172228] via-[#0e171c] to-[#060b0e]',
+        confessionTag: 'WCF 제2장 하나님과 거룩하신 삼위일체',
+        description: '무신론에 대한 강력한 성경적 논박과 함께 전능하심, 거룩하심, 자비하심 등 하나님의 신적 속성을 하나하나 눈부시게 밝혀 신자를 경배로 인도합니다.',
+        toc: [
+          '제1부 하나님의 실재와 무신론 비판',
+          '제2부 하나님의 영성과 편재성, 영원성과 불변성',
+          '제3부 하나님의 전지와 지혜, 권능과 거룩하심',
+          '제4부 하나님의 선하심, 공의와 주권적 통치'
+        ],
+        excerpt: '“하나님의 속성을 깊이 묵상하는 영혼은 세상의 모든 환난 앞에서도 요동하지 않는 영원한 반석 위에 서게 된다.”'
+      },
+      {
+        id: 'phb-013',
+        title: '인간의 사중 상태 (Human Nature in Its Fourfold State)',
+        originalTitle: 'Human Nature in Its Fourfold State',
+        author: '토마스 보스턴',
+        translator: '정성욱 역',
+        series: '개혁교의학 대계 (인간론편)',
+        category: 'dogmatics',
+        subCategory: 'anthropology',
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 28800,
+        originalPrice: 32000,
+        discountRate: 10,
+        pages: '480쪽',
+        isbn: '979-11-984502-2-4',
+        pubDate: '2026. 02. 01',
+        tagline: '원초적 무죄, 타락과 전적 부패, 중생과 은혜, 영원한 영화의 상태로 조명하는 성경적 인간 본성의 완전한 해부',
+        coverGradient: 'from-[#2e1d16] via-[#1d110c] to-[#0f0705]',
+        confessionTag: 'WCF 제6장 인간의 타락과 죄와 형벌 / 제9장 자유의지',
+        description: '에덴동산의 원초적 무죄 상태부터 타락 후 전적 부패, 그리스도 안에서의 은혜 상태, 내세의 영원한 상태에 이르는 인간의 실존을 명징하게 해부합니다.',
+        toc: [
+          '제1부 무죄의 상태: 창조 시 인간의 본래적 의와 영광',
+          '제2부 타락의 상태: 죄의 지배와 전적 무능력',
+          '제3부 은혜의 상태: 그리스도와의 연합과 중생',
+          '제4부 영원한 상태: 의인의 부활과 악인의 영원한 심판'
+        ],
+        excerpt: '“우리의 옛 본성은 아담 안에서 완전히 파선하였으나, 복음의 은혜는 둘째 아담이신 그리스도 안에서 우리를 새로운 피조물로 빚으신다.”'
+      },
+      {
+        id: 'phb-014',
+        title: '개혁교회론과 성례전 (Reformed Ecclesiology)',
+        originalTitle: 'Institutes of Elenctic Theology: The Church and Sacraments',
+        author: '프란키스쿠스 튜레틴',
+        translator: '박태현 역',
+        series: '개혁교의학 대계 (교회론편)',
+        category: 'dogmatics',
+        subCategory: 'ecclesiology',
+        isNew: true,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: false,
+        price: 45000,
+        originalPrice: 50000,
+        discountRate: 10,
+        pages: '720쪽',
+        isbn: '979-11-984502-3-1',
+        pubDate: '2026. 07. 01',
+        tagline: '참된 교회의 표지와 그리스도의 몸 된 교회의 직분, 세례와 성찬의 영광스러운 은혜를 규명한 정통 교의학',
+        coverGradient: 'from-[#1a2c26] via-[#101c18] to-[#070e0b]',
+        confessionTag: 'WCF 제25장 교회 / 제27~29장 성례, 세례, 성찬',
+        description: '제네바 아카데미의 최고 스콜라 신학자 튜레틴이 로마 가톨릭의 교권주의와 열광주의를 성경적으로 반박하고 참된 교회의 본질을 정립한 고전입니다.',
+        toc: [
+          '제1부 교회의 본질, 통일성, 거룩성과 보편성',
+          '제2부 참된 교회의 참된 표지: 말씀 전파와 권징',
+          '제3부 교회의 직분과 영적 치리',
+          '제4부 은혜의 외적 방편: 말씀과 세례, 주의 성찬'
+        ],
+        excerpt: '“교회는 인간의 인위적 결사체가 아니라 오직 영원한 대제사장이신 그리스도의 음성을 듣고 따르는 양들의 거룩한 회중이다.”'
+      },
+      {
+        id: 'phb-015',
+        title: '성도의 영원한 안식 (The Saints\' Everlasting Rest)',
+        originalTitle: 'The Saints\' Everlasting Rest',
+        author: '리처드 백스터',
+        translator: '백금산 역',
+        series: '개혁교의학 대계 (종말론편)',
+        category: 'dogmatics',
+        subCategory: 'eschatology',
+        isNew: false,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: true,
+        price: 32400,
+        originalPrice: 36000,
+        discountRate: 10,
+        pages: '640쪽',
+        isbn: '979-11-984502-4-8',
+        pubDate: '2025. 08. 20',
+        tagline: '장차 그리스도와 함께 누릴 천국의 영광스러운 안식과 부활의 소망을 사모하게 하는 종말론적 경건의 정수',
+        coverGradient: 'from-[#2c1d2e] via-[#1c111e] to-[#0e070f]',
+        confessionTag: 'WCF 제32장 사후 상태와 부활 / 제33장 최후 심판',
+        description: '질병으로 생사의 기로에 섰던 백스터가 천국의 지복직관(Beatific Vision)과 그리스도인의 궁극적 소망을 영혼의 벅찬 감격으로 써내려간 걸작입니다.',
+        toc: [
+          '제1부 성도들에게 예비된 영원한 안식의 탁월함',
+          '제2부 이 안식을 잃어버리는 자들의 비참과 경고',
+          '제3부 천국 안식을 사모하며 누리는 영혼의 훈련',
+          '제4부 믿음의 눈으로 바라보는 영광스러운 부활의 날'
+        ],
+        excerpt: '“우리의 순례길이 험난할수록 저 영원한 본향에서 기다리고 있는 안식은 더욱 달콤할 것이다. 마음의 닻을 천국 보좌에 굳게 내리라.”'
+      },
+      {
+        id: 'phb-016',
+        title: '16세기 종교개혁사 (전5권 세트)',
+        originalTitle: 'History of the Reformation in the Sixteenth Century (5 Vols)',
+        author: 'J. H. 메를 도비녜',
+        translator: '이원택 역',
+        series: '역사신학 대계 01',
+        category: 'historical',
+        subCategory: null,
+        isNew: true,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: false,
+        price: 225000,
+        originalPrice: 250000,
+        discountRate: 10,
+        pages: '3,400쪽',
+        isbn: '979-11-984502-5-5',
+        pubDate: '2026. 06. 10',
+        tagline: '루터, 츠빙글리, 칼빈으로 이어지는 종교개혁의 불꽃과 섭리의 역사를 웅장한 필치로 기록한 역사신학의 불후의 고전',
+        coverGradient: 'from-[#3a2818] via-[#24170c] to-[#120a05]',
+        confessionTag: '오직 성경, 오직 은혜, 오직 믿음 (Five Solas)',
+        description: '스위스 제네바의 개혁주의 교회사학자 도비녜가 방대한 1차 사료를 바탕으로 하나님의 주권적 손길이 역사의 물줄기를 바꾼 종교개혁의 파노라마를 생생히 복원합니다.',
+        toc: [
+          '제1~2권 루터와 독일 종교개혁의 여명 (보름스 제국의회)',
+          '제3권 츠빙글리와 스위스 종교개혁의 발흥',
+          '제4권 칼빈과 제네바의 거룩한 개혁',
+          '제5권 영국 및 스코틀랜드 종교개혁과 순교자들의 피'
+        ],
+        excerpt: '“종교개혁은 인간 영웅의 업적이 아니요, 하나님의 생명의 말씀이 어둠 속에 갇힌 교회를 깨우고 부활시킨 성령의 기적이었다.”'
+      },
+      {
+        id: 'phb-017',
+        title: '존 오웬 전집 (Works of John Owen, 전16권 정본 완역판)',
+        originalTitle: 'The Works of John Owen (16 Volumes Complete Set)',
+        author: '존 오웬',
+        translator: 'PHB 청교도원전번역위원회 공역',
+        series: '청교도저작 전집 대계 01',
+        category: 'puritan-works',
+        subCategory: null,
+        isNew: true,
+        isPreorder: true,
+        isHardcover: true,
+        isEbook: false,
+        price: 720000,
+        originalPrice: 800000,
+        discountRate: 10,
+        pages: '10,800쪽',
+        isbn: '979-11-984502-6-2',
+        pubDate: '2026. 12. 15 (한정판 사전예약)',
+        tagline: '영국 최고의 신학자 존 오웬의 교의학, 성령론, 성화론, 교회론 문헌 전체를 망라한 역사적 정본 전집',
+        coverGradient: 'from-[#22161b] via-[#160d11] to-[#0b0508]',
+        confessionTag: '웨스트민스터 총회 신학의 정점',
+        description: '삼위일체론, 성령론 대작, 그리스도의 죽으심의 효능, 죄 죽이기, 배교론 등 오웬이 남긴 16권의 전집 전체를 17세기 원문 대조로 정밀하게 완역한 한국 출판 사상 초유의 기념비적 전집입니다.',
+        toc: [
+          '제1~3권 기독론 및 삼위일체 하나님과의 교제',
+          '제4~5권 성령론 대계 (The Holy Spirit)',
+          '제6~7권 성화론과 영적 전쟁 (죄 죽이기, 유혹, 내주하는 죄)',
+          '제8~9권 그리스도의 구속 사역의 완전성 (제한속죄론)',
+          '제10~16권 교회론, 배교론 및 학술 논단'
+        ],
+        excerpt: '“우리가 그리스도를 닮아가는 유일한 길은 날마다 믿음의 눈으로 그분의 영광을 바라보는 것이다. 이 바라봄이 우리 영혼을 변화시킨다.”'
+      },
+      {
+        id: 'phb-018',
+        title: '토마스 굿윈 전집 (Works of Thomas Goodwin, 전12권 세트)',
+        originalTitle: 'The Works of Thomas Goodwin (12 Volumes Set)',
+        author: '토마스 굿윈',
+        translator: 'PHB 청교도원전번역위원회 공역',
+        series: '청교도저작 전집 대계 02',
+        category: 'puritan-works',
+        subCategory: null,
+        isNew: true,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: false,
+        price: 540000,
+        originalPrice: 600000,
+        discountRate: 10,
+        pages: '8,400쪽',
+        isbn: '979-11-984502-7-9',
+        pubDate: '2026. 09. 30',
+        tagline: '하늘에 계신 그리스도의 마음과 성령의 인치심, 영원한 선택의 영광을 가장 깊이 있게 논증한 청교도 거장의 전집',
+        coverGradient: 'from-[#1c2230] via-[#111722] to-[#070b12]',
+        confessionTag: '웨스트민스터 독립파 위원 대표작',
+        description: '웨스트민스터 총회 핵심 주역이자 옥스퍼드 모들린 칼리지 학장이었던 토마스 굿윈의 에베소서 강해, 그리스도의 심장, 성령의 사역, 지혜론 등을 총망라한 전집입니다.',
+        toc: [
+          '제1~2권 에베소서 강해 (창세 전 선택과 예정의 영광)',
+          '제3~4권 하늘에 계신 그리스도의 심장과 중보의 사랑',
+          '제5~7권 성령의 역사와 신자의 인치심, 구원의 확신',
+          '제8~12권 의인의 보상, 정당한 권징과 개혁교회 질서'
+        ],
+        excerpt: '“그리스도의 마음은 지금도 하늘 보좌에서 상처 입고 연약한 지상 성도들을 향해 가장 부드럽고 긍휼한 사랑으로 박동하고 있다.”'
+      }
+    ];
+
+    const PURITAN_QUOTES = [
+      {
+        quote: "그리스도를 아는 지식이 없는 거룩은 참된 거룩이 아니며, 지식만 있고 마음의 경건이 없는 신앙은 죽은 껍데기에 불과하다.",
+        author: "토마스 왓슨 (Thomas Watson)",
+        source: "『신자의 위로 (A Divine Cordial)』 중"
+      },
+      {
+        quote: "죄를 죽이지 않으면 죄가 당신을 죽일 것이다. 성령의 불로 당신의 마음을 채우지 않으면 죄의 독초가 영혼을 잠식할 것이다.",
+        author: "존 오웬 (John Owen)",
+        source: "『죄 죽이기 (Mortification of Sin)』 중"
+      },
+      {
+        quote: "그리스도께서는 상한 갈대를 꺾지 않으시며, 꺼져가는 심지를 끄지 않으신다. 우리의 가장 연약한 믿음조차 그분의 크신 자비 안에 안식한다.",
+        author: "리처드 십스 (Richard Sibbes)",
+        source: "『상한 갈대 (The Bruised Reed)』 중"
+      },
+      {
+        quote: "가정예배의 제단에 피어오르는 찬송과 기도는 사탄의 권세를 무너뜨리고 하나님의 은혜를 가정에 머물게 하는 거룩한 축복의 통로이다.",
+        author: "조엘 비키 (Joel R. Beeke)",
+        source: "『가정예배 성경 가이드』 서문 중"
+      }
+    ];
+
+    const CONFESSIONS_MAP = [
+      {
+        standard: '웨스트민스터 소요리문답',
+        section: '제1문: 사람의 제일 되는 목적',
+        content: '“사람의 제일 되는 목적은 하나님을 영화롭게 하고 영원토록 그분을 즐거워하는 것이다.”',
+        matchedBookId: 'phb-001',
+        bookTitle: '개혁주의 조직신학 전집 (조엘 비키 & 폴 스몰리)'
+      },
+      {
+        standard: '웨스트민스터 신앙고백서',
+        section: '제13장: 성화 (Sanctification)',
+        content: '“그리스도의 죽으심과 부활의 효능으로 말미암아서… 죄의 지배 권세가 파괴되고, 정욕들이 점점 약화되며 죽어간다.”',
+        matchedBookId: 'phb-002',
+        bookTitle: '죄와 유혹 (존 오웬 정본 완역판)'
+      },
+      {
+        standard: '하이델베르크 요리문답',
+        section: '제1문: 당신의 유일한 위로는 무엇입니까?',
+        content: '“살아서나 죽어서나 나는 나의 것이 아니요, 몸도 영혼도 나의 신실하신 구주 예수 그리스도의 것입니다.”',
+        matchedBookId: 'phb-003',
+        bookTitle: '신자의 위로 (토마스 왓슨)'
+      },
+      {
+        standard: '웨스트민스터 신앙고백서',
+        section: '제7장: 하나님과 인간의 언약',
+        content: '“하나님과 피조물 사이의 거리가 너무나 멀기 때문에… 하나님 편에서 언약의 방식으로 자신을 낮추사 교제하신다.”',
+        matchedBookId: 'phb-006',
+        bookTitle: '언약신학 탐구 (헤르만 위트시우스)'
+      }
+    ];
+
+    // State Variables
+    let currentCategory = 'all';
+    let currentSubcategory = 'all';
+    let currentSearch = '';
+    let cart = [
+      { book: BOOKS_DATA[0], quantity: 1 },
+      { book: BOOKS_DATA[1], quantity: 1 }
+    ];
+    let quoteIndex = 0;
+    let confessionIndex = 0;
+
+    // Toast Function
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const text = document.getElementById('toast-message');
+      text.innerText = msg;
+      toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+      }, 3000);
+    }
+
+    // Mobile Navigation Controls
+    function toggleMobileMenu(show) {
+      const drawer = document.getElementById('mobile-menu-drawer');
+      if (show) {
+        drawer.classList.remove('hidden');
+      } else {
+        drawer.classList.add('hidden');
+      }
+    }
+
+    function toggleMobileAccordion(name) {
+      const sub = document.getElementById(`mobile-sub-${name}`);
+      const arrow = document.getElementById(`mobile-arrow-${name}`);
+      if (!sub || !arrow) return;
+      const isOpen = !sub.classList.contains('hidden');
+      if (isOpen) {
+        sub.classList.add('hidden');
+        arrow.classList.remove('rotate-180');
+      } else {
+        sub.classList.remove('hidden');
+        arrow.classList.add('rotate-180');
+      }
+    }
+
+    // Filter Controller
+    function setFilter(category, subcategory = 'all', shouldScroll = true) {
+      currentCategory = category;
+      currentSubcategory = subcategory;
+      renderCategoryTabs();
+      renderBooksGrid();
+
+      if (shouldScroll) {
+        const el = document.getElementById('catalog-section');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
         }
+      }
+    }
 
-        window.onerror = function (msg, url, lineNo, columnNo, error) {
-            console.error('JS Error:', msg, 'Line:', lineNo, error);
-            return false;
-        };
+    function setCategoryFilter(category) {
+      setFilter(category, 'all', true);
+    }
 
-        // PDF.js worker 설정
-        if (typeof pdfjsLib !== 'undefined') {
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    function handleSearch(val) {
+      currentSearch = val;
+      renderActiveFilterIndicator();
+      renderBooksGrid();
+    }
+
+    // Helper: Filtered Books List
+    function getFilteredBooks() {
+      return BOOKS_DATA.filter(book => {
+        const matchesCat = (() => {
+          if (currentCategory === 'all') return true;
+          if (currentCategory === 'ebook') return book.isEbook;
+          if (currentCategory === 'new') return book.isNew || book.isPreorder;
+
+          if (book.category !== currentCategory) return false;
+
+          if (currentSubcategory && currentSubcategory !== 'all') {
+            return book.subCategory === currentSubcategory;
+          }
+          return true;
+        })();
+
+        const q = currentSearch.toLowerCase().trim();
+        const matchesQuery =
+          !q ||
+          book.title.toLowerCase().includes(q) ||
+          book.author.toLowerCase().includes(q) ||
+          book.translator.toLowerCase().includes(q) ||
+          book.series.toLowerCase().includes(q) ||
+          (book.tagline && book.tagline.toLowerCase().includes(q)) ||
+          (book.originalTitle && book.originalTitle.toLowerCase().includes(q));
+
+        return matchesCat && matchesQuery;
+      });
+    }
+
+    // Render Category Tabs & Subcategory Pills
+    function renderCategoryTabs() {
+      const primaryTabs = [
+        { key: 'all', label: '전체 도서 (All)' },
+        { key: 'commentary', label: '성경주석' },
+        { key: 'dogmatics', label: '조직신학' },
+        { key: 'historical', label: '역사신학' },
+        { key: 'christian-life', label: '크리스천 라이프' },
+        { key: 'puritan-works', label: '청교도저작 전집' },
+        { key: 'ebook', label: '전자책 (eBook)' }
+      ];
+
+      const tabsContainer = document.getElementById('category-tabs-container');
+      tabsContainer.innerHTML = primaryTabs.map(tab => `
+        <button
+          onclick="setFilter('${tab.key}', 'all', false)"
+          class="px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all ${
+            currentCategory === tab.key
+              ? 'bg-[#6E1B2A] text-white shadow-md font-semibold'
+              : 'bg-white text-[#5E6470] hover:bg-[#EDE9E1] border border-[#E4DFD7]'
+          }"
+        >
+          ${tab.label}
+        </button>
+      `).join('');
+
+      // Subcategory Pills Rendering
+      const subContainer = document.getElementById('subcategory-pills-container');
+      const subcategoriesMap = {
+        commentary: [
+          { key: 'all', label: '전체 주석' },
+          { key: 'set', label: 'Set (세트)' },
+          { key: 'ot', label: '구약' },
+          { key: 'nt', label: '신약' }
+        ],
+        dogmatics: [
+          { key: 'all', label: '전체 교의학' },
+          { key: 'set', label: 'Set (전집/세트)' },
+          { key: 'theology-proper', label: '신론' },
+          { key: 'anthropology', label: '인간론' },
+          { key: 'christology', label: '기독론' },
+          { key: 'soteriology', label: '구원론' },
+          { key: 'ecclesiology', label: '교회론' },
+          { key: 'eschatology', label: '종말론' }
+        ]
+      };
+
+      if (subcategoriesMap[currentCategory]) {
+        subContainer.classList.remove('hidden');
+        subContainer.innerHTML = subcategoriesMap[currentCategory].map(sub => `
+          <button
+            onclick="setFilter('${currentCategory}', '${sub.key}', false)"
+            class="px-3.5 py-1.5 rounded-full text-xs transition-all ${
+              currentSubcategory === sub.key
+                ? 'bg-[#C39738] text-[#17191C] font-bold shadow-xs'
+                : 'bg-white text-[#5E6470] hover:bg-[#EDE9E1] border border-[#E4DFD7]'
+            }"
+          >
+            ${sub.label}
+          </button>
+        `).join('');
+      } else {
+        subContainer.classList.add('hidden');
+        subContainer.innerHTML = '';
+      }
+
+      renderActiveFilterIndicator();
+    }
+
+    // Render Active Filter Indicator Banner
+    function renderActiveFilterIndicator() {
+      const indicator = document.getElementById('active-filter-indicator');
+      const filtered = getFilteredBooks();
+
+      const catNames = {
+        'all': '전체 도서',
+        'commentary': '성경주석',
+        'dogmatics': '조직신학',
+        'historical': '역사신학',
+        'christian-life': '크리스천 라이프',
+        'puritan-works': '청교도저작 전집',
+        'ebook': '전자책(eBook)'
+      };
+
+      const subNames = {
+        'set': 'Set (전집/세트)',
+        'ot': '구약',
+        'nt': '신약',
+        'theology-proper': '신론',
+        'anthropology': '인간론',
+        'christology': '기독론',
+        'soteriology': '구원론',
+        'ecclesiology': '교회론',
+        'eschatology': '종말론'
+      };
+
+      let labelText = catNames[currentCategory] || '전체 도서';
+      if (currentSubcategory && currentSubcategory !== 'all' && subNames[currentSubcategory]) {
+        labelText += ` > ${subNames[currentSubcategory]}`;
+      }
+
+      const isFiltered = currentCategory !== 'all' || (currentSubcategory && currentSubcategory !== 'all') || currentSearch;
+
+      indicator.innerHTML = `
+        <div class="flex items-center space-x-2 text-xs flex-wrap gap-y-1">
+          <span class="text-[#7E8694]">현재 탐색 분류:</span>
+          <span class="font-bold text-[#6E1B2A] bg-[#FAF8F5] px-2.5 py-1 rounded border border-[#E4DFD7] flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
+            <span>${labelText}</span>
+          </span>
+          <span class="text-[#5E6470]">• 총 <strong class="text-[#17191C]">${filtered.length}권</strong>의 추천 도서</span>
+          ${currentSearch ? `<span class="text-[#7E8694]">(검색어: "${currentSearch}")</span>` : ''}
+        </div>
+        <div>
+          ${isFiltered ? `
+            <button
+              onclick="setFilter('all', 'all', false); const s = document.getElementById('header-search-input'); if(s) s.value=''; handleSearch('');"
+              class="text-xs text-[#8C2538] hover:text-[#6E1B2A] font-semibold underline hover:no-underline"
+            >
+              전체 분류로 초기화
+            </button>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    // Filter and Render Books Grid
+    function renderBooksGrid() {
+      const filtered = getFilteredBooks();
+      const container = document.getElementById('books-grid-container');
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full text-center py-20 bg-white rounded-lg border border-[#E4DFD7] p-8">
+            <p class="font-serifKr font-semibold text-base text-[#17191C]">선택하신 분류의 도서가 없습니다.</p>
+            <p class="text-xs text-[#5E6470] mt-1">다른 카테고리나 검색어를 선택해 주십시오.</p>
+            <button onclick="setFilter('all', 'all', false)" class="mt-4 px-4 py-2 bg-[#6E1B2A] text-white rounded text-xs font-semibold">
+              전체 도서 보기
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(book => `
+        <div class="bg-white rounded-lg border border-[#E4DFD7] overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+          <div class="p-6 bg-[#F8F7F4] flex justify-center items-center relative border-b border-[#E4DFD7] overflow-hidden">
+            
+            <div onclick="openBookPreview('${book.id}')" class="cursor-pointer w-44 h-64 bg-gradient-to-br ${book.coverGradient} rounded-r-md rounded-l-xs shadow-book book-spine-effect p-4 flex flex-col justify-between transform transition-all duration-300 group-hover:scale-105 group-hover:-rotate-1 relative">
+              <div class="absolute inset-2 border border-[#C39738]/30 pointer-events-none"></div>
+              <div class="relative z-10 text-center">
+                <span class="font-cinzel text-[8px] tracking-wider text-[#DFC075] uppercase block truncate">
+                  ${book.series.split('(')[0]}
+                </span>
+              </div>
+              <div class="relative z-10 text-center my-auto space-y-1">
+                <h3 class="font-serifKr text-base font-bold text-white leading-snug">
+                  ${book.title.split('(')[0]}
+                </h3>
+                <p class="font-serifEn italic text-[9px] text-[#DFC075]/70 truncate">${book.originalTitle}</p>
+              </div>
+              <div class="relative z-10 text-center border-t border-[#C39738]/20 pt-2">
+                <p class="text-[10px] font-serifKr text-[#E4DFD7] font-medium">${book.author}</p>
+                <span class="font-cinzel text-[7px] text-[#A6ADB8] tracking-widest">PHB CLASSICS</span>
+              </div>
+            </div>
+
+            <div class="absolute top-3 left-3 flex flex-col gap-1 z-20">
+              ${book.isPreorder ? '<span class="bg-[#6E1B2A] text-white text-[9px] font-bold px-2 py-0.5 rounded shadow">사전예약</span>' : ''}
+              ${book.isHardcover ? '<span class="bg-[#17191C] text-[#C39738] text-[9px] font-medium px-2 py-0.5 rounded border border-[#C39738]/40 shadow">양장본</span>' : ''}
+              ${book.isEbook ? '<span class="bg-[#23272D] text-[#DFC075] text-[9px] font-medium px-2 py-0.5 rounded border border-[#DFC075]/40 shadow">ePub</span>' : ''}
+            </div>
+
+            <div class="absolute inset-0 bg-[#17191C]/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center gap-2 p-4 z-30">
+              <button onclick="openBookPreview('${book.id}')" class="w-full bg-[#DFC075] hover:bg-[#C39738] text-[#17191C] text-xs font-semibold py-2 px-3 rounded shadow flex items-center justify-center gap-1.5 transition-colors">
+                목차 & 서점 바로가기
+              </button>
+              <button onclick="addToCart('${book.id}')" class="w-full bg-[#6E1B2A] hover:bg-[#8C2538] text-white text-xs font-semibold py-2 px-3 rounded shadow flex items-center justify-center gap-1.5 transition-colors">
+                장바구니 담기
+              </button>
+            </div>
+
+          </div>
+
+          <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+            <div class="space-y-1.5">
+              <span class="text-[10px] font-semibold text-[#8C2538] tracking-wider uppercase block">${book.series}</span>
+              <h3 onclick="openBookPreview('${book.id}')" class="font-serifKr font-bold text-base text-[#17191C] hover:text-[#6E1B2A] cursor-pointer transition-colors line-clamp-1">
+                ${book.title}
+              </h3>
+              <p class="text-xs text-[#5E6470]">
+                <span class="font-medium text-[#17191C]">${book.author}</span> 지음
+                <span class="text-[#A6ADB8]"> • </span>
+                <span>${book.translator}</span>
+              </p>
+              <p class="text-xs text-[#7E8694] line-clamp-2 pt-1">${book.tagline}</p>
+            </div>
+
+            <div class="pt-3 border-t border-[#E4DFD7] flex items-center justify-between">
+              <div>
+                <div class="flex items-center space-x-1.5">
+                  <span class="text-sm font-bold text-[#6E1B2A]">${book.discountRate}%</span>
+                  <span class="text-base font-bold text-[#17191C]">${book.price.toLocaleString()}원</span>
+                </div>
+                <span class="text-[11px] text-[#A6ADB8] line-through">${book.originalPrice.toLocaleString()}원</span>
+              </div>
+
+              <button onclick="addToCart('${book.id}')" class="p-2.5 rounded bg-[#F8F7F4] hover:bg-[#6E1B2A] text-[#17191C] hover:text-white border border-[#E4DFD7] transition-all" title="장바구니 담기">
+                ＋
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setCategoryFilter(cat) {
+      currentCategory = cat;
+      renderCategoryTabs();
+      renderBooksGrid();
+      const el = document.getElementById('catalog-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function handleSearch(val) {
+      currentSearch = val;
+      renderBooksGrid();
+    }
+
+    // Cart Management
+    function addToCart(bookId) {
+      const book = BOOKS_DATA.find(b => b.id === bookId);
+      if (!book) return;
+      const existing = cart.find(item => item.book.id === bookId);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({ book, quantity: 1 });
+      }
+      updateCartUI();
+      showToast(`『${book.title}』이(가) 장바구니에 담겼습니다.`);
+    }
+
+    function updateCartQuantity(bookId, delta) {
+      cart = cart.map(item => {
+        if (item.book.id === bookId) {
+          const newQty = item.quantity + delta;
+          return newQty > 0 ? { ...item, quantity: newQty } : null;
         }
+        return item;
+      }).filter(Boolean);
+      updateCartUI();
+    }
 
-        // --- Core Logic handled by main.js?v=20260912_v1 ---
-        console.log("Waiting for main.js?v=20260912_v1 to handle application logic...");
+    function removeCartItem(bookId) {
+      cart = cart.filter(item => item.book.id !== bookId);
+      updateCartUI();
+    }
 
-        // Auto-run dump loading instantly
-        window.loadMainCarouselsImmediate = async () => {
-            try {
-                const resp = await fetch('all_posts_dump.json');
-                if (resp.ok) {
-                    const jsonPosts = await resp.json();
-                    if (Array.isArray(jsonPosts) && jsonPosts.length > 0) {
-                        window.allPostsDumpData = jsonPosts;
-                        if (typeof window.renderPostsToCarousels === 'function') {
-                            window.renderPostsToCarousels(jsonPosts);
-                        }
-                    }
-                }
-            } catch (e) {
-                console.warn("Immediate JSON Dump load error:", e);
-            }
-        };
+    function updateCartUI() {
+      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const total = cart.reduce((sum, item) => sum + item.book.price * item.quantity, 0);
+      const freeShip = total >= 50000;
+      const shipCost = total === 0 ? 0 : freeShip ? 0 : 3500;
+      const finalTotal = total + shipCost;
 
-    </script>
-    <script src="bgm.js?v=20260913_bgm_v9"></script>
-    <script src="stats.js?v=1"></script>
+      document.getElementById('header-cart-count').innerText = count;
+      document.getElementById('cart-drawer-title').innerText = `장바구니 (${count}권)`;
 
-    <script src="main.js?v=20261002_v1"></script>
+      const shipNotice = document.getElementById('cart-shipping-notice');
+      if (freeShip) {
+        shipNotice.innerHTML = '<span class="text-[#6E1B2A] font-semibold">✓ 무료배송 혜택이 적용되었습니다! (50,000원 이상)</span>';
+      } else {
+        const remaining = 50000 - total;
+        const pct = Math.min(100, (total / 50000) * 100);
+        shipNotice.innerHTML = `
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-[#5E6470]">
+              <span>무료배송까지</span>
+              <span class="font-bold text-[#6E1B2A]">${remaining.toLocaleString()}원 추가 필요</span>
+            </div>
+            <div class="w-full bg-[#E4DFD7] h-1.5 rounded-full overflow-hidden">
+              <div class="bg-[#C39738] h-full" style="width: ${pct}%"></div>
+            </div>
+          </div>
+        `;
+      }
 
-    <a href="mailto:kpuritan.phb@gmail.com" class="floating-inquiry-btn">
-        <i class="fas fa-envelope"></i>
-    </a>
-    <!-- ═══════════════════════════════════════════════════════════
-         HERO CAROUSEL — 슬라이드 데이터 & 구동 스크립트
-         ─────────────────────────────────────────────────────────
-         ▸ heroSlides 배열 하나에서 모든 슬라이드를 관리합니다.
-         ▸ type: "brand" → KPI 브랜드 슬라이드
-         ▸ type: "book"  → PHB 도서 홍보 슬라이드
-         ▸ bookImage     → 실제 책 표지 이미지 경로로 교체하세요.
-         ▸ backgroundImage → 슬라이드 배경 이미지 경로로 교체하세요.
-         ▸ link          → "자세히 보기" 버튼의 이동 URL.
-    ═══════════════════════════════════════════════════════════ -->
-    <script>
-    (function () {
-        'use strict';
+      const list = document.getElementById('cart-items-list');
+      if (cart.length === 0) {
+        list.innerHTML = '<div class="text-center py-20 text-[#7E8694] text-sm">장바구니에 담긴 도서가 없습니다.</div>';
+      } else {
+        list.innerHTML = cart.map(({ book, quantity }) => `
+          <div class="py-4 flex gap-4 items-center">
+            <div class="w-14 h-20 bg-gradient-to-br ${book.coverGradient} rounded shadow flex-shrink-0 flex items-center justify-center p-1 text-center">
+              <span class="text-[7px] font-serifKr text-white line-clamp-2">${book.title.split('(')[0]}</span>
+            </div>
+            <div class="flex-1 min-w-0 space-y-1">
+              <h4 class="font-serifKr font-semibold text-xs text-[#17191C] truncate">${book.title}</h4>
+              <p class="text-[11px] text-[#5E6470] truncate">${book.author}</p>
+              <p class="text-xs font-bold text-[#6E1B2A]">${(book.price * quantity).toLocaleString()}원</p>
+              <div class="flex items-center space-x-2 pt-1">
+                <button onclick="updateCartQuantity('${book.id}', -1)" class="w-6 h-6 rounded border border-[#E4DFD7] bg-[#F8F7F4] hover:bg-[#EDE9E1] text-xs">-</button>
+                <span class="text-xs font-semibold px-1">${quantity}</span>
+                <button onclick="updateCartQuantity('${book.id}', 1)" class="w-6 h-6 rounded border border-[#E4DFD7] bg-[#F8F7F4] hover:bg-[#EDE9E1] text-xs">+</button>
+                <button onclick="removeCartItem('${book.id}')" class="text-[11px] text-[#A6ADB8] hover:text-[#6E1B2A] ml-2">삭제</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
 
-        /* ══════════════════════════════════════════
-           ★ 슬라이드 데이터 — 이곳을 수정하세요 ★
-           ══════════════════════════════════════════ */
-        const heroSlides = [
-            /* ─── Slide 1: KPI 브랜드 ─── */
-            {
-                type: 'brand',
-                subtitle: '한국청교도연구소',
-                title: 'KOREA PURITAN\nINSTITUTE',
-                description: '청교도 신학과 개혁주의 신앙을 연구하고 성경적 자료를 제공하여\n한국교회의 갱신과 회복을 섬깁니다.',
-                backgroundImage: 'hero-bg.jpg?v=2',
-                link: null
-            },
+      const summary = document.getElementById('cart-footer-summary');
+      if (cart.length > 0) {
+        summary.innerHTML = `
+          <div class="space-y-1.5 text-xs text-[#5E6470]">
+            <div class="flex justify-between">
+              <span>도서 합계금액</span>
+              <span class="font-medium text-[#17191C]">${total.toLocaleString()}원</span>
+            </div>
+            <div class="flex justify-between">
+              <span>배송비</span>
+              <span class="font-medium text-[#17191C]">${shipCost === 0 ? '무료' : shipCost.toLocaleString() + '원'}</span>
+            </div>
+            <div class="flex justify-between text-sm font-bold text-[#17191C] pt-2 border-t border-[#E4DFD7]">
+              <span>총 결제 예상금액</span>
+              <span class="text-base text-[#6E1B2A]">${finalTotal.toLocaleString()}원</span>
+            </div>
+          </div>
+          <button onclick="checkoutCart(${finalTotal})" class="w-full bg-[#6E1B2A] hover:bg-[#8C2538] text-white py-3.5 rounded font-semibold text-xs tracking-wider uppercase transition-all shadow-md">
+            주문서 작성 및 결제하기
+          </button>
+        `;
+      } else {
+        summary.innerHTML = '';
+      }
+    }
 
-            /* ─── Slide 2: PHB 도서 홍보 ─── */
-            {
-                type: 'book',
-                category: 'PHB 출판사',
-                badge: '청교도 신학 고전',
-                title: '기독교 완전 무장론',
-                author: '윌리엄 거널 저 | 김홍만 역',
-                tagline: '영적 전쟁의 고전 — 청교도 신학의 정수',
-                description: '에베소서 6:10–18을 기반으로 신자의 영적 전쟁을 상세히 다룬\n청교도 신학의 최대 고전. 전 3권 완역.',
-                bookImage: '',   /* ← 책 표지 이미지 경로를 입력하세요 */
-                backgroundImage: 'hero-bg.jpg?v=2',
-                link: 'https://smartstore.naver.com/kpuritan_phb'
-            },
+    function toggleCart(show) {
+      const modal = document.getElementById('cart-drawer-modal');
+      if (show) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        updateCartUI();
+      } else {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+      }
+    }
 
-            /* ─── Slide 3: PHB 도서 홍보 ─── */
-            {
-                type: 'book',
-                category: 'PHB 출판사',
-                badge: '개혁주의 경건',
-                title: '경건의 실천',
-                author: '루이스 베일리 저 | 김홍만 역',
-                tagline: '17세기 최고의 경건서',
-                description: '청교도 시대 전 세계에서 가장 많이 읽힌 경건 도서.\n성경적 신앙의 실천을 깊이 있게 안내합니다.',
-                bookImage: '',   /* ← 책 표지 이미지 경로를 입력하세요 */
-                backgroundImage: 'hero-bg.jpg?v=2',
-                link: 'https://smartstore.naver.com/kpuritan_phb'
-            },
+    // Bookstore Link Generator (Paper & e-Book)
+    function getStoreLinks(book) {
+      if (!book) return { paper: {}, ebook: {} };
+      const cleanTitle = book.title.split('(')[0].trim();
+      const query = encodeURIComponent(cleanTitle);
+      const custom = book.storeLinks || {};
 
-            /* ─── Slide 4: PHB 도서 홍보 ─── */
-            {
-                type: 'book',
-                category: 'PHB 출판사',
-                badge: '기독론 강해',
-                title: '죄 죽이기',
-                author: '존 오웬 저 | 김홍만 역',
-                tagline: '성화의 핵심을 파헤치다',
-                description: '청교도 신학자 존 오웬의 성화론 고전.\n그리스도인의 죄와 싸우는 방법을 성경적으로 가르칩니다.',
-                bookImage: '',   /* ← 책 표지 이미지 경로를 입력하세요 */
-                backgroundImage: 'hero-bg.jpg?v=2',
-                link: 'https://smartstore.naver.com/kpuritan_phb'
-            },
-
-            /* ─── Slide 5: PHB 신간/추천 ─── */
-            {
-                type: 'book',
-                category: 'PHB 출판사 신간',
-                badge: '신간 추천',
-                title: '구속사 성경 해설노트',
-                author: '김홍만 저',
-                tagline: '창세기부터 요한계시록까지 — 구속사의 흐름',
-                description: '성경 전체를 구속사적 관점으로 해설한 성경 연구 필독서.\n한국청교도연구소 김홍만 소장의 역작.',
-                bookImage: '',   /* ← 책 표지 이미지 경로를 입력하세요 */
-                backgroundImage: 'hero-bg.jpg?v=2',
-                link: 'https://smartstore.naver.com/kpuritan_phb'
-            }
-        ];
-
-        /* ══════════════════════════════════════════
-           슬라이더 설정
-        ══════════════════════════════════════════ */
-        const INTERVAL_MS   = 5000;   // 자동 전환 간격 (ms)
-        const FADE_DURATION = 700;    // 전환 애니메이션 (ms — CSS와 맞춤)
-
-        let currentIndex = 0;
-        let autoTimer    = null;
-        let isAnimating  = false;
-
-        /* ── 목업 책 표지 SVG 생성기 ── */
-        function makeMockCover(title, author) {
-            const colors = [
-                ['#1a3a5c','#c8a96e'],
-                ['#2c1810','#d4a855'],
-                ['#0b2d1f','#b8936a'],
-                ['#3b1f0e','#e8c07a'],
-                ['#1c1f3a','#c09060']
-            ];
-            const idx  = Math.abs(title.charCodeAt(0)) % colors.length;
-            const [bg, gold] = colors[idx];
-            const shortTitle = title.length > 10 ? title.slice(0, 10) + '…' : title;
-            const shortAuthor= author.length > 16 ? author.slice(0, 16) + '…' : author;
-            return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280" width="200" height="280">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="${bg}"/>
-      <stop offset="100%" stop-color="${bg}CC"/>
-    </linearGradient>
-    <linearGradient id="spine" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="rgba(0,0,0,0.4)"/>
-      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
-    </linearGradient>
-  </defs>
-  <!-- 배경 -->
-  <rect width="200" height="280" fill="url(#bg)"/>
-  <!-- 책 등 그림자 -->
-  <rect width="18" height="280" fill="url(#spine)"/>
-  <!-- 상단 금박 테두리 -->
-  <rect x="14" y="14" width="172" height="252" fill="none" stroke="${gold}" stroke-width="1.5" opacity="0.6"/>
-  <rect x="18" y="18" width="164" height="244" fill="none" stroke="${gold}" stroke-width="0.5" opacity="0.3"/>
-  <!-- 중앙 장식 십자가 -->
-  <g opacity="0.25" transform="translate(100,118)">
-    <line x1="0" y1="-32" x2="0" y2="32" stroke="${gold}" stroke-width="1.5"/>
-    <line x1="-22" y1="-6" x2="22" y2="-6" stroke="${gold}" stroke-width="1.5"/>
-  </g>
-  <!-- PHB 로고 텍스트 -->
-  <text x="100" y="44" text-anchor="middle" font-family="Georgia,serif" font-size="9"
-        fill="${gold}" opacity="0.9" letter-spacing="3">PHB</text>
-  <!-- 가로줄 -->
-  <line x1="30" y1="52" x2="170" y2="52" stroke="${gold}" stroke-width="0.7" opacity="0.5"/>
-  <!-- 제목 -->
-  <text x="100" y="88" text-anchor="middle" font-family="'Nanum Myeongjo',Georgia,serif"
-        font-size="16" font-weight="bold" fill="#ffffff" letter-spacing="0.5">${shortTitle}</text>
-  <!-- 구분선 -->
-  <line x1="60" y1="100" x2="140" y2="100" stroke="${gold}" stroke-width="0.7" opacity="0.6"/>
-  <!-- 저자 -->
-  <text x="100" y="240" text-anchor="middle" font-family="Georgia,serif"
-        font-size="9" fill="${gold}" opacity="0.8" letter-spacing="1">${shortAuthor}</text>
-  <!-- 하단 장식 -->
-  <line x1="30" y1="250" x2="170" y2="250" stroke="${gold}" stroke-width="0.7" opacity="0.5"/>
-</svg>`)}`;
+      return {
+        paper: {
+          naver: custom.naver || `https://search.shopping.naver.com/search/all?query=${encodeURIComponent('퓨리탄 헤리티지 ' + cleanTitle)}`,
+          aladin: custom.aladin || `https://www.aladin.co.kr/search/wsearchresult.aspx?SearchWord=${query}`,
+          kyobo: custom.kyobo || `https://search.kyobobook.co.kr/search?keyword=${query}`,
+          yes24: custom.yes24 || `https://www.yes24.com/Product/Search?domain=BOOK&query=${query}`,
+        },
+        ebook: {
+          aladin: custom.ebookAladin || `https://www.aladin.co.kr/search/wsearchresult.aspx?SearchWord=${query}&SearchTarget=eBook`,
+          yes24: custom.ebookYes24 || `https://www.yes24.com/Product/Search?domain=EBOOK&query=${query}`,
+          kyobo: custom.ebookKyobo || `https://search.kyobobook.co.kr/search?keyword=${query}&gbCode=EBK`,
         }
+      };
+    }
 
-        /* ── 슬라이드 HTML 생성 ── */
-        function buildSlide(slide, index) {
-            const div = document.createElement('div');
-            div.className = 'hero-slide' + (index === 0 ? ' active' : '');
-            div.setAttribute('data-index', index);
-            div.setAttribute('role', 'tabpanel');
-            div.setAttribute('aria-label', `슬라이드 ${index + 1}`);
+    // ==========================================
+    // OFFICIAL BOOKSTORE LOGOS (Vector SVGs)
+    // ==========================================
+    const STORE_LOGOS = {
+      aladin: `
+        <svg viewBox="0 0 170 46" class="h-9 sm:h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+          <text x="6" y="32" font-family="'Noto Sans KR', sans-serif" font-size="24" font-weight="900" fill="#2C337B" letter-spacing="-1.5">알라딘</text>
+          <g transform="translate(74, 4)">
+            <path d="M2 23 C12 22 20 19 30 15 C22 20 14 24 3 26 Z" fill="#F8A51D"/>
+            <circle cx="39" cy="8.5" r="2.8" fill="#F8A51D"/>
+            <path d="M28 13.5 C36 11 44 11 51 13.5 C45 15.5 34 15.5 28 13.5 Z" fill="#F8A51D"/>
+            <path d="M26 16.5 C36 18.5 47 18.5 54 15.5 C48 24 37 27 24 23.5 C24 20.5 25 18 26 16.5 Z" fill="#E6007E"/>
+            <path d="M26 23.5 C34 26.5 43 25.5 49 20.5 C45 28 37 29.5 27 27 Z" fill="#2E3192"/>
+            <path d="M28 27 C34 29 40 28 44 24.5 C40 30 33 31 29 29 Z" fill="#E6007E"/>
+            <path d="M29 30.5 C34 31.5 39 31.5 42 29.5 C40 33.5 32 34 28 32.5 Z" fill="#F8A51D"/>
+            <path d="M52 14.5 C57 12.5 61.5 10 62.5 6 C63.5 1.5 58 -1.5 53.5 -0.5 C49 0.5 48 4.5 50.5 7.5 C53 10.5 56.5 9.5 57 7.5 C57.5 5.5 55 4 53 4 C51.5 4 52 2.5 54 2.5 C57.5 2.5 59 5.5 57.5 7.5 C55.5 10.5 51.5 12.5 48.5 14.5 Z" fill="#5C55A5"/>
+          </g>
+        </svg>
+      `,
+      yes24: `
+        <svg viewBox="0 0 170 46" class="h-9 sm:h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+          <path d="M78 7 C78 5.5 79.5 4 81 4 C82.5 4 83.5 5.5 83.5 7 L82 14 C82 15.5 80.5 16.5 79 16.5 C77.5 16.5 76.5 15.5 76.5 14 Z" fill="#E51921"/>
+          <path d="M88 7 C88 5.5 89.5 4 91 4 C92.5 4 93.5 5.5 93.5 7 L92 14 C92 15.5 90.5 16.5 89 16.5 C87.5 16.5 86.5 15.5 86.5 14 Z" fill="#E51921"/>
+          <text x="8" y="31" font-family="'Arial', 'Helvetica', sans-serif" font-size="22" font-weight="900" fill="#677282" letter-spacing="0.5">YES</text>
+          <text x="67" y="32" font-family="'Arial', 'Helvetica', sans-serif" font-size="24" font-weight="900" fill="#677282" letter-spacing="-1">24</text>
+          <path d="M68 34 C76 42.5 92 42.5 100 34" stroke="#0077C8" stroke-width="4.8" stroke-linecap="round"/>
+          <text x="108" y="31" font-family="'Arial', 'Helvetica', sans-serif" font-size="21" font-weight="900" fill="#677282" letter-spacing="0">.COM</text>
+        </svg>
+      `,
+      kyoboEbook: `
+        <svg viewBox="0 0 170 46" class="h-9 sm:h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(73, 2)">
+            <path d="M2 7 C2 3 7 0 13 0 C19 0 23 4 23 9 C23 15 17 17.5 10 16.5 C6 15.5 2 12.5 2 7 Z" fill="#43B02A"/>
+            <circle cx="7" cy="7.5" r="1.5" fill="white"/>
+            <path d="M12 16 L12 20" stroke="#43B02A" stroke-width="2.6" stroke-linecap="round"/>
+          </g>
+          <text x="6" y="37" font-family="'Arial', 'Noto Sans KR', sans-serif" font-size="20" font-weight="900" fill="#004785" letter-spacing="1.2">KYOBO</text>
+          <text x="106" y="37" font-family="'Arial', 'Noto Sans KR', sans-serif" font-size="20" font-weight="500" fill="#004785" letter-spacing="-0.5">eBook</text>
+        </svg>
+      `,
+      kyobo: `
+        <svg viewBox="0 0 170 46" class="h-9 sm:h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(10, 10)">
+            <path d="M2 6 C2 2.5 6 0 11 0 C16 0 19.5 3.5 19.5 8 C19.5 13 14 15 8 14 C5 13 2 10.5 2 6 Z" fill="#43B02A"/>
+            <circle cx="6" cy="6.5" r="1.3" fill="white"/>
+            <path d="M10 13.5 L10 17" stroke="#43B02A" stroke-width="2.2" stroke-linecap="round"/>
+          </g>
+          <text x="36" y="30" font-family="'Noto Sans KR', sans-serif" font-size="20" font-weight="900" fill="#17191C" letter-spacing="-1">교보문고</text>
+          <text x="114" y="29" font-family="'Arial', sans-serif" font-size="11" font-weight="800" fill="#7E8694" letter-spacing="0.5">KYOBO</text>
+        </svg>
+      `,
+      naver: `
+        <svg viewBox="0 0 170 46" class="h-9 sm:h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="9" width="26" height="26" rx="5" fill="#03C75A"/>
+          <path d="M16 27 L16 16 L21 23.5 L26 16 L26 27" stroke="white" stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+          <g transform="translate(40, 25)">
+            <text x="0" y="0" font-family="'Arial', 'Noto Sans KR', sans-serif" font-size="15" font-weight="900" fill="#17191C">smart</text>
+            <text x="44" y="0" font-family="'Arial', 'Noto Sans KR', sans-serif" font-size="15" font-weight="900" fill="#03C75A">store</text>
+            <text x="0" y="11" font-family="'Noto Sans KR', sans-serif" font-size="9" font-weight="600" fill="#7E8694">네이버 스마트스토어</text>
+          </g>
+        </svg>
+      `
+    };
 
-            // 배경 레이어
-            const bgStyle = slide.backgroundImage
-                ? `background-image: url('${slide.backgroundImage}');`
-                : '';
+    function checkoutCart(amount) {
+      if (cart.length === 0) {
+        showToast('장바구니가 비어 있습니다.');
+        return;
+      }
+      toggleCart(false);
+      openStoreCheckoutModal();
+    }
 
-            if (slide.type === 'brand') {
-                div.innerHTML = `
-                    <div class="hs-bg" style="${bgStyle}"></div>
-                    <div class="hs-overlay hs-overlay--brand"></div>
-                    <div class="hs-content hs-content--brand">
-                        <div class="hs-brand-inner">
-                            <span class="hs-subtitle">${slide.subtitle}</span>
-                            <h1 class="hs-title-brand">${slide.title.replace('\n','<br>')}</h1>
-                            <p class="hs-desc-brand">${slide.description.replace('\n','<br>')}</p>
-                        </div>
-                    </div>`;
-            } else {
-                // 목업 표지 또는 실제 이미지
-                const imgSrc = slide.bookImage && slide.bookImage.trim()
-                    ? slide.bookImage
-                    : makeMockCover(slide.title, slide.author);
+    function openStoreCheckoutModal() {
+      const modal = document.getElementById('store-checkout-modal');
+      const list = document.getElementById('store-checkout-items-list');
+      if (!modal || !list) return;
 
-                div.innerHTML = `
-                    <div class="hs-bg" style="${bgStyle}"></div>
-                    <div class="hs-overlay hs-overlay--book"></div>
-                    <div class="hs-content hs-content--book">
-                        <div class="hs-book-text">
-                            <div class="hs-book-badge">
-                                <span class="hs-category">${slide.category}</span>
-                                ${slide.badge ? `<span class="hs-badge-label">${slide.badge}</span>` : ''}
-                            </div>
-                            <h2 class="hs-book-title">${slide.title}</h2>
-                            <p class="hs-book-author">${slide.author}</p>
-                            <p class="hs-book-tagline">${slide.tagline}</p>
-                            <p class="hs-book-desc">${slide.description.replace('\n','<br>')}</p>
-                            ${slide.link ? `<a href="${slide.link}" class="hs-cta-btn" target="_blank" rel="noopener">자세히 보기 <i class="fas fa-arrow-right"></i></a>` : ''}
-                        </div>
-                        <div class="hs-book-cover-wrap">
-                            <div class="hs-book-cover-inner">
-                                <img src="${imgSrc}"
-                                     alt="${slide.title} 표지"
-                                     class="hs-book-cover-img"
-                                     loading="${index === 0 ? 'eager' : 'lazy'}"
-                                     decoding="async">
-                            </div>
-                        </div>
-                    </div>`;
-            }
-            return div;
-        }
+      list.innerHTML = cart.map(({ book, quantity }) => {
+        const storeLinks = getStoreLinks(book);
+        return `
+          <div class="p-4 bg-white rounded-lg border border-[#E4DFD7] space-y-3 shadow-2xs">
+            <div class="flex items-center justify-between border-b border-[#F8F7F4] pb-2">
+              <div>
+                <h5 class="font-serifKr font-bold text-sm text-[#17191C]">${book.title}</h5>
+                <p class="text-xs text-[#5E6470]">${book.author} | 수량 ${quantity}권 | ${(book.price * quantity).toLocaleString()}원</p>
+              </div>
+              <span class="text-[10px] font-semibold text-[#8C2538] bg-[#6E1B2A]/10 px-2 py-0.5 rounded">
+                ${book.isEbook ? '종이책 / e-Book' : '종이책 전용'}
+              </span>
+            </div>
 
-        /* ── Dot 생성 ── */
-        function buildDots(slidesList) {
-            const container = document.getElementById('hero-dots');
-            if (!container) return;
-            container.innerHTML = '';
-            const list = Array.isArray(slidesList) ? slidesList : heroSlides;
-            list.forEach((_, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'hero-dot' + (i === 0 ? ' active' : '');
-                btn.setAttribute('role', 'tab');
-                btn.setAttribute('aria-label', `슬라이드 ${i + 1}`);
-                btn.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
-                btn.addEventListener('click', () => goTo(i));
-                container.appendChild(btn);
-            });
-        }
+            <!-- 종이책 구매 서점 로고 배너 -->
+            <div>
+              <div class="text-[#1e6e28] text-xs font-bold mb-1.5 flex items-center justify-between">
+                <span>- 종이책 서점 로고를 선택해서 클릭하시면 해당 도서로 이동합니다.</span>
+              </div>
+              <div class="border border-[#D5D9E0] bg-white rounded overflow-hidden grid grid-cols-2 sm:grid-cols-4 shadow-2xs">
+                <a href="${storeLinks.paper.naver}" target="_blank" rel="noopener noreferrer"
+                  class="flex items-center justify-center p-2.5 sm:p-3 border-r border-b sm:border-b-0 border-[#D5D9E0] hover:bg-[#F8F9FA] transition-colors group" title="네이버 스마트스토어에서 종이책 구매">
+                  ${STORE_LOGOS.naver}
+                </a>
+                <a href="${storeLinks.paper.kyobo}" target="_blank" rel="noopener noreferrer"
+                  class="flex items-center justify-center p-2.5 sm:p-3 sm:border-r border-b sm:border-b-0 border-[#D5D9E0] hover:bg-[#F8F9FA] transition-colors group" title="교보문고에서 종이책 구매">
+                  ${STORE_LOGOS.kyobo}
+                </a>
+                <a href="${storeLinks.paper.aladin}" target="_blank" rel="noopener noreferrer"
+                  class="flex items-center justify-center p-2.5 sm:p-3 border-r border-[#D5D9E0] hover:bg-[#F8F9FA] transition-colors group" title="알라딘에서 종이책 구매">
+                  ${STORE_LOGOS.aladin}
+                </a>
+                <a href="${storeLinks.paper.yes24}" target="_blank" rel="noopener noreferrer"
+                  class="flex items-center justify-center p-2.5 sm:p-3 hover:bg-[#F8F9FA] transition-colors group" title="예스24(YES24)에서 종이책 구매">
+                  ${STORE_LOGOS.yes24}
+                </a>
+              </div>
+            </div>
 
-        /* ── 슬라이드 전환 ── */
-        function goTo(next) {
-            if (isAnimating || next === currentIndex) return;
-            isAnimating = true;
+            <!-- 전자책 구매 서점 로고 배너 -->
+            <div class="pt-2 border-t border-[#F8F7F4]">
+              <div class="text-[#1e6e28] text-xs font-bold mb-1.5 flex items-center justify-between">
+                <span>- 전자책 서점 로고를 선택해서 클릭하시면 해당 eBook으로 이동합니다.</span>
+                ${book.isEbook ? '<span class="text-[9px] text-[#0057B3] font-semibold">eBook 지원</span>' : '<span class="text-[9px] text-[#7E8694]">eBook 준비중</span>'}
+              </div>
+              <div class="border border-[#D5D9E0] bg-white rounded overflow-hidden grid grid-cols-3 divide-x divide-[#D5D9E0] shadow-2xs">
+                <a href="${storeLinks.ebook.aladin}" target="_blank" rel="noopener noreferrer"
+                  class="flex items-center justify-center p-2.5 sm:p-3 hover:bg-[#F8F9FA] transition-colors group" title="알라딘에서 eBook 구매">
+                  ${STORE_LOGOS.aladin}
+                </a>
+                <a href="${storeLinks.ebook.yes24}" target="_blank" rel="noopener noreferrer"
+                  class="flex items-center justify-center p-2.5 sm:p-3 hover:bg-[#F8F9FA] transition-colors group" title="예스24(YES24)에서 eBook 구매">
+                  ${STORE_LOGOS.yes24}
+                </a>
+                <a href="${storeLinks.ebook.kyobo}" target="_blank" rel="noopener noreferrer"
+                  class="flex items-center justify-center p-2.5 sm:p-3 hover:bg-[#F8F9FA] transition-colors group" title="교보문고에서 eBook 구매">
+                  ${STORE_LOGOS.kyoboEbook}
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
 
-            const slides  = document.querySelectorAll('.hero-slide');
-            const dots    = document.querySelectorAll('.hero-dot');
-            const prevIdx = currentIndex;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
 
-            if (!slides || slides.length === 0 || !slides[next]) {
-                isAnimating = false;
-                return;
-            }
+    function closeStoreCheckoutModal() {
+      const modal = document.getElementById('store-checkout-modal');
+      if (modal) {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+      }
+    }
 
-            // 다음 슬라이드 준비 (fade-in 예비)
-            slides[next].classList.add('entering');
+    // Book Preview Modal
+    function openBookPreview(bookId) {
+      const book = BOOKS_DATA.find(b => b.id === bookId);
+      if (!book) return;
 
-            // 약간 지연 후 트랜지션
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    if (slides[prevIdx]) {
-                        slides[prevIdx].classList.remove('active');
-                        slides[prevIdx].classList.add('leaving');
-                    }
-                    slides[next].classList.remove('entering');
-                    slides[next].classList.add('active');
+      const storeLinks = getStoreLinks(book);
 
-                    if (dots[prevIdx]) {
-                        dots[prevIdx].classList.remove('active');
-                        dots[prevIdx].setAttribute('aria-selected', 'false');
-                    }
-                    if (dots[next]) {
-                        dots[next].classList.add('active');
-                        dots[next].setAttribute('aria-selected', 'true');
-                    }
+      document.getElementById('preview-modal-header-title').innerText = book.title;
+      document.getElementById('preview-modal-price').innerText = `${book.price.toLocaleString()}원`;
+      document.getElementById('preview-modal-add-cart-btn').onclick = () => {
+        addToCart(book.id);
+        closeBookPreview();
+      };
 
-                    currentIndex = next;
+      const body = document.getElementById('preview-modal-body');
+      body.innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 items-start pb-6 border-b border-[#E4DFD7]">
+          <div class="sm:col-span-4 flex justify-center">
+            <div class="w-36 h-52 bg-gradient-to-br ${book.coverGradient} rounded shadow-book p-3 flex flex-col justify-between text-center relative">
+              <span class="text-[7px] font-cinzel text-[#DFC075] tracking-wider uppercase block">${book.series.split('(')[0]}</span>
+              <h4 class="text-xs font-serifKr font-bold text-white leading-snug">${book.title.split('(')[0]}</h4>
+              <span class="text-[8px] font-serifKr text-[#E4DFD7]">${book.author}</span>
+            </div>
+          </div>
+          <div class="sm:col-span-8 space-y-2">
+            <span class="text-xs font-semibold text-[#8C2538] block">${book.series}</span>
+            <h3 class="text-xl font-serifKr font-bold text-[#17191C]">${book.title}</h3>
+            <p class="text-xs text-[#5E6470] italic">${book.originalTitle}</p>
+            <div class="grid grid-cols-2 gap-y-1 text-xs text-[#5E6470] pt-2">
+              <p><strong class="text-[#17191C]">저자:</strong> ${book.author}</p>
+              <p><strong class="text-[#17191C]">역자:</strong> ${book.translator}</p>
+              <p><strong class="text-[#17191C]">정가:</strong> ${book.price.toLocaleString()}원</p>
+              <p><strong class="text-[#17191C]">분량:</strong> ${book.pages}</p>
+              <p><strong class="text-[#17191C]">출간일:</strong> ${book.pubDate}</p>
+              <p><strong class="text-[#17191C]">ISBN:</strong> ${book.isbn}</p>
+            </div>
+            <div class="pt-2">
+              <span class="bg-[#EDE9E1] text-[#6E1B2A] text-[11px] font-semibold px-2.5 py-1 rounded border border-[#E4DFD7] inline-block">
+                ${book.confessionTag}
+              </span>
+            </div>
+          </div>
+        </div>
 
-                    setTimeout(() => {
-                        if (slides[prevIdx]) slides[prevIdx].classList.remove('leaving');
-                        isAnimating = false;
-                    }, FADE_DURATION);
-                });
-            });
-        }
+        <!-- ========================================== -->
+        <!-- 서점별 구매 바로가기 (종이책 & e-Book) -->
+        <!-- ========================================== -->
+        <div id="modal-stores-section" class="bg-gradient-to-br from-[#FAF8F5] to-[#F2EFE9] p-5 sm:p-6 rounded-xl border-2 border-[#DFC075]/70 shadow-sm space-y-5">
+          <!-- 1. 종이책 서점 로고 배너 -->
+          <div>
+            <div class="text-[#1e6e28] text-xs sm:text-sm font-bold flex items-center justify-between mb-2">
+              <span>- 종이책 서점 로고를 선택해서 클릭하시면 해당 도서로 이동합니다.</span>
+              <span class="text-[10px] font-semibold text-[#8C2538] bg-[#6E1B2A]/10 px-2 py-0.5 rounded border border-[#6E1B2A]/20 hidden sm:inline-block">
+                10% 정가할인 혜택
+              </span>
+            </div>
+            <div class="border border-[#D5D9E0] bg-white rounded overflow-hidden grid grid-cols-2 sm:grid-cols-4 shadow-2xs">
+              <!-- 네이버 스마트스토어 -->
+              <a href="${storeLinks.paper.naver}" target="_blank" rel="noopener noreferrer"
+                class="flex items-center justify-center p-3.5 sm:p-4 border-r border-b sm:border-b-0 border-[#D5D9E0] hover:bg-[#F8F9FA] transition-colors group" title="네이버 스마트스토어에서 종이책 구매">
+                ${STORE_LOGOS.naver}
+              </a>
 
-        function getSlidesCount() {
-            const slides = document.querySelectorAll('.hero-slide');
-            return slides.length > 0 ? slides.length : heroSlides.length;
-        }
+              <!-- 교보문고 -->
+              <a href="${storeLinks.paper.kyobo}" target="_blank" rel="noopener noreferrer"
+                class="flex items-center justify-center p-3.5 sm:p-4 sm:border-r border-b sm:border-b-0 border-[#D5D9E0] hover:bg-[#F8F9FA] transition-colors group" title="교보문고에서 종이책 구매">
+                ${STORE_LOGOS.kyobo}
+              </a>
 
-        function nextSlide() {
-            const count = getSlidesCount();
-            if (count === 0) return;
-            goTo((currentIndex + 1) % count);
-        }
-        function prevSlide() {
-            const count = getSlidesCount();
-            if (count === 0) return;
-            goTo((currentIndex - 1 + count) % count);
-        }
+              <!-- 알라딘 -->
+              <a href="${storeLinks.paper.aladin}" target="_blank" rel="noopener noreferrer"
+                class="flex items-center justify-center p-3.5 sm:p-4 border-r border-[#D5D9E0] hover:bg-[#F8F9FA] transition-colors group" title="알라딘에서 종이책 구매">
+                ${STORE_LOGOS.aladin}
+              </a>
 
-        /* ── 자동 재생 ── */
-        function startAuto() {
-            stopAuto();
-            const count = getSlidesCount();
-            if (count <= 1) return;
-            autoTimer = setInterval(nextSlide, INTERVAL_MS);
-        }
-        function stopAuto() {
-            if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
-        }
+              <!-- 예스24 -->
+              <a href="${storeLinks.paper.yes24}" target="_blank" rel="noopener noreferrer"
+                class="flex items-center justify-center p-3.5 sm:p-4 hover:bg-[#F8F9FA] transition-colors group" title="예스24(YES24)에서 종이책 구매">
+                ${STORE_LOGOS.yes24}
+              </a>
+            </div>
+          </div>
 
-        /* ── 동적 슬라이드 렌더 함수 ── */
-        function renderHeroSlides(slidesList) {
-            const track = document.getElementById('hero-slider-track');
-            if (!track) return;
-            stopAuto();
-            currentIndex = 0;
-            track.innerHTML = '';
-            const slides = (Array.isArray(slidesList) && slidesList.length > 0) ? slidesList : heroSlides;
-            slides.forEach((slide, i) => track.appendChild(buildSlide(slide, i)));
-            buildDots(slides);
-            startAuto();
-        }
-        window.renderHeroSlides = renderHeroSlides;
+          <!-- 2. e-Book (전자책) 서점 로고 배너 -->
+          <div class="pt-2 border-t border-[#E4DFD7]">
+            <div class="text-[#1e6e28] text-xs sm:text-sm font-bold flex items-center justify-between mb-2">
+              <span>- 전자책 서점 로고를 선택해서 클릭하시면 해당 eBook으로 이동합니다.</span>
+              ${book.isEbook ? '<span class="text-[10px] font-semibold text-[#0057B3] bg-[#0070E0]/10 px-2 py-0.5 rounded border border-[#0070E0]/20 hidden sm:inline-block">e-Book 발행 도서</span>' : '<span class="text-[10px] text-[#7E8694] bg-[#EDE9E1] px-2 py-0.5 rounded hidden sm:inline-block">e-Book 준비중 (조회 가능)</span>'}
+            </div>
 
-        /* ── 초기화 ── */
-        async function init() {
-            const track = document.getElementById('hero-slider-track');
-            const section = document.getElementById('hero-section');
-            if (!track || !section) return;
+            <div class="border border-[#D5D9E0] bg-white rounded overflow-hidden grid grid-cols-3 divide-x divide-[#D5D9E0] shadow-2xs">
+              <!-- 알라딘 e-Book -->
+              <a href="${storeLinks.ebook.aladin}" target="_blank" rel="noopener noreferrer"
+                class="flex items-center justify-center p-3.5 sm:p-4 hover:bg-[#F8F9FA] transition-colors group" title="알라딘 eBook에서 구매">
+                ${STORE_LOGOS.aladin}
+              </a>
 
-            let activeSlides = heroSlides;
+              <!-- 예스24 e-Book -->
+              <a href="${storeLinks.ebook.yes24}" target="_blank" rel="noopener noreferrer"
+                class="flex items-center justify-center p-3.5 sm:p-4 hover:bg-[#F8F9FA] transition-colors group" title="예스24 eBook에서 구매">
+                ${STORE_LOGOS.yes24}
+              </a>
 
-            // 1. localStorage 빠른 렌더링
-            try {
-                const customSlidesRaw = localStorage.getItem('kpuritan_hero_slides');
-                if (customSlidesRaw) {
-                    const parsed = JSON.parse(customSlidesRaw);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        activeSlides = parsed;
-                    }
-                }
-            } catch (e) {
-                console.warn("Custom hero slides cache read notice:", e);
-            }
+              <!-- 교보문고 e-Book -->
+              <a href="${storeLinks.ebook.kyobo}" target="_blank" rel="noopener noreferrer"
+                class="flex items-center justify-center p-3.5 sm:p-4 hover:bg-[#F8F9FA] transition-colors group" title="교보문고 sam/eBook에서 구매">
+                ${STORE_LOGOS.kyoboEbook}
+              </a>
+            </div>
+          </div>
+        </div>
 
-            renderHeroSlides(activeSlides);
+        <div class="space-y-2">
+          <h4 class="font-serifKr font-bold text-base text-[#17191C]">도서 상세 소개</h4>
+          <p class="text-[#5E6470] leading-relaxed text-xs sm:text-sm bg-white p-4 rounded border border-[#E4DFD7]">${book.description}</p>
+        </div>
 
-            // 2. Firestore 최신 데이터 동기화
-            const fetchLatestSlides = async () => {
-                if (!window.db) return;
-                
-                const safeGet = async (promise, ms = 4000) => {
-                    if (typeof fetchWithTimeout === 'function') {
-                        return fetchWithTimeout(promise, ms);
-                    }
-                    return Promise.race([
-                        promise,
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('Firestore timeout')), ms))
-                    ]);
-                };
+        <div class="space-y-2">
+          <h4 class="font-serifKr font-bold text-base text-[#17191C]">도서 목차 (Table of Contents)</h4>
+          <div class="bg-white p-4 rounded border border-[#E4DFD7] space-y-2 text-xs sm:text-sm">
+            ${book.toc.map(t => `<div class="py-1 border-b border-[#F8F7F4] last:border-none">• ${t}</div>`).join('')}
+          </div>
+        </div>
 
-                try {
-                    let snap = null;
-                    try {
-                        snap = await safeGet(window.db.collection('posts').doc('settings_hero_slides').get(), 4000);
-                    } catch (e1) {}
-                    
-                    if (!snap || !snap.exists || !snap.data() || !Array.isArray(snap.data().slides)) {
-                        try {
-                            snap = await safeGet(window.db.collection('settings').doc('hero_slides').get(), 3000);
-                        } catch (e2) {}
-                    }
+        <div class="space-y-2">
+          <h4 class="font-serifKr font-bold text-base text-[#17191C]">본문 및 서문 맛보기</h4>
+          <div class="bg-[#EDE9E1] p-5 rounded-lg border-l-4 border-[#6E1B2A] font-serifKr text-xs sm:text-sm text-[#17191C] leading-relaxed italic">
+            ${book.excerpt}
+          </div>
+        </div>
+      `;
 
-                    if (snap && snap.exists && snap.data() && snap.data().slides && Array.isArray(snap.data().slides) && snap.data().slides.length > 0) {
-                        const latestSlides = snap.data().slides;
-                        localStorage.setItem('kpuritan_hero_slides', JSON.stringify(latestSlides));
-                        renderHeroSlides(latestSlides);
-                    }
-                } catch (fsErr) {
-                    console.warn("Firestore hero_slides load notice:", fsErr);
-                }
-            };
+      const modal = document.getElementById('book-preview-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
 
-            if (window.db) {
-                fetchLatestSlides();
-            } else {
-                let checkCount = 0;
-                const dbTimer = setInterval(() => {
-                    checkCount++;
-                    if (window.db) {
-                        clearInterval(dbTimer);
-                        fetchLatestSlides();
-                    } else if (checkCount > 10) {
-                        clearInterval(dbTimer);
-                    }
-                }, 300);
-            }
+    function closeBookPreview() {
+      const modal = document.getElementById('book-preview-modal');
+      modal.classList.remove('flex');
+      modal.classList.add('hidden');
+    }
 
-            // 화살표 버튼
-            const prevBtn = document.getElementById('hero-prev');
-            const nextBtn = document.getElementById('hero-next');
-            if (prevBtn) prevBtn.onclick = () => { stopAuto(); prevSlide(); startAuto(); };
-            if (nextBtn) nextBtn.onclick = () => { stopAuto(); nextSlide(); startAuto(); };
+    // Quotes Rotator
+    function renderQuote() {
+      const q = PURITAN_QUOTES[quoteIndex];
+      document.getElementById('puritan-quote-text').innerText = `"${q.quote}"`;
+      document.getElementById('puritan-quote-author').innerText = q.author;
+      document.getElementById('puritan-quote-source').innerText = q.source;
 
-            // Hover — 자동재생 일시정지
-            section.addEventListener('mouseenter', stopAuto);
-            section.addEventListener('mouseleave', startAuto);
-            section.addEventListener('focusin',    stopAuto);
-            section.addEventListener('focusout',   startAuto);
+      const dots = document.getElementById('quote-dots-container');
+      dots.innerHTML = PURITAN_QUOTES.map((_, i) => `
+        <button onclick="setQuote(${i})" class="w-2.5 h-2.5 rounded-full transition-all ${quoteIndex === i ? 'bg-[#6E1B2A] w-6' : 'bg-[#E4DFD7]'}" aria-label="명언 ${i + 1}"></button>
+      `).join('');
+    }
 
-            // 모바일 스와이프 (손가락 터치 슬라이드)
-            let touchStartX = 0;
-            let touchStartY = 0;
-            section.addEventListener('touchstart', (e) => {
-                if (e.changedTouches && e.changedTouches.length > 0) {
-                    touchStartX = e.changedTouches[0].clientX;
-                    touchStartY = e.changedTouches[0].clientY;
-                }
-            }, { passive: true });
-            section.addEventListener('touchend', (e) => {
-                if (e.changedTouches && e.changedTouches.length > 0) {
-                    const dx = e.changedTouches[0].clientX - touchStartX;
-                    const dy = e.changedTouches[0].clientY - touchStartY;
-                    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
-                        stopAuto();
-                        if (dx < 0) nextSlide(); else prevSlide();
-                        startAuto();
-                    }
-                }
-            }, { passive: true });
+    function setQuote(idx) {
+      quoteIndex = idx;
+      renderQuote();
+    }
 
-            // 키보드 접근성
-            section.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowLeft')  { stopAuto(); prevSlide(); startAuto(); }
-                if (e.key === 'ArrowRight') { stopAuto(); nextSlide(); startAuto(); }
-            });
-        }
+    // Confessions Anchor
+    function renderConfessions() {
+      const tabs = document.getElementById('confession-tabs-container');
+      tabs.innerHTML = CONFESSIONS_MAP.map((item, idx) => `
+        <button onclick="setConfession(${idx})" class="p-2.5 text-left rounded text-xs transition-all border ${
+          confessionIndex === idx
+            ? 'bg-[#6E1B2A] text-white border-[#8C2538] font-semibold'
+            : 'bg-[#23272D] text-[#A6ADB8] border-[#3A3F4A] hover:bg-[#2B3038]'
+        }">
+          <span class="block text-[10px] text-[#DFC075] truncate">${item.standard}</span>
+          <span class="block truncate font-medium">${item.section.split(':')[0]}</span>
+        </button>
+      `).join('');
 
-        // DOM 준비 후 실행
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
-    })();
-    </script>
+      const cur = CONFESSIONS_MAP[confessionIndex];
+      const detail = document.getElementById('confession-detail-container');
+      detail.innerHTML = `
+        <div class="flex justify-between items-center text-xs">
+          <span class="text-[#DFC075] font-semibold font-serifKr">${cur.section}</span>
+          <span class="text-[10px] text-[#A6ADB8] bg-[#17191C] px-2 py-0.5 rounded">${cur.standard}</span>
+        </div>
+        <p class="text-xs text-[#E4DFD7] font-serifKr leading-relaxed italic">${cur.content}</p>
+        <div class="border-t border-[#3A3F4A] pt-2">
+          <span class="text-[10px] text-[#A6ADB8] block">연계 필독 추천 도서:</span>
+          <p class="text-xs font-semibold text-[#DFC075]">『${cur.bookTitle}』</p>
+        </div>
+      `;
+
+      document.getElementById('confession-view-book-btn').onclick = () => {
+        openBookPreview(cur.matchedBookId);
+      };
+    }
+
+    function setConfession(idx) {
+      confessionIndex = idx;
+      renderConfessions();
+    }
+
+    // Auth Modal
+    function openAuthModal(mode) {
+      switchAuthTab(mode);
+      const modal = document.getElementById('auth-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeAuthModal() {
+      const modal = document.getElementById('auth-modal');
+      modal.classList.remove('flex');
+      modal.classList.add('hidden');
+    }
+
+    function switchAuthTab(mode) {
+      const loginTab = document.getElementById('auth-tab-login');
+      const signupTab = document.getElementById('auth-tab-signup');
+      const loginForm = document.getElementById('auth-form-login');
+      const signupForm = document.getElementById('auth-form-signup');
+
+      if (mode === 'login') {
+        loginTab.className = 'flex-1 py-3 text-xs sm:text-sm font-semibold transition-all bg-white text-[#6E1B2A] border-b-2 border-[#6E1B2A]';
+        signupTab.className = 'flex-1 py-3 text-xs sm:text-sm font-semibold transition-all text-[#5E6470] hover:text-[#17191C]';
+        loginForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+      } else {
+        signupTab.className = 'flex-1 py-3 text-xs sm:text-sm font-semibold transition-all bg-white text-[#6E1B2A] border-b-2 border-[#6E1B2A]';
+        loginTab.className = 'flex-1 py-3 text-xs sm:text-sm font-semibold transition-all text-[#5E6470] hover:text-[#17191C]';
+        signupForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+      }
+    }
+
+    function handleAuthSubmit(e, mode) {
+      e.preventDefault();
+      if (mode === 'login') {
+        showToast('성공적으로 로그인되었습니다.');
+      } else {
+        showToast('PHB 회원가입이 완료되었습니다. 환영합니다!');
+      }
+      closeAuthModal();
+    }
+
+    function handleNewsletter(e) {
+      e.preventDefault();
+      showToast('PHB 신학 서신 구독이 완료되었습니다. 환영 메일을 확인해 주세요.');
+      e.target.reset();
+    }
+
+    // Initial Load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCategoryTabs();
+      renderBooksGrid();
+      renderQuote();
+      renderConfessions();
+      updateCartUI();
+
+      setInterval(() => {
+        quoteIndex = (quoteIndex + 1) % PURITAN_QUOTES.length;
+        renderQuote();
+      }, 7000);
+    });
+  </script>
 </body>
-
 </html>
