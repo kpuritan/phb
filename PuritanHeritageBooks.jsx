@@ -18,7 +18,13 @@ import {
   Menu,
   Check,
   CheckCircle2,
-  BookX
+  BookX,
+  Edit3,
+  Trash2,
+  Shield,
+  Settings,
+  RotateCcw,
+  Lock
 } from 'lucide-react';
 
 // ==========================================
@@ -831,6 +837,189 @@ export default function PuritanHeritageBooksApp() {
   const [newsletterSuccess, setNewsletterSuccess] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
 
+  // Admin Mode States
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [books, setBooks] = useState(() => {
+    try {
+      const saved = localStorage.getItem('phb_books');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return BOOKS_DATA;
+  });
+  const [adminLoginModalOpen, setAdminLoginModalOpen] = useState(false);
+  const [bookFormModalOpen, setBookFormModalOpen] = useState(false);
+  const [bookManagerModalOpen, setBookManagerModalOpen] = useState(false);
+  const [editingBook, setEditingBook] = useState(null);
+  const [adminId, setAdminId] = useState('admin');
+  const [adminPw, setAdminPw] = useState('1234');
+  const [managerSearchQuery, setManagerSearchQuery] = useState('');
+
+  // Admin Book Form State
+  const [formBook, setFormBook] = useState({
+    id: '',
+    title: '',
+    originalTitle: '',
+    author: '',
+    translator: '',
+    series: '',
+    category: 'dogmatics',
+    price: 31500,
+    originalPrice: 35000,
+    coverGradient: 'from-[#1a1c20] via-[#2d1b24] to-[#121417]',
+    pages: '480쪽',
+    pubDate: '2026. 10.',
+    isNew: false,
+    isPreorder: false,
+    isHardcover: true,
+    isEbook: false,
+    tagline: '',
+    description: '',
+    toc: '',
+    excerpt: ''
+  });
+
+  useEffect(() => {
+    try {
+      setIsAdmin(localStorage.getItem('isAdmin') === 'true');
+    } catch (e) {}
+  }, []);
+
+  const saveBooksData = (newBooks) => {
+    setBooks(newBooks);
+    try {
+      localStorage.setItem('phb_books', JSON.stringify(newBooks));
+    } catch (e) {}
+  };
+
+  const handleAdminLogin = (e) => {
+    e.preventDefault();
+    if (adminId === 'admin' && adminPw === '1234') {
+      setIsAdmin(true);
+      try { localStorage.setItem('isAdmin', 'true'); } catch (e) {}
+      setAdminLoginModalOpen(false);
+      showToast('👑 관리자 모드로 로그인되었습니다.');
+    } else {
+      alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+    }
+  };
+
+  const logoutAdmin = () => {
+    if (window.confirm('관리자 모드를 로그아웃하시겠습니까?')) {
+      setIsAdmin(false);
+      try { localStorage.removeItem('isAdmin'); } catch (e) {}
+      showToast('관리자 모드에서 로그아웃되었습니다.');
+    }
+  };
+
+  const openBookForm = (book = null) => {
+    if (book) {
+      setEditingBook(book);
+      setFormBook({
+        id: book.id,
+        title: book.title || '',
+        originalTitle: book.originalTitle || '',
+        author: book.author || '',
+        translator: book.translator || '',
+        series: book.series || '',
+        category: book.category || 'dogmatics',
+        price: book.price || 0,
+        originalPrice: book.originalPrice || 0,
+        coverGradient: book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]',
+        pages: book.pages || '',
+        pubDate: book.pubDate || '',
+        isNew: !!book.isNew,
+        isPreorder: !!book.isPreorder,
+        isHardcover: !!book.isHardcover,
+        isEbook: !!book.isEbook,
+        tagline: book.tagline || '',
+        description: book.description || '',
+        toc: (book.toc || []).join('\n'),
+        excerpt: book.excerpt || ''
+      });
+    } else {
+      setEditingBook(null);
+      setFormBook({
+        id: '',
+        title: '',
+        originalTitle: '',
+        author: '',
+        translator: '',
+        series: 'PHB 출간도서',
+        category: 'dogmatics',
+        price: 31500,
+        originalPrice: 35000,
+        coverGradient: 'from-[#1a1c20] via-[#2d1b24] to-[#121417]',
+        pages: '480쪽',
+        pubDate: '2026. 10.',
+        isNew: true,
+        isPreorder: false,
+        isHardcover: true,
+        isEbook: false,
+        tagline: '',
+        description: '',
+        toc: '제1장 서론\n제2장 본론\n제3장 실천적 결론',
+        excerpt: '“하나님의 말씀은 모든 신앙과 삶의 유일한 최고 권위입니다.”'
+      });
+    }
+    setBookFormModalOpen(true);
+  };
+
+  const handleBookFormSave = (e) => {
+    e.preventDefault();
+    const origPrice = Number(formBook.originalPrice) || 0;
+    const salePrice = Number(formBook.price) || origPrice;
+    const discountRate = origPrice > 0 ? Math.round(((origPrice - salePrice) / origPrice) * 100) : 0;
+    const tocArray = formBook.toc.split('\n').map(s => s.trim()).filter(Boolean);
+
+    if (editingBook) {
+      const updated = books.map(b => b.id === editingBook.id ? {
+        ...b,
+        ...formBook,
+        originalPrice: origPrice,
+        price: salePrice,
+        discountRate: Math.max(0, discountRate),
+        toc: tocArray.length > 0 ? tocArray : b.toc
+      } : b);
+      saveBooksData(updated);
+      showToast(`『${formBook.title}』 도서 정보가 수정되었습니다.`);
+    } else {
+      const newBook = {
+        id: 'phb-' + String(Date.now()).slice(-6),
+        ...formBook,
+        originalPrice: origPrice,
+        price: salePrice,
+        discountRate: Math.max(0, discountRate),
+        isbn: '979-11-984501-' + Math.floor(10 + Math.random() * 89) + '-0',
+        confessionTag: '개혁주의 표준문서 연계',
+        toc: tocArray.length > 0 ? tocArray : ['제1장 서론', '제2장 본론']
+      };
+      saveBooksData([newBook, ...books]);
+      showToast(`새 도서 『${formBook.title}』이(가) 등록되었습니다.`);
+    }
+    setBookFormModalOpen(false);
+  };
+
+  const handleDeleteBook = (bookId) => {
+    const target = books.find(b => b.id === bookId);
+    if (!target) return;
+    if (window.confirm(`'${target.title}' 도서를 정말로 삭제하시겠습니까?`)) {
+      const updated = books.filter(b => b.id !== bookId);
+      saveBooksData(updated);
+      showToast(`'${target.title}' 도서가 삭제되었습니다.`);
+    }
+  };
+
+  const handleResetBooks = () => {
+    if (window.confirm('모든 도서 데이터를 출판사 기본 목록(8권)으로 초기화하시겠습니까? 추가/수정된 도서는 삭제됩니다.')) {
+      saveBooksData(BOOKS_DATA);
+      try { localStorage.removeItem('phb_books'); } catch (e) {}
+      showToast('도서 데이터가 기본값으로 복원되었습니다.');
+    }
+  };
+
   // Quote Rotator
   useEffect(() => {
     const timer = setInterval(() => {
@@ -899,7 +1088,7 @@ export default function PuritanHeritageBooksApp() {
 
   // Filtered Books
   const filteredBooks = useMemo(() => {
-    return BOOKS_DATA.filter(book => {
+    return books.filter(book => {
       const matchesCat = (() => {
         if (selectedCategory === 'all') return true;
         if (selectedCategory === 'ebook') return book.isEbook;
@@ -925,7 +1114,7 @@ export default function PuritanHeritageBooksApp() {
 
       return matchesCat && matchesQuery;
     });
-  }, [selectedCategory, selectedSubcategory, searchQuery]);
+  }, [books, selectedCategory, selectedSubcategory, searchQuery]);
 
   const handleNewsletter = (e) => {
     e.preventDefault();
@@ -944,6 +1133,53 @@ export default function PuritanHeritageBooksApp() {
         <div className="fixed bottom-6 right-6 z-50 bg-[#17191C] text-[#F8F7F4] border-l-4 border-[#C39738] px-5 py-3.5 rounded shadow-2xl flex items-center space-x-3 text-sm animate-bounce">
           <CheckCircle2 className="w-5 h-5 text-[#C39738]" />
           <span className="font-medium">{toastMessage}</span>
+        </div>
+      )}
+
+      {/* GLOBAL ADMIN BAR */}
+      {isAdmin && (
+        <div className="bg-[#17191C] border-b-2 border-[#C39738] text-white py-2 px-4 shadow-lg sticky top-0 z-50 transition-all">
+          <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#C39738] text-[#17191C] font-bold text-[10px]">👑</span>
+              <span className="font-bold text-[#DFC075] font-serif">PHB 플랫폼 관리자 모드</span>
+              <span className="hidden md:inline text-[#A6ADB8] text-[11px]">| 실시간 도서 등록 · 수정 · 순서 관리 지원</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => openBookForm()}
+                className="bg-[#6E1B2A] hover:bg-[#8C2538] text-white px-3 py-1.5 rounded font-semibold flex items-center gap-1 shadow transition-colors cursor-pointer text-xs"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>신규 도서 등록</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setBookManagerModalOpen(true)}
+                className="bg-[#2D333B] hover:bg-[#3D444D] text-[#DFC075] border border-[#C39738]/50 px-3 py-1.5 rounded font-medium flex items-center gap-1 transition-colors cursor-pointer text-xs"
+              >
+                <Settings className="w-3.5 h-3.5" />
+                <span>도서 목록 관리</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleResetBooks}
+                className="bg-[#23272D] hover:bg-[#2C313A] text-[#A6ADB8] hover:text-white px-2.5 py-1.5 rounded text-[11px] transition-colors cursor-pointer"
+                title="도서 목록을 기본 8권 데이터로 초기화"
+              >
+                <RotateCcw className="w-3 h-3 inline mr-1" />
+                기본 복원
+              </button>
+              <button
+                type="button"
+                onClick={logoutAdmin}
+                className="bg-[#DC2626] hover:bg-[#B91C1C] text-white px-3 py-1.5 rounded font-semibold flex items-center gap-1 shadow transition-colors cursor-pointer text-xs"
+              >
+                <span>🚪</span> 로그아웃
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -966,6 +1202,14 @@ export default function PuritanHeritageBooksApp() {
             <a href="#about" className="hover:text-[#C39738] transition-colors font-semibold text-[#E4DFD7]">
               출판 사명선언문
             </a>
+            <span className="text-[#3A3F4A]">|</span>
+            <button
+              onClick={() => isAdmin ? setBookManagerModalOpen(true) : setAdminLoginModalOpen(true)}
+              className="hover:text-[#C39738] text-[#C39738] transition-colors font-medium flex items-center gap-1 cursor-pointer"
+            >
+              <span>👑</span>
+              <span>{isAdmin ? '관리자 대시보드' : '관리자 모드'}</span>
+            </button>
             <span className="text-[#3A3F4A]">|</span>
             <span className="text-[#C39738] font-serif font-semibold tracking-wider">KR / EN</span>
           </div>
@@ -1787,16 +2031,25 @@ export default function PuritanHeritageBooksApp() {
                   </div>
 
                   <div className="absolute inset-0 bg-[#17191C]/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center gap-2 p-4 z-30">
+                    {isAdmin && (
+                      <button
+                        onClick={() => openBookForm(book)}
+                        className="w-full bg-[#DFC075] hover:bg-[#C39738] text-[#17191C] text-xs font-bold py-1.5 px-3 rounded shadow flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>관리자 도서 수정</span>
+                      </button>
+                    )}
                     <button
                       onClick={() => setPreviewBook(book)}
-                      className="w-full bg-[#DFC075] hover:bg-[#C39738] text-[#17191C] text-xs font-semibold py-2 px-3 rounded shadow flex items-center justify-center gap-1.5 transition-colors"
+                      className="w-full bg-[#DFC075] hover:bg-[#C39738] text-[#17191C] text-xs font-semibold py-2 px-3 rounded shadow flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                     >
                       <BookOpen className="w-3.5 h-3.5" />
                       <span>목차 & 서점 바로가기</span>
                     </button>
                     <button
                       onClick={() => addToCart(book)}
-                      className="w-full bg-[#6E1B2A] hover:bg-[#8C2538] text-white text-xs font-semibold py-2 px-3 rounded shadow flex items-center justify-center gap-1.5 transition-colors"
+                      className="w-full bg-[#6E1B2A] hover:bg-[#8C2538] text-white text-xs font-semibold py-2 px-3 rounded shadow flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                     >
                       <ShoppingBag className="w-3.5 h-3.5" />
                       <span>장바구니 담기</span>
@@ -1842,7 +2095,7 @@ export default function PuritanHeritageBooksApp() {
 
                     <button
                       onClick={() => addToCart(book)}
-                      className="p-2.5 rounded bg-[#F8F7F4] hover:bg-[#6E1B2A] text-[#17191C] hover:text-white border border-[#E4DFD7] transition-all"
+                      className="p-2.5 rounded bg-[#F8F7F4] hover:bg-[#6E1B2A] text-[#17191C] hover:text-white border border-[#E4DFD7] transition-all cursor-pointer"
                       title="장바구니 담기"
                     >
                       <Plus className="w-4 h-4" />
@@ -1850,6 +2103,27 @@ export default function PuritanHeritageBooksApp() {
                   </div>
                 </div>
 
+                {isAdmin && (
+                  <div className="bg-[#FAF8F5] border-t border-[#E4DFD7] px-4 py-2.5 flex items-center justify-between text-xs">
+                    <span className="text-[10px] text-[#6E1B2A] font-bold tracking-wider font-serif">ADMIN</span>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => openBookForm(book)}
+                        className="px-2.5 py-1 rounded bg-[#17191C] text-[#DFC075] hover:bg-[#2C313A] text-[10px] font-semibold flex items-center gap-1 border border-[#C39738]/40 shadow-2xs transition-colors cursor-pointer"
+                      >
+                        <Edit3 className="w-3 h-3 inline" />
+                        수정
+                      </button>
+                      <button
+                        onClick={() => handleDeleteBook(book.id)}
+                        className="px-2.5 py-1 rounded bg-red-50 text-red-600 hover:bg-red-600 hover:text-white text-[10px] font-semibold border border-red-200 transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="w-3 h-3 inline" />
+                        삭제
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -2119,10 +2393,18 @@ export default function PuritanHeritageBooksApp() {
 
           <div className="pt-8 flex flex-col sm:flex-row justify-between items-center text-[11px] text-[#5E6470] gap-3">
             <p>© 2026 Puritan Heritage Books. All rights reserved. Soli Deo Gloria.</p>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 items-center">
               <a href="#privacy" className="hover:text-white">개인정보처리방침</a>
               <a href="#terms" className="hover:text-white">이용약관</a>
               <a href="#confession" className="hover:text-white">도서출판 사명문</a>
+              <span className="text-[#3A3F4A]">|</span>
+              <button
+                onClick={() => isAdmin ? setBookManagerModalOpen(true) : setAdminLoginModalOpen(true)}
+                className="text-[#8E95A5] hover:text-[#DFC075] transition-colors flex items-center gap-1 cursor-pointer"
+              >
+                <Lock className="w-3.5 h-3.5" />
+                <span>{isAdmin ? '관리자 모드 (ON)' : '관리자 로그인'}</span>
+              </button>
             </div>
           </div>
         </div>
@@ -2643,6 +2925,429 @@ export default function PuritanHeritageBooksApp() {
               회원가입 시 신간 10% 추가 적립 및 청교도 묵상 칼럼을 무료로 받아보실 수 있습니다.
             </div>
 
+          </div>
+        </div>
+      {/* MODAL 4: ADMIN LOGIN MODAL */}
+      {adminLoginModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#FFFFFF] text-[#17191C] w-full max-w-sm rounded-xl border-t-4 border-[#6E1B2A] shadow-2xl p-6 relative">
+            <div className="flex justify-between items-center pb-3 border-b border-[#EAE5DC] mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded bg-[#17191C] border border-[#C39738] flex items-center justify-center text-[#DFC075] text-xs font-serif font-bold">PHB</div>
+                <h3 className="font-serif font-bold text-lg text-[#17191C]">관리자 로그인</h3>
+              </div>
+              <button onClick={() => setAdminLoginModalOpen(false)} className="text-[#8E95A5] hover:text-[#17191C] text-xl font-bold p-1 leading-none cursor-pointer">&times;</button>
+            </div>
+            <p className="text-xs text-[#5E6470] mb-5 font-serif">
+              퓨리탄 헤리티지 북스 플랫폼 도서 관리 및 설정 기능을 사용하려면 로그인해 주십시오. (기본 계정: <span className="font-semibold text-[#17191C]">admin / 1234</span>)
+            </p>
+            <form onSubmit={handleAdminLogin} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-[#17191C] mb-1">아이디</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="admin"
+                  value={adminId}
+                  onChange={(e) => setAdminId(e.target.value)}
+                  className="w-full text-xs p-2.5 rounded border border-[#D5CEBF] focus:outline-none focus:border-[#C39738] bg-[#FAF8F5]"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-[#17191C] mb-1">비밀번호</label>
+                <input
+                  type="password"
+                  required
+                  placeholder="••••"
+                  value={adminPw}
+                  onChange={(e) => setAdminPw(e.target.value)}
+                  className="w-full text-xs p-2.5 rounded border border-[#D5CEBF] focus:outline-none focus:border-[#C39738] bg-[#FAF8F5]"
+                />
+              </div>
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  className="w-full bg-[#17191C] hover:bg-[#6E1B2A] text-white py-2.5 px-4 rounded text-xs font-bold border border-[#C39738] shadow transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <Shield className="w-3.5 h-3.5 text-[#DFC075]" />
+                  <span>관리자 로그인</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 5: BOOK FORM (ADD / EDIT) MODAL */}
+      {bookFormModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#F8F7F4] text-[#17191C] w-full max-w-2xl rounded-xl border border-[#C39738] shadow-2xl overflow-hidden relative max-h-[92vh] flex flex-col">
+            <div className="bg-[#17191C] text-white p-4 px-6 flex justify-between items-center border-b border-[#C39738]">
+              <div className="flex items-center space-x-2">
+                <span className="font-serif text-xs font-bold text-[#DFC075] tracking-widest uppercase">Book Management</span>
+                <span className="text-[#3A3F4A]">|</span>
+                <span className="text-xs text-[#A6ADB8] font-serif font-semibold">
+                  {editingBook ? `도서 수정: ${editingBook.title}` : '신규 도서 등록'}
+                </span>
+              </div>
+              <button onClick={() => setBookFormModalOpen(false)} className="text-[#A6ADB8] hover:text-white p-1 text-base cursor-pointer">✕</button>
+            </div>
+
+            <form onSubmit={handleBookFormSave} className="p-6 overflow-y-auto space-y-4 flex-1 text-xs font-sans">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-semibold text-[#17191C] mb-1">도서명 (한글) *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="예: 구속사적 성경신학"
+                    value={formBook.title}
+                    onChange={(e) => setFormBook({ ...formBook, title: e.target.value })}
+                    className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-[#17191C] mb-1">원제 (영문)</label>
+                  <input
+                    type="text"
+                    placeholder="예: Biblical Theology"
+                    value={formBook.originalTitle}
+                    onChange={(e) => setFormBook({ ...formBook, originalTitle: e.target.value })}
+                    className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block font-semibold text-[#17191C] mb-1">저자 *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="예: 게할더스 보스"
+                    value={formBook.author}
+                    onChange={(e) => setFormBook({ ...formBook, author: e.target.value })}
+                    className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-[#17191C] mb-1">역자</label>
+                  <input
+                    type="text"
+                    placeholder="예: 이승구 역"
+                    value={formBook.translator}
+                    onChange={(e) => setFormBook({ ...formBook, translator: e.target.value })}
+                    className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-[#17191C] mb-1">카테고리 *</label>
+                  <select
+                    value={formBook.category}
+                    onChange={(e) => setFormBook({ ...formBook, category: e.target.value })}
+                    className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                  >
+                    <option value="dogmatics">개혁교의학 (dogmatics)</option>
+                    <option value="puritan-gems">청교도 보화 (puritan-gems)</option>
+                    <option value="family">가정예배 & 영성 (family)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block font-semibold text-[#17191C] mb-1">시리즈명</label>
+                  <input
+                    type="text"
+                    placeholder="예: 개혁교의학 대계"
+                    value={formBook.series}
+                    onChange={(e) => setFormBook({ ...formBook, series: e.target.value })}
+                    className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-[#17191C] mb-1">정가 (원) *</label>
+                  <input
+                    type="number"
+                    required
+                    placeholder="35000"
+                    value={formBook.originalPrice}
+                    onChange={(e) => setFormBook({ ...formBook, originalPrice: Number(e.target.value) })}
+                    className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-[#17191C] mb-1">판매가 (원) *</label>
+                  <input
+                    type="number"
+                    required
+                    placeholder="31500"
+                    value={formBook.price}
+                    onChange={(e) => setFormBook({ ...formBook, price: Number(e.target.value) })}
+                    className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block font-semibold text-[#17191C] mb-1">표지 컬러 테마</label>
+                  <select
+                    value={formBook.coverGradient}
+                    onChange={(e) => setFormBook({ ...formBook, coverGradient: e.target.value })}
+                    className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                  >
+                    <option value="from-[#1a1c20] via-[#2d1b24] to-[#121417]">차콜 버건디 (다크 프리미엄)</option>
+                    <option value="from-[#4a121c] via-[#2a0b11] to-[#170508]">버건디 와인 (클래식)</option>
+                    <option value="from-[#0f231c] via-[#091511] to-[#040806]">포레스트 딥그린 (경건)</option>
+                    <option value="from-[#162032] via-[#0d1420] to-[#060a10]">미드나잇 네이비 (교의학)</option>
+                    <option value="from-[#2e1d13] via-[#1a100b] to-[#0d0805]">앤틱 브라운 (양장 바인더)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-semibold text-[#17191C] mb-1">페이지 수</label>
+                  <input
+                    type="text"
+                    placeholder="예: 480쪽"
+                    value={formBook.pages}
+                    onChange={(e) => setFormBook({ ...formBook, pages: e.target.value })}
+                    className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-[#17191C] mb-1">출간일 / 상태</label>
+                  <input
+                    type="text"
+                    placeholder="예: 2026. 10. 15"
+                    value={formBook.pubDate}
+                    onChange={(e) => setFormBook({ ...formBook, pubDate: e.target.value })}
+                    className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-[#17191C] mb-1.5">도서 속성 및 뱃지</label>
+                <div className="flex flex-wrap gap-4 bg-white p-3 rounded border border-[#E4DFD7]">
+                  <label className="flex items-center space-x-1.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formBook.isNew}
+                      onChange={(e) => setFormBook({ ...formBook, isNew: e.target.checked })}
+                      className="rounded text-[#6E1B2A]"
+                    />
+                    <span>신간 (NEW)</span>
+                  </label>
+                  <label className="flex items-center space-x-1.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formBook.isPreorder}
+                      onChange={(e) => setFormBook({ ...formBook, isPreorder: e.target.checked })}
+                      className="rounded text-[#6E1B2A]"
+                    />
+                    <span>사전예약 (Pre-order)</span>
+                  </label>
+                  <label className="flex items-center space-x-1.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formBook.isHardcover}
+                      onChange={(e) => setFormBook({ ...formBook, isHardcover: e.target.checked })}
+                      className="rounded text-[#6E1B2A]"
+                    />
+                    <span>양장본 (Hardcover)</span>
+                  </label>
+                  <label className="flex items-center space-x-1.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formBook.isEbook}
+                      onChange={(e) => setFormBook({ ...formBook, isEbook: e.target.checked })}
+                      className="rounded text-[#6E1B2A]"
+                    />
+                    <span>전자책 지원 (ePub)</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-[#17191C] mb-1">한 줄 헤드카피 (Tagline)</label>
+                <input
+                  type="text"
+                  placeholder="예: 성경적 구속사의 웅장한 파노라마를 펼쳐내는 기념비적 교의학"
+                  value={formBook.tagline}
+                  onChange={(e) => setFormBook({ ...formBook, tagline: e.target.value })}
+                  className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-[#17191C] mb-1">도서 상세 소개 (Description)</label>
+                <textarea
+                  rows={3}
+                  placeholder="도서에 대한 자세한 소개글을 입력하세요."
+                  value={formBook.description}
+                  onChange={(e) => setFormBook({ ...formBook, description: e.target.value })}
+                  className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-semibold text-[#17191C] mb-1">목차 (줄 단위로 입력)</label>
+                  <textarea
+                    rows={4}
+                    placeholder="제1장 서론&#10;제2장 본론"
+                    value={formBook.toc}
+                    onChange={(e) => setFormBook({ ...formBook, toc: e.target.value })}
+                    className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-[#17191C] mb-1">본문 맛보기 발췌문 (Excerpt)</label>
+                  <textarea
+                    rows={4}
+                    placeholder="“진정한 신학은 하나님의 영광을 바라보는 데서 시작한다...”"
+                    value={formBook.excerpt}
+                    onChange={(e) => setFormBook({ ...formBook, excerpt: e.target.value })}
+                    className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-[#E4DFD7] flex justify-end space-x-3">
+                <button
+                  type="button"
+                  onClick={() => setBookFormModalOpen(false)}
+                  className="px-4 py-2 border border-[#E4DFD7] rounded text-xs font-semibold text-[#5E6470] hover:bg-[#EDE9E1] transition-colors cursor-pointer"
+                >
+                  취소
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-[#6E1B2A] hover:bg-[#8C2538] text-white rounded text-xs font-semibold shadow transition-colors flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>💾</span>
+                  <span>도서 저장하기</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 6: BOOK MANAGER PORTAL MODAL */}
+      {bookManagerModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#F8F7F4] text-[#17191C] w-full max-w-4xl rounded-xl border border-[#C39738] shadow-2xl overflow-hidden relative max-h-[92vh] flex flex-col">
+            <div className="bg-[#17191C] text-white p-4 px-6 flex justify-between items-center border-b border-[#C39738]">
+              <div className="flex items-center space-x-3">
+                <span className="font-serif text-xs font-bold text-[#DFC075] tracking-widest uppercase">Admin Book Manager</span>
+                <span className="text-[#3A3F4A]">|</span>
+                <span className="text-xs text-white font-serif font-semibold">도서 종합 관리 포털 ({books.length}권)</span>
+              </div>
+              <button onClick={() => setBookManagerModalOpen(false)} className="text-[#A6ADB8] hover:text-white p-1 text-base cursor-pointer">✕</button>
+            </div>
+
+            <div className="p-4 bg-white border-b border-[#E4DFD7] flex flex-col sm:flex-row justify-between items-center gap-3">
+              <div className="relative w-full sm:w-72">
+                <input
+                  type="text"
+                  placeholder="도서명, 저자 검색..."
+                  value={managerSearchQuery}
+                  onChange={(e) => setManagerSearchQuery(e.target.value)}
+                  className="w-full text-xs p-2 pl-8 rounded border border-[#E4DFD7] bg-[#FAF8F5] focus:outline-none focus:border-[#C39738]"
+                />
+                <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[#A6ADB8]" />
+              </div>
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <button
+                  onClick={() => { setBookManagerModalOpen(false); openBookForm(); }}
+                  className="px-3.5 py-1.5 bg-[#6E1B2A] hover:bg-[#8C2538] text-white rounded text-xs font-semibold shadow transition-colors flex items-center gap-1 cursor-pointer"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>새 도서 추가</span>
+                </button>
+                <button
+                  onClick={handleResetBooks}
+                  className="px-3 py-1.5 border border-[#E4DFD7] text-[#5E6470] hover:bg-[#EDE9E1] rounded text-xs font-medium transition-colors cursor-pointer"
+                >
+                  기본값 초기화
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 overflow-y-auto flex-1">
+              <div className="overflow-x-auto rounded-lg border border-[#E4DFD7] bg-white shadow-xs">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-[#FAF8F5] text-[#5E6470] font-semibold border-b border-[#E4DFD7]">
+                    <tr>
+                      <th className="p-3">표지</th>
+                      <th className="p-3">도서명 / 원제</th>
+                      <th className="p-3">저자 / 역자</th>
+                      <th className="p-3">카테고리</th>
+                      <th className="p-3">판매가</th>
+                      <th className="p-3">상태/뱃지</th>
+                      <th className="p-3 text-right">관리</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#E4DFD7]">
+                    {books.filter(b => !managerSearchQuery || b.title.toLowerCase().includes(managerSearchQuery.toLowerCase()) || b.author.toLowerCase().includes(managerSearchQuery.toLowerCase())).map((b) => (
+                      <tr key={b.id} className="hover:bg-[#FAF8F5] transition-colors">
+                        <td className="p-3">
+                          <div className={`w-8 h-11 rounded bg-gradient-to-br ${b.coverGradient} shadow-xs border border-[#C39738]/30 flex items-center justify-center text-[7px] text-white font-serif font-bold`}>
+                            PHB
+                          </div>
+                        </td>
+                        <td className="p-3">
+                          <div className="font-bold text-[#17191C] text-xs">{b.title}</div>
+                          <div className="text-[10px] text-[#7E8694] italic truncate max-w-xs">{b.originalTitle || ''}</div>
+                        </td>
+                        <td className="p-3">
+                          <div>{b.author}</div>
+                          <div className="text-[10px] text-[#7E8694]">{b.translator || '-'}</div>
+                        </td>
+                        <td className="p-3">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-[#FAF8F5] border border-[#E4DFD7] text-[#6E1B2A]">
+                            {b.category}
+                          </span>
+                        </td>
+                        <td className="p-3 font-semibold text-[#17191C]">
+                          {b.price.toLocaleString()}원
+                        </td>
+                        <td className="p-3">
+                          <div className="flex flex-wrap gap-1">
+                            {b.isPreorder && <span className="bg-[#6E1B2A] text-white text-[9px] px-1.5 py-0.5 rounded">사전예약</span>}
+                            {b.isNew && <span className="bg-[#C39738] text-[#17191C] font-bold text-[9px] px-1.5 py-0.5 rounded">신간</span>}
+                            {b.isHardcover && <span className="bg-[#17191C] text-[#C39738] text-[9px] px-1.5 py-0.5 rounded">양장</span>}
+                            {b.isEbook && <span className="bg-[#2D333B] text-[#DFC075] text-[9px] px-1.5 py-0.5 rounded">ePub</span>}
+                          </div>
+                        </td>
+                        <td className="p-3 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button
+                              onClick={() => { setBookManagerModalOpen(false); openBookForm(b); }}
+                              className="px-2.5 py-1 rounded bg-[#17191C] text-[#DFC075] hover:bg-[#2C313A] text-[10px] font-semibold transition-colors cursor-pointer"
+                            >
+                              수정
+                            </button>
+                            <button
+                              onClick={() => handleDeleteBook(b.id)}
+                              className="px-2.5 py-1 rounded bg-red-50 text-red-600 hover:bg-red-600 hover:text-white text-[10px] font-semibold border border-red-200 transition-colors cursor-pointer"
+                            >
+                              삭제
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="bg-white p-4 px-6 border-t border-[#E4DFD7] flex items-center justify-between text-xs text-[#5E6470]">
+              <span>도서 정보를 수정하거나 삭제하면 카탈로그에 실시간 반영되며 자동 저장됩니다.</span>
+              <button onClick={() => setBookManagerModalOpen(false)} className="px-4 py-1.5 border border-[#E4DFD7] rounded font-semibold hover:bg-[#EDE9E1] cursor-pointer">닫기</button>
+            </div>
           </div>
         </div>
       )}

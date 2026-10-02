@@ -107,6 +107,33 @@
   </div>
 
   <!-- ========================================== -->
+  <!-- GLOBAL ADMIN NOTIFICATION & CONTROL BAR -->
+  <!-- ========================================== -->
+  <div id="global-admin-bar" class="hidden bg-[#17191C] border-b-2 border-[#C39738] text-white py-2 px-4 shadow-lg sticky top-0 z-50 transition-all">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#C39738] text-[#17191C] font-bold text-[10px]">👑</span>
+        <span class="font-bold text-[#DFC075] font-serifKr">PHB 플랫폼 관리자 모드</span>
+        <span class="hidden md:inline text-[#A6ADB8] text-[11px]">| 실시간 도서 등록 · 수정 · 순서 관리 지원</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="openBookFormModal()" class="bg-[#6E1B2A] hover:bg-[#8C2538] text-white px-3 py-1.5 rounded font-semibold flex items-center gap-1 shadow transition-colors cursor-pointer text-xs">
+          <span>＋</span> 신규 도서 등록
+        </button>
+        <button type="button" onclick="openBookManagerModal()" class="bg-[#2D333B] hover:bg-[#3D444D] text-[#DFC075] border border-[#C39738]/50 px-3 py-1.5 rounded font-medium flex items-center gap-1 transition-colors cursor-pointer text-xs">
+          <span>📑</span> 도서 목록 관리
+        </button>
+        <button type="button" onclick="resetBooksToDefault()" class="bg-[#23272D] hover:bg-[#2C313A] text-[#A6ADB8] hover:text-white px-2.5 py-1.5 rounded text-[11px] transition-colors cursor-pointer" title="도서 목록을 기본 8권 데이터로 초기화">
+          🔄 기본 복원
+        </button>
+        <button type="button" onclick="logoutAdmin()" class="bg-[#DC2626] hover:bg-[#B91C1C] text-white px-3 py-1.5 rounded font-semibold flex items-center gap-1 shadow transition-colors cursor-pointer text-xs">
+          🚪 로그아웃
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
   <!-- 1. TOP UTILITY BANNER -->
   <!-- ========================================== -->
   <div class="bg-[#52131F] text-[#F5EDE8] text-xs py-2 px-4 border-b border-[#731D2D]">
@@ -124,6 +151,10 @@
         <span class="text-[#80313E]">|</span>
         <a href="#about" class="hover:text-[#DFC075] transition-colors font-serifKr font-semibold text-white">
           출판 사명선언문
+        </a>
+        <span class="text-[#80313E]">|</span>
+        <a href="javascript:void(0)" onclick="handleAdminTriggerClick()" id="top-admin-trigger" class="hover:text-[#DFC075] text-[#DFC075] transition-colors font-medium flex items-center gap-1 cursor-pointer">
+          <span id="top-admin-trigger-icon">👑</span> <span id="top-admin-trigger-text">관리자 모드</span>
         </a>
         <span class="text-[#80313E]">|</span>
         <span class="text-[#DFC075] font-cinzel font-semibold tracking-wider">KR / EN</span>
@@ -933,11 +964,20 @@
 
       <div class="pt-8 flex flex-col sm:flex-row justify-between items-center text-[11px] text-[#5E6470] gap-3">
         <p>© 2026 Puritan Heritage Books. All rights reserved. Soli Deo Gloria.</p>
-        <div class="flex space-x-4">
-          <a href="admin.html" class="text-[#C39738] hover:underline font-semibold"><i class="fas fa-lock mr-1"></i>관리자 로그인</a>
+        <div class="flex space-x-4 items-center">
           <a href="#privacy" class="hover:text-white">개인정보처리방침</a>
           <a href="#terms" class="hover:text-white">이용약관</a>
           <a href="#about" class="hover:text-white">도서출판 사명문</a>
+          <span class="text-[#3A3F4A]">|</span>
+          <a href="admin.html" class="text-[#C39738] hover:underline font-semibold flex items-center gap-1">
+            <i class="fas fa-lock text-[10px]"></i>
+            <span>관리자 대시보드</span>
+          </a>
+          <span class="text-[#3A3F4A]">·</span>
+          <a href="javascript:void(0)" onclick="handleAdminTriggerClick()" id="footer-admin-link" class="text-[#8E95A5] hover:text-[#DFC075] transition-colors flex items-center gap-1 cursor-pointer">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            <span id="footer-admin-link-text">관리자 모드</span>
+          </a>
         </div>
       </div>
     </div>
@@ -1074,8 +1114,228 @@
         </form>
       </div>
 
-      <div class="bg-[#EDE9E1] px-6 py-3 text-center text-[11px] text-[#7E8694] border-t border-[#E4DFD7]">
-        회원가입 시 신간 10% 추가 적립 및 청교도 묵상 칼럼을 무료로 받아보실 수 있습니다.
+  <!-- ========================================== -->
+  <!-- MODAL 4: ADMIN LOGIN MODAL -->
+  <!-- ========================================== -->
+  <div id="admin-login-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#FFFFFF] text-[#17191C] w-full max-w-sm rounded-xl border-t-4 border-[#6E1B2A] shadow-2xl p-6 relative">
+      <div class="flex justify-between items-center pb-3 border-b border-[#EAE5DC] mb-4">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded bg-[#17191C] border border-[#C39738] flex items-center justify-center text-[#DFC075] text-xs font-cinzel font-bold">PHB</div>
+          <h3 class="font-serifKr font-bold text-lg text-[#17191C]">관리자 로그인</h3>
+        </div>
+        <button onclick="closeAdminLoginModal()" class="text-[#8E95A5] hover:text-[#17191C] text-xl font-bold p-1 leading-none cursor-pointer">&times;</button>
+      </div>
+      <p class="text-xs text-[#5E6470] mb-5 font-serifKr">
+        퓨리탄 헤리티지 북스 플랫폼 도서 관리 및 설정 기능을 사용하려면 로그인해 주십시오. (기본 계정: <span class="font-semibold text-[#17191C]">admin / 1234</span>)
+      </p>
+      <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-[#17191C] mb-1">아이디</label>
+          <input type="text" id="admin-login-id" required placeholder="admin" value="admin" class="w-full text-xs p-2.5 rounded border border-[#D5CEBF] focus:outline-none focus:border-[#C39738] bg-[#FAF8F5]">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-[#17191C] mb-1">비밀번호</label>
+          <input type="password" id="admin-login-pw" required placeholder="••••" value="1234" class="w-full text-xs p-2.5 rounded border border-[#D5CEBF] focus:outline-none focus:border-[#C39738] bg-[#FAF8F5]">
+        </div>
+        <div class="pt-2">
+          <button type="submit" class="w-full bg-[#17191C] hover:bg-[#6E1B2A] text-white py-2.5 px-4 rounded text-xs font-bold border border-[#C39738] shadow transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>🛡️</span> 관리자 로그인
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL 5: BOOK FORM (ADD / EDIT) MODAL -->
+  <!-- ========================================== -->
+  <div id="book-form-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#F8F7F4] text-[#17191C] w-full max-w-2xl rounded-xl border border-[#C39738] shadow-2xl overflow-hidden relative max-h-[92vh] flex flex-col">
+      <div class="bg-[#17191C] text-white p-4 px-6 flex justify-between items-center border-b border-[#C39738]">
+        <div class="flex items-center space-x-2">
+          <span class="font-cinzel text-xs font-bold text-[#DFC075] tracking-widest uppercase">Book Management</span>
+          <span class="text-[#3A3F4A]">|</span>
+          <span id="book-form-modal-title" class="text-xs text-[#A6ADB8] font-serifKr font-semibold">신규 도서 등록</span>
+        </div>
+        <button onclick="closeBookFormModal()" class="text-[#A6ADB8] hover:text-white p-1 text-base cursor-pointer">✕</button>
+      </div>
+
+      <form id="book-edit-form" onsubmit="handleBookFormSubmit(event)" class="p-6 overflow-y-auto space-y-4 flex-1 text-xs font-sans">
+        <input type="hidden" id="form-book-id" value="">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-semibold text-[#17191C] mb-1">도서명 (한글) *</label>
+            <input type="text" id="form-book-title" required placeholder="예: 구속사적 성경신학" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+          </div>
+          <div>
+            <label class="block font-semibold text-[#17191C] mb-1">원제 (영문)</label>
+            <input type="text" id="form-book-original-title" placeholder="예: Biblical Theology" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-semibold text-[#17191C] mb-1">저자 *</label>
+            <input type="text" id="form-book-author" required placeholder="예: 게할더스 보스" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+          </div>
+          <div>
+            <label class="block font-semibold text-[#17191C] mb-1">역자</label>
+            <input type="text" id="form-book-translator" placeholder="예: 이승구 역" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+          </div>
+          <div>
+            <label class="block font-semibold text-[#17191C] mb-1">카테고리 *</label>
+            <select id="form-book-category" required class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+              <option value="dogmatics">개혁교의학 (dogmatics)</option>
+              <option value="puritan-gems">청교도 보화 (puritan-gems)</option>
+              <option value="family">가정예배 & 영성 (family)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-semibold text-[#17191C] mb-1">시리즈명</label>
+            <input type="text" id="form-book-series" placeholder="예: 개혁교의학 대계" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+          </div>
+          <div>
+            <label class="block font-semibold text-[#17191C] mb-1">정가 (원) *</label>
+            <input type="number" id="form-book-original-price" required placeholder="35000" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]" oninput="calculateDiscountPreview()">
+          </div>
+          <div>
+            <label class="block font-semibold text-[#17191C] mb-1">판매가 (원) *</label>
+            <input type="number" id="form-book-price" required placeholder="31500" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]" oninput="calculateDiscountPreview()">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-semibold text-[#17191C] mb-1">표지 컬러 테마</label>
+            <select id="form-book-gradient" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+              <option value="from-[#1a1c20] via-[#2d1b24] to-[#121417]">차콜 버건디 (다크 프리미엄)</option>
+              <option value="from-[#4a121c] via-[#2a0b11] to-[#170508]">버건디 와인 (클래식)</option>
+              <option value="from-[#0f231c] via-[#091511] to-[#040806]">포레스트 딥그린 (경건)</option>
+              <option value="from-[#162032] via-[#0d1420] to-[#060a10]">미드나잇 네이비 (교의학)</option>
+              <option value="from-[#2e1d13] via-[#1a100b] to-[#0d0805]">앤틱 브라운 (양장 바인더)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-[#17191C] mb-1">페이지 수</label>
+            <input type="text" id="form-book-pages" placeholder="예: 480쪽" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+          </div>
+          <div>
+            <label class="block font-semibold text-[#17191C] mb-1">출간일 / 출간상태</label>
+            <input type="text" id="form-book-pubdate" placeholder="예: 2026. 10. 15" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-[#17191C] mb-1.5">도서 속성 및 뱃지</label>
+          <div class="flex flex-wrap gap-4 bg-white p-3 rounded border border-[#E4DFD7]">
+            <label class="flex items-center space-x-1.5 cursor-pointer">
+              <input type="checkbox" id="form-book-isnew" class="rounded text-[#6E1B2A]">
+              <span>신간 (NEW)</span>
+            </label>
+            <label class="flex items-center space-x-1.5 cursor-pointer">
+              <input type="checkbox" id="form-book-ispreorder" class="rounded text-[#6E1B2A]">
+              <span>사전예약 (Pre-order)</span>
+            </label>
+            <label class="flex items-center space-x-1.5 cursor-pointer">
+              <input type="checkbox" id="form-book-ishardcover" checked class="rounded text-[#6E1B2A]">
+              <span>양장본 (Hardcover)</span>
+            </label>
+            <label class="flex items-center space-x-1.5 cursor-pointer">
+              <input type="checkbox" id="form-book-isebook" class="rounded text-[#6E1B2A]">
+              <span>전자책 지원 (ePub)</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-[#17191C] mb-1">한 줄 헤드카피 (Tagline)</label>
+          <input type="text" id="form-book-tagline" placeholder="예: 성경적 구속사의 웅장한 파노라마를 펼쳐내는 기념비적 교의학" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-[#17191C] mb-1">도서 상세 소개 (Description)</label>
+          <textarea id="form-book-description" rows="3" placeholder="도서에 대한 자세한 소개글을 입력하세요." class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-semibold text-[#17191C] mb-1">목차 (줄 단위로 입력)</label>
+            <textarea id="form-book-toc" rows="4" placeholder="제1장 구속사의 본질&#10;제2장 구약의 예표론&#10;제3장 그리스도 안의 성취" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold text-[#17191C] mb-1">본문 맛보기 발췌문 (Excerpt)</label>
+            <textarea id="form-book-excerpt" rows="4" placeholder="“진정한 신학은 하나님의 영광을 바라보는 데서 시작한다...”" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"></textarea>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-[#E4DFD7] flex justify-end space-x-3">
+          <button type="button" onclick="closeBookFormModal()" class="px-4 py-2 border border-[#E4DFD7] rounded text-xs font-semibold text-[#5E6470] hover:bg-[#EDE9E1] transition-colors cursor-pointer">취소</button>
+          <button type="submit" class="px-6 py-2 bg-[#6E1B2A] hover:bg-[#8C2538] text-white rounded text-xs font-semibold shadow transition-colors flex items-center gap-1.5 cursor-pointer">
+            <span>💾</span> 도서 저장하기
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL 6: BOOK MANAGER PORTAL MODAL -->
+  <!-- ========================================== -->
+  <div id="book-manager-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#F8F7F4] text-[#17191C] w-full max-w-4xl rounded-xl border border-[#C39738] shadow-2xl overflow-hidden relative max-h-[92vh] flex flex-col">
+      <div class="bg-[#17191C] text-white p-4 px-6 flex justify-between items-center border-b border-[#C39738]">
+        <div class="flex items-center space-x-3">
+          <span class="font-cinzel text-xs font-bold text-[#DFC075] tracking-widest uppercase">Admin Book Manager</span>
+          <span class="text-[#3A3F4A]">|</span>
+          <span class="text-xs text-white font-serifKr font-semibold">도서 종합 관리 포털 (<span id="manager-book-count">0</span>권)</span>
+        </div>
+        <button onclick="closeBookManagerModal()" class="text-[#A6ADB8] hover:text-white p-1 text-base cursor-pointer">✕</button>
+      </div>
+
+      <div class="p-4 bg-white border-b border-[#E4DFD7] flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div class="relative w-full sm:w-72">
+          <input type="text" id="manager-search-input" oninput="renderManagerBookTable()" placeholder="도서명, 저자 검색..." class="w-full text-xs p-2 pl-8 rounded border border-[#E4DFD7] bg-[#FAF8F5] focus:outline-none focus:border-[#C39738]">
+          <span class="absolute left-2.5 top-2.5 text-[#A6ADB8] text-xs">🔍</span>
+        </div>
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+          <button onclick="closeBookManagerModal(); openBookFormModal();" class="px-3.5 py-1.5 bg-[#6E1B2A] hover:bg-[#8C2538] text-white rounded text-xs font-semibold shadow transition-colors flex items-center gap-1 cursor-pointer">
+            <span>＋</span> 새 도서 추가
+          </button>
+          <button onclick="resetBooksToDefault()" class="px-3 py-1.5 border border-[#E4DFD7] text-[#5E6470] hover:bg-[#EDE9E1] rounded text-xs font-medium transition-colors cursor-pointer">
+            기본값 초기화
+          </button>
+        </div>
+      </div>
+
+      <div class="p-6 overflow-y-auto flex-1">
+        <div class="overflow-x-auto rounded-lg border border-[#E4DFD7] bg-white shadow-xs">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-[#FAF8F5] text-[#5E6470] font-semibold border-b border-[#E4DFD7]">
+              <tr>
+                <th class="p-3">표지</th>
+                <th class="p-3">도서명 / 원제</th>
+                <th class="p-3">저자 / 역자</th>
+                <th class="p-3">카테고리</th>
+                <th class="p-3">판매가</th>
+                <th class="p-3">상태/뱃지</th>
+                <th class="p-3 text-right">관리</th>
+              </tr>
+            </thead>
+            <tbody id="manager-table-body" class="divide-y divide-[#E4DFD7]">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 px-6 border-t border-[#E4DFD7] flex items-center justify-between text-xs text-[#5E6470]">
+        <span>도서 정보를 수정하거나 삭제하면 카탈로그에 실시간 반영되며 자동 저장됩니다.</span>
+        <button onclick="closeBookManagerModal()" class="px-4 py-1.5 border border-[#E4DFD7] rounded font-semibold hover:bg-[#EDE9E1] cursor-pointer">닫기</button>
       </div>
     </div>
   </div>
@@ -1139,7 +1399,7 @@
   <!-- JAVASCRIPT LOGIC -->
   <!-- ========================================== -->
   <script>
-        // Firebase Config for Realtime Sync
+    // Firebase Config for Realtime Sync
     const firebaseConfig = {
       apiKey: "AIzaSyCJbOaiElCypwgtPgbwdnudn3VC737fMrs",
       authDomain: "kpuritan-home.firebaseapp.com",
@@ -1153,7 +1413,6 @@
     }
     const db = (typeof firebase !== 'undefined') ? firebase.firestore() : null;
 
-    let BOOKS_DATA = [];
     const DEFAULT_BOOKS_DATA = [
       {
         id: 'phb-001',
@@ -1704,6 +1963,38 @@
       }
     ];
 
+    // Load custom books from localStorage if available, or initialize from default
+    let BOOKS_DATA = (() => {
+      try {
+        const saved = localStorage.getItem('phb_books');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {
+        console.error('Failed to load saved books from localStorage:', e);
+      }
+      return JSON.parse(JSON.stringify(DEFAULT_BOOKS_DATA));
+    })();
+
+    async function saveBooksData() {
+      try {
+        localStorage.setItem('phb_books', JSON.stringify(BOOKS_DATA));
+        localStorage.setItem('phb_custom_books', JSON.stringify(BOOKS_DATA));
+      } catch (e) {
+        console.error('Failed to save books to localStorage:', e);
+      }
+      if (db) {
+        try {
+          BOOKS_DATA.forEach(b => {
+            db.collection("phb_books").doc(b.id).set(b, { merge: true }).catch(() => {});
+          });
+        } catch (e) {
+          console.warn("Firestore sync warning:", e);
+        }
+      }
+    }
+
     const PURITAN_QUOTES = [
       {
         quote: "그리스도를 아는 지식이 없는 거룩은 참된 거룩이 아니며, 지식만 있고 마음의 경건이 없는 신앙은 죽은 껍데기에 불과하다.",
@@ -2035,10 +2326,15 @@
             </div>
 
             <div class="absolute inset-0 bg-[#17191C]/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center gap-2 p-4 z-30">
-              <button onclick="openBookPreview('${book.id}')" class="w-full bg-[#DFC075] hover:bg-[#C39738] text-[#17191C] text-xs font-semibold py-2 px-3 rounded shadow flex items-center justify-center gap-1.5 transition-colors">
+              ${window.isAdmin ? `
+                <button onclick="openBookFormModal('${book.id}')" class="w-full bg-[#DFC075] hover:bg-[#C39738] text-[#17191C] text-xs font-bold py-1.5 px-3 rounded shadow flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
+                  ✏️ 관리자 도서 수정
+                </button>
+              ` : ''}
+              <button onclick="openBookPreview('${book.id}')" class="w-full bg-[#DFC075] hover:bg-[#C39738] text-[#17191C] text-xs font-semibold py-2 px-3 rounded shadow flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
                 목차 & 서점 바로가기
               </button>
-              <button onclick="addToCart('${book.id}')" class="w-full bg-[#6E1B2A] hover:bg-[#8C2538] text-white text-xs font-semibold py-2 px-3 rounded shadow flex items-center justify-center gap-1.5 transition-colors">
+              <button onclick="addToCart('${book.id}')" class="w-full bg-[#6E1B2A] hover:bg-[#8C2538] text-white text-xs font-semibold py-2 px-3 rounded shadow flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
                 장바구니 담기
               </button>
             </div>
@@ -2068,11 +2364,25 @@
                 <span class="text-[11px] text-[#A6ADB8] line-through">${book.originalPrice.toLocaleString()}원</span>
               </div>
 
-              <button onclick="addToCart('${book.id}')" class="p-2.5 rounded bg-[#F8F7F4] hover:bg-[#6E1B2A] text-[#17191C] hover:text-white border border-[#E4DFD7] transition-all" title="장바구니 담기">
+              <button onclick="addToCart('${book.id}')" class="p-2.5 rounded bg-[#F8F7F4] hover:bg-[#6E1B2A] text-[#17191C] hover:text-white border border-[#E4DFD7] transition-all cursor-pointer" title="장바구니 담기">
                 ＋
               </button>
             </div>
           </div>
+
+          ${window.isAdmin ? `
+            <div class="bg-[#FAF8F5] border-t border-[#E4DFD7] px-4 py-2.5 flex items-center justify-between text-xs">
+              <span class="text-[10px] text-[#6E1B2A] font-bold tracking-wider font-cinzel">ADMIN</span>
+              <div class="flex items-center gap-1.5">
+                <button onclick="openBookFormModal('${book.id}')" class="px-2.5 py-1 rounded bg-[#17191C] text-[#DFC075] hover:bg-[#2C313A] text-[10px] font-semibold flex items-center gap-1 border border-[#C39738]/40 shadow-2xs transition-colors cursor-pointer">
+                  ✏️ 수정
+                </button>
+                <button onclick="deleteBook('${book.id}')" class="px-2.5 py-1 rounded bg-red-50 text-red-600 hover:bg-red-600 hover:text-white text-[10px] font-semibold border border-red-200 transition-colors cursor-pointer">
+                  🗑️ 삭제
+                </button>
+              </div>
+            </div>
+          ` : ''}
         </div>
       `).join('');
     }
@@ -2635,6 +2945,344 @@
       e.target.reset();
     }
 
+    // ==========================================
+    // ADMIN MODE LOGIC
+    // ==========================================
+    window.isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+    function updateAdminUI() {
+      window.isAdmin = localStorage.getItem('isAdmin') === 'true';
+      const adminBar = document.getElementById('global-admin-bar');
+      const topTriggerText = document.getElementById('top-admin-trigger-text');
+      const footerAdminLinkText = document.getElementById('footer-admin-link-text');
+
+      if (window.isAdmin) {
+        if (adminBar) adminBar.classList.remove('hidden');
+        if (topTriggerText) topTriggerText.innerText = '관리자 대시보드';
+        if (footerAdminLinkText) footerAdminLinkText.innerText = '관리자 모드 (ON)';
+      } else {
+        if (adminBar) adminBar.classList.add('hidden');
+        if (topTriggerText) topTriggerText.innerText = '관리자 모드';
+        if (footerAdminLinkText) footerAdminLinkText.innerText = '관리자 로그인';
+      }
+      renderBooksGrid();
+    }
+
+    function handleAdminTriggerClick() {
+      if (window.isAdmin) {
+        openBookManagerModal();
+      } else {
+        openAdminLoginModal();
+      }
+    }
+
+    function openAdminLoginModal() {
+      const modal = document.getElementById('admin-login-modal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      const pwInput = document.getElementById('admin-login-pw');
+      if (pwInput) {
+        setTimeout(() => pwInput.focus(), 100);
+      }
+    }
+
+    function closeAdminLoginModal() {
+      const modal = document.getElementById('admin-login-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const id = document.getElementById('admin-login-id')?.value?.trim();
+      const pw = document.getElementById('admin-login-pw')?.value?.trim();
+
+      if (id === 'admin' && pw === '1234') {
+        localStorage.setItem('isAdmin', 'true');
+        window.isAdmin = true;
+        closeAdminLoginModal();
+        updateAdminUI();
+        showToast('👑 관리자 모드로 로그인되었습니다.');
+      } else {
+        alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+      }
+    }
+
+    function logoutAdmin() {
+      if (confirm('관리자 모드를 로그아웃하시겠습니까?')) {
+        localStorage.removeItem('isAdmin');
+        window.isAdmin = false;
+        updateAdminUI();
+        showToast('관리자 모드에서 로그아웃되었습니다.');
+      }
+    }
+
+    function calculateDiscountPreview() {
+      // realtime feedback placeholder
+    }
+
+    function openBookFormModal(bookId) {
+      const modal = document.getElementById('book-form-modal');
+      const titleEl = document.getElementById('book-form-modal-title');
+      const form = document.getElementById('book-edit-form');
+      if (!modal || !form) return;
+
+      if (bookId) {
+        const book = BOOKS_DATA.find(b => b.id === bookId);
+        if (!book) return;
+        titleEl.textContent = `도서 수정: ${book.title}`;
+        document.getElementById('form-book-id').value = book.id;
+        document.getElementById('form-book-title').value = book.title || '';
+        document.getElementById('form-book-original-title').value = book.originalTitle || '';
+        document.getElementById('form-book-author').value = book.author || '';
+        document.getElementById('form-book-translator').value = book.translator || '';
+        document.getElementById('form-book-series').value = book.series || '';
+        document.getElementById('form-book-category').value = book.category || 'dogmatics';
+        document.getElementById('form-book-original-price').value = book.originalPrice || '';
+        document.getElementById('form-book-price').value = book.price || '';
+        document.getElementById('form-book-gradient').value = book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]';
+        document.getElementById('form-book-pages').value = book.pages || '';
+        document.getElementById('form-book-pubdate').value = book.pubDate || '';
+        document.getElementById('form-book-isnew').checked = !!book.isNew;
+        document.getElementById('form-book-ispreorder').checked = !!book.isPreorder;
+        document.getElementById('form-book-ishardcover').checked = !!book.isHardcover;
+        document.getElementById('form-book-isebook').checked = !!book.isEbook;
+        document.getElementById('form-book-tagline').value = book.tagline || '';
+        document.getElementById('form-book-description').value = book.description || '';
+        document.getElementById('form-book-toc').value = (book.toc || []).join('\n');
+        document.getElementById('form-book-excerpt').value = book.excerpt || '';
+      } else {
+        titleEl.textContent = '신규 도서 등록';
+        form.reset();
+        document.getElementById('form-book-id').value = '';
+        document.getElementById('form-book-ishardcover').checked = true;
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeBookFormModal() {
+      const modal = document.getElementById('book-form-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function handleBookFormSubmit(e) {
+      e.preventDefault();
+      const bookId = document.getElementById('form-book-id').value;
+      const title = document.getElementById('form-book-title').value.trim();
+      const originalTitle = document.getElementById('form-book-original-title').value.trim();
+      const author = document.getElementById('form-book-author').value.trim();
+      const translator = document.getElementById('form-book-translator').value.trim();
+      const series = document.getElementById('form-book-series').value.trim() || 'PHB 출간도서';
+      const category = document.getElementById('form-book-category').value;
+      const originalPrice = parseInt(document.getElementById('form-book-original-price').value, 10) || 0;
+      const price = parseInt(document.getElementById('form-book-price').value, 10) || originalPrice;
+      const discountRate = originalPrice > 0 ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0;
+      const coverGradient = document.getElementById('form-book-gradient').value;
+      const pages = document.getElementById('form-book-pages').value.trim() || '상세정보 참조';
+      const pubDate = document.getElementById('form-book-pubdate').value.trim() || '2026. 10.';
+      const isNew = document.getElementById('form-book-isnew').checked;
+      const isPreorder = document.getElementById('form-book-ispreorder').checked;
+      const isHardcover = document.getElementById('form-book-ishardcover').checked;
+      const isEbook = document.getElementById('form-book-isebook').checked;
+      const tagline = document.getElementById('form-book-tagline').value.trim();
+      const description = document.getElementById('form-book-description').value.trim();
+      const toc = document.getElementById('form-book-toc').value.split('\n').map(s => s.trim()).filter(Boolean);
+      const excerpt = document.getElementById('form-book-excerpt').value.trim();
+
+      if (bookId) {
+        // Edit existing book
+        const idx = BOOKS_DATA.findIndex(b => b.id === bookId);
+        if (idx !== -1) {
+          BOOKS_DATA[idx] = {
+            ...BOOKS_DATA[idx],
+            title,
+            originalTitle: originalTitle || title,
+            author,
+            translator: translator || '역자 미상',
+            series,
+            category,
+            originalPrice,
+            price,
+            discountRate: Math.max(0, discountRate),
+            coverGradient,
+            pages,
+            pubDate,
+            isNew,
+            isPreorder,
+            isHardcover,
+            isEbook,
+            tagline: tagline || BOOKS_DATA[idx].tagline,
+            description: description || BOOKS_DATA[idx].description,
+            toc: toc.length > 0 ? toc : BOOKS_DATA[idx].toc,
+            excerpt: excerpt || BOOKS_DATA[idx].excerpt
+          };
+          showToast(`'${title}' 도서 정보가 수정되었습니다.`);
+        }
+      } else {
+        // Add new book
+        const newBook = {
+          id: 'phb-' + String(Date.now()).slice(-6),
+          title,
+          originalTitle: originalTitle || title,
+          author,
+          translator: translator || '역자 미상',
+          series,
+          category,
+          isNew,
+          isPreorder,
+          isHardcover,
+          isEbook,
+          price,
+          originalPrice,
+          discountRate: Math.max(0, discountRate),
+          pages,
+          isbn: '979-11-984501-' + Math.floor(10 + Math.random() * 89) + '-0',
+          pubDate,
+          tagline: tagline || `${author}의 대표작 정본 출간`,
+          coverGradient,
+          confessionTag: '개혁주의 표준문서 연계',
+          description: description || '퓨리탄 헤리티지 북스에서 정본으로 출간한 개혁주의 고전 문헌입니다.',
+          toc: toc.length > 0 ? toc : ['제1장 서론', '제2장 본론', '제3장 결론 및 실천적 적용'],
+          excerpt: excerpt || '“하나님의 말씀은 모든 신앙과 삶의 유일한 최고 권위입니다.”'
+        };
+        BOOKS_DATA.unshift(newBook);
+        showToast(`새 도서 '${title}'(이)가 등록되었습니다.`);
+      }
+
+      saveBooksData();
+      renderBooksGrid();
+      renderManagerBookTable();
+      closeBookFormModal();
+    }
+
+    async function deleteBook(bookId) {
+      const book = BOOKS_DATA.find(b => b.id === bookId);
+      if (!book) return;
+      if (confirm(`'${book.title}' 도서를 정말로 삭제하시겠습니까?`)) {
+        BOOKS_DATA = BOOKS_DATA.filter(b => b.id !== bookId);
+        saveBooksData();
+        if (db) {
+          try {
+            await db.collection("phb_books").doc(bookId).delete();
+          } catch (e) {
+            console.warn("Firestore delete failed:", e);
+          }
+        }
+        renderBooksGrid();
+        renderManagerBookTable();
+        showToast(`'${book.title}' 도서가 삭제되었습니다.`);
+      }
+    }
+
+    async function resetBooksToDefault() {
+      if (confirm('모든 도서 데이터를 출판사 기본 목록(8권)으로 초기화하시겠습니까? 추가 및 수정한 도서는 삭제됩니다.')) {
+        BOOKS_DATA = JSON.parse(JSON.stringify(DEFAULT_BOOKS_DATA));
+        localStorage.removeItem('phb_books');
+        localStorage.removeItem('phb_custom_books');
+        if (db) {
+          try {
+            const snap = await db.collection("phb_books").get();
+            const batch = db.batch();
+            snap.forEach(doc => batch.delete(doc.ref));
+            DEFAULT_BOOKS_DATA.forEach(b => batch.set(db.collection("phb_books").doc(b.id), b));
+            await batch.commit();
+          } catch (e) {
+            console.warn("Firestore reset warning:", e);
+          }
+        }
+        renderBooksGrid();
+        renderManagerBookTable();
+        showToast('도서 데이터가 기본값으로 복원되었습니다.');
+      }
+    }
+
+    function openBookManagerModal() {
+      const modal = document.getElementById('book-manager-modal');
+      if (!modal) return;
+      renderManagerBookTable();
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeBookManagerModal() {
+      const modal = document.getElementById('book-manager-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function renderManagerBookTable() {
+      const tbody = document.getElementById('manager-table-body');
+      const countEl = document.getElementById('manager-book-count');
+      const searchInput = document.getElementById('manager-search-input');
+      if (!tbody) return;
+
+      const q = searchInput ? searchInput.value.toLowerCase().trim() : '';
+      const filtered = BOOKS_DATA.filter(b => 
+        !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)
+      );
+
+      if (countEl) countEl.textContent = BOOKS_DATA.length;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-[#5E6470]">일치하는 도서가 없습니다.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(b => `
+        <tr class="hover:bg-[#FAF8F5] transition-colors">
+          <td class="p-3">
+            <div class="w-8 h-11 rounded bg-gradient-to-br ${b.coverGradient} shadow-xs border border-[#C39738]/30 flex items-center justify-center text-[7px] text-white font-cinzel font-bold">
+              PHB
+            </div>
+          </td>
+          <td class="p-3">
+            <div class="font-bold text-[#17191C] text-xs">${b.title}</div>
+            <div class="text-[10px] text-[#7E8694] italic truncate max-w-xs">${b.originalTitle || ''}</div>
+          </td>
+          <td class="p-3">
+            <div>${b.author}</div>
+            <div class="text-[10px] text-[#7E8694]">${b.translator || '-'}</div>
+          </td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-[#FAF8F5] border border-[#E4DFD7] text-[#6E1B2A]">
+              ${b.category}
+            </span>
+          </td>
+          <td class="p-3 font-semibold text-[#17191C]">
+            ${b.price.toLocaleString()}원
+          </td>
+          <td class="p-3">
+            <div class="flex flex-wrap gap-1">
+              ${b.isPreorder ? '<span class="bg-[#6E1B2A] text-white text-[9px] px-1.5 py-0.5 rounded">사전예약</span>' : ''}
+              ${b.isNew ? '<span class="bg-[#C39738] text-[#17191C] font-bold text-[9px] px-1.5 py-0.5 rounded">신간</span>' : ''}
+              ${b.isHardcover ? '<span class="bg-[#17191C] text-[#C39738] text-[9px] px-1.5 py-0.5 rounded">양장</span>' : ''}
+              ${b.isEbook ? '<span class="bg-[#2D333B] text-[#DFC075] text-[9px] px-1.5 py-0.5 rounded">ePub</span>' : ''}
+            </div>
+          </td>
+          <td class="p-3 text-right">
+            <div class="flex items-center justify-end gap-1.5">
+              <button onclick="closeBookManagerModal(); openBookFormModal('${b.id}')" class="px-2.5 py-1 rounded bg-[#17191C] text-[#DFC075] hover:bg-[#2C313A] text-[10px] font-semibold transition-colors cursor-pointer">
+                수정
+              </button>
+              <button onclick="deleteBook('${b.id}')" class="px-2.5 py-1 rounded bg-red-50 text-red-600 hover:bg-red-600 hover:text-white text-[10px] font-semibold border border-red-200 transition-colors cursor-pointer">
+                삭제
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
     // Initial Load
     
     // Load Custom Books from Firestore & LocalStorage
@@ -2645,10 +3293,12 @@
 
       // 2. Check LocalStorage
       try {
-        const localCustom = localStorage.getItem('phb_custom_books');
+        const localCustom = localStorage.getItem('phb_custom_books') || localStorage.getItem('phb_books');
         if (localCustom) {
           const parsed = JSON.parse(localCustom);
-          parsed.forEach(b => mergedMap.set(b.id, b));
+          if (Array.isArray(parsed)) {
+            parsed.forEach(b => mergedMap.set(b.id, b));
+          }
         }
       } catch (e) {}
 
@@ -2676,6 +3326,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      updateAdminUI();
       syncDynamicBooks();
       renderCategoryTabs();
       renderBooksGrid();
