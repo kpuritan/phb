@@ -1980,7 +1980,9 @@
     async function saveBooksData() {
       try {
         localStorage.setItem('phb_books', JSON.stringify(BOOKS_DATA));
-        localStorage.setItem('phb_custom_books', JSON.stringify(BOOKS_DATA));
+        localStorage.setItem('phb_books_list', JSON.stringify(BOOKS_DATA));
+        localStorage.setItem('phb_books_list', JSON.stringify(BOOKS_DATA));
+      localStorage.setItem('phb_custom_books', JSON.stringify(BOOKS_DATA));
       } catch (e) {
         console.error('Failed to save books to localStorage:', e);
       }
@@ -3285,43 +3287,40 @@
 
     // Initial Load
     
-    // Load Custom Books from Firestore & LocalStorage
+    // Load Books Data with accurate delete/sync state
     async function syncDynamicBooks() {
-      // 1. Initialize with default catalog
-      const mergedMap = new Map();
-      DEFAULT_BOOKS_DATA.forEach(b => mergedMap.set(b.id, b));
-
-      // 2. Check LocalStorage
-      try {
-        const localCustom = localStorage.getItem('phb_custom_books') || localStorage.getItem('phb_books');
-        if (localCustom) {
-          const parsed = JSON.parse(localCustom);
+      // 1. Check if custom/deleted list exists in localStorage
+      const localList = localStorage.getItem('phb_books_list') || localStorage.getItem('phb_custom_books');
+      if (localList) {
+        try {
+          const parsed = JSON.parse(localList);
           if (Array.isArray(parsed)) {
-            parsed.forEach(b => mergedMap.set(b.id, b));
+            BOOKS_DATA = parsed;
           }
-        }
-      } catch (e) {}
+        } catch (e) {}
+      } else {
+        BOOKS_DATA = DEFAULT_BOOKS_DATA.slice();
+      }
 
-      // 3. Check Firestore
+      // 2. Check Firestore
       if (db) {
         try {
           const snapshot = await db.collection("phb_books").get();
           if (!snapshot.empty) {
+            const firestoreBooks = [];
             snapshot.forEach(doc => {
-              mergedMap.set(doc.id, { id: doc.id, ...doc.data() });
+              firestoreBooks.push({ id: doc.id, ...doc.data() });
             });
-          } else if (DEFAULT_BOOKS_DATA.length > 0) {
-            // Initial seed to Firestore so admin has instant access
-            DEFAULT_BOOKS_DATA.forEach(b => {
-              db.collection("phb_books").doc(b.id).set(b, { merge: true }).catch(() => {});
-            });
+            if (firestoreBooks.length > 0) {
+              BOOKS_DATA = firestoreBooks;
+              localStorage.setItem('phb_books_list', JSON.stringify(BOOKS_DATA));
+            }
           }
         } catch (err) {
           console.warn("Firestore sync offline:", err);
         }
       }
 
-      BOOKS_DATA = Array.from(mergedMap.values());
       renderBooksGrid();
     }
 

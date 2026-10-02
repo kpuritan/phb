@@ -1182,36 +1182,45 @@
       }
     }
 
-    // Load Books Data with seed fallback
+    // Load Books Data cleanly from LocalStorage / Firestore / Initial Seed
     async function loadBooksData() {
       const refreshIcon = document.getElementById('refresh-icon');
       if (refreshIcon) refreshIcon.classList.add('fa-spin');
 
-      const mergedMap = new Map();
-      DEFAULT_BOOKS_DATA.forEach(function(b) { mergedMap.set(b.id, b); });
-
-      try {
-        const localCustom = localStorage.getItem('phb_custom_books');
-        if (localCustom) {
-          const parsed = JSON.parse(localCustom);
-          parsed.forEach(function(b) { mergedMap.set(b.id, b); });
+      // 1. Check if user already initialized or modified books list in localStorage
+      const localCustom = localStorage.getItem('phb_books_list');
+      if (localCustom) {
+        try {
+          allBooks = JSON.parse(localCustom);
+        } catch (e) {
+          allBooks = DEFAULT_BOOKS_DATA.slice();
         }
-      } catch (e) {}
-
-      try {
-        if (db) {
-          const snapshot = await db.collection("phb_books").get();
-          if (!snapshot.empty) {
-            snapshot.forEach(function(doc) {
-              mergedMap.set(doc.id, Object.assign({ id: doc.id }, doc.data()));
-            });
-          }
-        }
-      } catch (err) {
-        console.warn("Firestore offline fallback:", err);
+      } else {
+        // First time: initialize with default books
+        allBooks = DEFAULT_BOOKS_DATA.slice();
+        localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
       }
 
-      allBooks = Array.from(mergedMap.values());
+      // 2. Try Firestore sync in background if available
+      if (db) {
+        try {
+          const snapshot = await db.collection("phb_books").get();
+          if (!snapshot.empty) {
+            const firestoreBooks = [];
+            snapshot.forEach(function(doc) {
+              firestoreBooks.push(Object.assign({ id: doc.id }, doc.data()));
+            });
+            // If firestore has items and local is unchanged, take firestore
+            if (firestoreBooks.length > 0) {
+              allBooks = firestoreBooks;
+              localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+            }
+          }
+        } catch (err) {
+          console.warn("Firestore offline mode:", err);
+        }
+      }
+
       if (refreshIcon) refreshIcon.classList.remove('fa-spin');
       renderAdminBooks();
     }
@@ -1433,15 +1442,23 @@
       const book = allBooks.find(b => b.id === id);
       if (!book) return;
 
-      if (confirm(`정말 도서 『${book.title}』을(를) 삭제하시겠습니까?`)) {
-        try {
-          await db.collection("phb_books").doc(id).delete();
-        } catch (e) {
-          console.warn("Firestore delete failed:", e);
+      if (confirm(`정말 도서 『${book.title}』을(를) 영구 삭제하시겠습니까?`)) {
+        // Remove from memory
+        allBooks = allBooks.filter(b => b.id !== id);
+        // Persist to unified localStorage key
+        localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+        localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+      localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
+
+        // Delete from Firestore
+        if (db) {
+          try {
+            await db.collection("phb_books").doc(id).delete();
+          } catch (e) {
+            console.warn("Firestore delete failed:", e);
+          }
         }
 
-        allBooks = allBooks.filter(b => b.id !== id);
-        localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
         renderAdminBooks();
         showToast('도서가 성공적으로 삭제되었습니다.');
       }
@@ -1514,6 +1531,7 @@
         allBooks.unshift(bookData);
       }
 
+      localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
       localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
 
       saveBtn.disabled = false;
