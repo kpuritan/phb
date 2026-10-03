@@ -1440,12 +1440,12 @@ export default function PuritanHeritageBooksApp() {
                   역사신학
                 </button>
 
-                {/* 4. 그리스도인의 삶 */}
+                {/* 4. 크리스천 라이프 */}
                 <button
                   onClick={() => selectFilter('christian-life', 'all')}
                   className="px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serif font-semibold"
                 >
-                  그리스도인의 삶
+                  크리스천 라이프
                 </button>
 
                 {/* 5. 청교도저작 전집 */}
@@ -1577,14 +1577,14 @@ export default function PuritanHeritageBooksApp() {
                   <span className="text-xs text-[#7E8694]">교회사</span>
                 </button>
 
-                {/* 4. 그리스도인의 삶 */}
+                {/* 4. 크리스천 라이프 */}
                 <button
                   onClick={() => { selectFilter('christian-life', 'all'); setMobileMenuOpen(false); }}
                   className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-semibold"
                 >
                   <span className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
-                    <span>그리스도인의 삶</span>
+                    <span>크리스천 라이프</span>
                   </span>
                   <span className="text-xs text-[#7E8694]">경건•성화</span>
                 </button>
@@ -1659,7 +1659,7 @@ export default function PuritanHeritageBooksApp() {
             { key: 'exposition', label: '성경 강해' },
             { key: 'dogmatics', label: '조직신학' },
             { key: 'historical', label: '역사신학' },
-            { key: 'christian-life', label: '그리스도인의 삶' },
+            { key: 'christian-life', label: '크리스천 라이프' },
             { key: 'puritan-works', label: '청교도저작 전집' },
             { key: 'ebook', label: '전자책 (eBook)' }
           ].map((tab) => (
@@ -1738,7 +1738,7 @@ export default function PuritanHeritageBooksApp() {
                     'exposition': '성경 강해',
                     'dogmatics': '조직신학',
                     'historical': '역사신학',
-                    'christian-life': '그리스도인의 삶',
+                    'christian-life': '크리스천 라이프',
                     'puritan-works': '청교도저작 전집',
                     'ebook': '전자책(eBook)'
                   };
@@ -1944,7 +1944,7 @@ export default function PuritanHeritageBooksApp() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-[#2B2F36]">
             
-            <div className="lg:col-span-7 space-y-4">
+            <div className="lg:col-span-5 space-y-4">
               <div className="flex items-center space-x-3">
                 <div className="w-9 h-9 rounded bg-[#23272D] border border-[#C39738] flex items-center justify-center font-serif font-bold text-[#C39738] text-sm">
                   PHB
@@ -1969,7 +1969,20 @@ export default function PuritanHeritageBooksApp() {
               </div>
             </div>
 
-            <div className="lg:col-span-5 space-y-4">
+            <div className="lg:col-span-3 space-y-3">
+              <h4 className="font-serif text-white font-bold text-xs uppercase tracking-wider text-[#DFC075]">도서 카테고리</h4>
+              <ul className="space-y-2 text-[#7E8694]">
+                <li><a href="commentary.html" className="hover:text-[#DFC075] transition-colors">성경주석</a></li>
+                <li><a href="exposition.html" className="hover:text-[#DFC075] transition-colors">성경 강해</a></li>
+                <li><a href="dogmatics.html" className="hover:text-[#DFC075] transition-colors">조직 신학</a></li>
+                <li><a href="historical.html" className="hover:text-[#DFC075] transition-colors">역사 신학</a></li>
+                <li><a href="christian-life.html" className="hover:text-[#DFC075] transition-colors">크리스천 라이프</a></li>
+                <li><a href="puritan-works.html" className="hover:text-[#DFC075] transition-colors">청교도 저작 전집</a></li>
+                <li><a href="ebook.html" className="hover:text-[#DFC075] transition-colors">전자책</a></li>
+              </ul>
+            </div>
+
+            <div className="lg:col-span-4 space-y-4">
               <h4 className="font-serif text-xs font-bold text-white uppercase tracking-wider">
                 PHB Theological Letter & New Releases
               </h4>
