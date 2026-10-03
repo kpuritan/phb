@@ -1195,10 +1195,6 @@ export default function PuritanHeritageBooksApp() {
             <span className="text-[#3A3F4A]">|</span>
             <a href="#login" className="hover:text-[#C39738] transition-colors">마이페이지</a>
             <span className="text-[#3A3F4A]">|</span>
-            <a href="about.html" target="_blank" rel="noopener noreferrer" className="hover:text-[#C39738] transition-colors font-semibold text-[#E4DFD7]">
-              출판 사명선언문
-            </a>
-            <span className="text-[#3A3F4A]">|</span>
             <button
               onClick={() => isAdmin ? setBookManagerModalOpen(true) : setAdminLoginModalOpen(true)}
               className="hover:text-[#C39738] text-[#C39738] transition-colors font-medium flex items-center gap-1 cursor-pointer"
@@ -1631,13 +1627,6 @@ export default function PuritanHeritageBooksApp() {
                     회원가입
                   </button>
                 </div>
-                <a 
-                  href="about.html" target="_blank" rel="noopener noreferrer" 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block text-center text-[#A6ADB8] hover:text-[#DFC075] py-1 text-[11px]"
-                >
-                  출판 사명선언문 (Mission)
-                </a>
               </div>
 
             </div>
