@@ -252,18 +252,20 @@
           <div class="flex items-center space-x-1 lg:space-x-2 text-xs font-medium">
             
             <!-- 0. 전체 도서 -->
-            <a
-              href="index.html"
-              class="px-3 py-2 rounded font-serifKr text-white hover:text-[#DFC075] hover:bg-[#23272D] transition-colors"
+            <button
+              onclick="setFilter('all', 'all')"
+              data-cat="all"
+              class="gnb-nav-btn px-3 py-2 rounded font-serifKr text-white hover:text-[#DFC075] hover:bg-[#23272D] transition-colors" (Fix syntax error and restore full interactivity for GNB category menus and admin modals)
             >
               전체도서
             </a>
 
             <!-- 1. 성경주석 Dropdown (Set, 구약, 신약) -->
             <div class="relative group">
-              <a
-                href="commentary.html"
-                class="flex items-center space-x-1 px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serifKr font-semibold"
+              <button
+                onclick="setFilter('commentary', 'all')"
+                data-cat="commentary"
+                class="gnb-nav-btn flex items-center space-x-1 px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serifKr font-semibold" (Fix syntax error and restore full interactivity for GNB category menus and admin modals)
               >
                 <span>성경주석</span>
                 <svg class="w-3.5 h-3.5 text-[#C39738] group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -311,9 +313,10 @@
 
             <!-- 2. 조직신학 Dropdown (Set, 신론, 인간론, 기독론, 구원론, 교회론, 종말론) -->
             <div class="relative group">
-              <a
-                href="dogmatics.html"
-                class="flex items-center space-x-1 px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serifKr font-semibold"
+              <button
+                onclick="setFilter('dogmatics', 'all')"
+                data-cat="dogmatics"
+                class="gnb-nav-btn flex items-center space-x-1 px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serifKr font-semibold" (Fix syntax error and restore full interactivity for GNB category menus and admin modals)
               >
                 <span>조직신학</span>
                 <svg class="w-3.5 h-3.5 text-[#C39738] group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -389,25 +392,28 @@
             </div>
 
             <!-- 3. 역사신학 -->
-            <a
-              href="historical.html"
-              class="px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serifKr font-semibold"
+            <button
+              onclick="setFilter('historical', 'all')"
+              data-cat="historical"
+              class="gnb-nav-btn px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serifKr font-semibold" (Fix syntax error and restore full interactivity for GNB category menus and admin modals)
             >
               역사신학
             </a>
 
             <!-- 4. 크리스천 라이프 -->
-            <a
-              href="christian-life.html"
-              class="px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serifKr font-semibold"
+            <button
+              onclick="setFilter('christian-life', 'all')"
+              data-cat="christian-life"
+              class="gnb-nav-btn px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serifKr font-semibold" (Fix syntax error and restore full interactivity for GNB category menus and admin modals)
             >
               크리스천 라이프
             </a>
 
             <!-- 5. 청교도저작 전집 -->
-            <a
-              href="puritan-works.html"
-              class="px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serifKr font-semibold flex items-center gap-1.5"
+            <button
+              onclick="setFilter('puritan-works', 'all')"
+              data-cat="puritan-works"
+              class="gnb-nav-btn px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serifKr font-semibold flex items-center gap-1.5" (Fix syntax error and restore full interactivity for GNB category menus and admin modals)
             >
               <span>청교도저작 전집</span>
               <span class="text-[9px] bg-[#C39738] text-[#17191C] px-1 py-0.2 rounded font-bold">정본</span>
@@ -2207,6 +2213,7 @@
     function setFilter(category, subcategory = 'all', shouldScroll = true) {
       currentCategory = category;
       currentSubcategory = subcategory;
+      updateGnbActiveState();
       renderCategoryTabs();
       renderBooksGrid();
 
@@ -2216,6 +2223,20 @@
           el.scrollIntoView({ behavior: 'smooth' });
         }
       }
+    }
+
+    function updateGnbActiveState() {
+      const gnbButtons = document.querySelectorAll('.gnb-nav-btn');
+      gnbButtons.forEach(btn => {
+        const cat = btn.getAttribute('data-cat');
+        if (cat === currentCategory) {
+          btn.classList.add('text-[#DFC075]', 'bg-[#23272D]', 'border-b-2', 'border-[#C39738]');
+          btn.classList.remove('text-[#F8F7F4]', 'text-white');
+        } else {
+          btn.classList.remove('text-[#DFC075]', 'bg-[#23272D]', 'border-b-2', 'border-[#C39738]');
+          btn.classList.add('text-white');
+        }
+      });
     }
 
     function setCategoryFilter(category) {
@@ -3249,15 +3270,8 @@
         document.getElementById('form-book-original-price').value = book.originalPrice || '';
         document.getElementById('form-book-price').value = book.price || '';
         document.getElementById('form-book-gradient').value = book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]';
-            <div class="w-36 h-52 bg-gradient-to-br ${book.coverGradient} rounded shadow-book p-3 flex flex-col justify-between text-center relative overflow-hidden">
-              ${(book.coverUrl || book.coverImage) ? `
-                <img src="${book.coverUrl || book.coverImage}" alt="${book.title}" class="absolute inset-0 w-full h-full object-cover">
-              ` : `
-                <span class="text-[7px] font-cinzel text-[#DFC075] tracking-wider uppercase block">${book.series.split('(')[0]}</span>
-                <h4 class="text-xs font-serifKr font-bold text-white leading-snug">${book.title.split('(')[0]}</h4>
-                <span class="text-[8px] font-serifKr text-[#E4DFD7]">${book.author}</span>
-              `}
-            </div>
+        if (document.getElementById('form-book-cover-url')) document.getElementById('form-book-cover-url').value = book.coverUrl || '';
+        if (document.getElementById('form-book-cover-file')) document.getElementById('form-book-cover-file').value = '';
         document.getElementById('form-book-pages').value = book.pages || '';
         document.getElementById('form-book-pubdate').value = book.pubDate || '';
         document.getElementById('form-book-isnew').checked = !!book.isNew;
@@ -3569,6 +3583,8 @@
 
     
     // Expose all admin & modal controller functions globally
+    window.setFilter = setFilter;
+    window.setCategoryFilter = setCategoryFilter;
     window.openBookFormModal = openBookFormModal;
     window.closeBookFormModal = closeBookFormModal;
     window.openBookManagerModal = openBookManagerModal;
