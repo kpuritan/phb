@@ -1597,15 +1597,6 @@
         document.getElementById('form-confession-tag').value = book.confessionTag || '';
         document.getElementById('form-cover-gradient').value = book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]';
         
-        // Populate Cover
-        if (book.coverUrl || book.coverImage) {
-          uploadedCoverDataUrl = book.coverUrl || book.coverImage;
-          document.getElementById('form-cover-url').value = uploadedCoverDataUrl.startsWith('data:') ? '' : uploadedCoverDataUrl;
-          updateCoverPreview(uploadedCoverDataUrl);
-        } else {
-          removeCoverImage();
-        }
-
         // Cover image setup
         currentCoverDataUrl = book.coverUrl || book.coverImage || '';
         const urlInput = document.getElementById('form-cover-url');
@@ -1674,7 +1665,6 @@
         document.getElementById('form-enable-ebook').checked = false;
         toggleStoreFieldVisibility();
         clearCoverImage();
-        if (typeof removeCoverImage === 'function') removeCoverImage();
         handleCoverGradientChange('from-[#1a1c20] via-[#2d1b24] to-[#121417]');
         updateCoverPreviewText();
       }
