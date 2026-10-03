@@ -2016,10 +2016,6 @@ export default function PuritanHeritageBooksApp() {
           <div className="pt-8 flex flex-col sm:flex-row justify-between items-center text-[11px] text-[#5E6470] gap-3">
             <p>© 2026 Puritan Heritage Books. All rights reserved. Soli Deo Gloria.</p>
             <div className="flex space-x-4 items-center">
-              <a href="#privacy" className="hover:text-white">개인정보처리방침</a>
-              <a href="#terms" className="hover:text-white">이용약관</a>
-              <a href="about.html" target="_blank" rel="noopener noreferrer" className="hover:text-white">도서출판 사명문</a>
-              <span className="text-[#3A3F4A]">|</span>
               <button
                 onClick={() => isAdmin ? setBookManagerModalOpen(true) : setAdminLoginModalOpen(true)}
                 className="text-[#8E95A5] hover:text-[#DFC075] transition-colors flex items-center gap-1 cursor-pointer"
