@@ -228,6 +228,57 @@
             </div>
           </div>
 
+          <!-- 성경 강해 Dropdown -->
+          <div class="relative group">
+            <button
+              onclick="setFilter('exposition', 'all')"
+              data-cat="exposition"
+              class="gnb-nav-btn flex items-center space-x-1 px-2.5 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-semibold"
+            >
+              <span>성경강해</span>
+              <svg class="w-3 h-3 text-[#C39738] group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+
+            <div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50 min-w-[210px] animate-fadeIn">
+              <div class="bg-[#17191C] border border-[#C39738]/50 rounded-b-lg shadow-2xl py-2 px-1 text-xs divide-y divide-[#2B2F36]">
+                <div class="px-3 py-1.5 flex items-center justify-between text-[10px] font-cinzel text-[#DFC075] tracking-wider uppercase">
+                  <span>Expositions</span>
+                  <span class="text-[#7E8694]">성경 강해</span>
+                </div>
+                <div class="py-1">
+                  <button
+                    onclick="setFilter('exposition', 'all')"
+                    class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block cursor-pointer"
+                  >
+                    <span class="font-medium text-white">성경강해 전체보기</span>
+                    <span class="text-[10px] text-[#A6ADB8]">All</span>
+                  </button>
+                  <button
+                    onclick="setFilter('exposition', 'set')"
+                    class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block cursor-pointer"
+                  >
+                    <span class="font-medium text-white">Set (전집/세트)</span>
+                    <span class="text-[10px] bg-[#6E1B2A] text-[#DFC075] px-1.5 py-0.5 rounded font-cinzel">세트</span>
+                  </button>
+                  <button
+                    onclick="setFilter('exposition', 'ot')"
+                    class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block cursor-pointer"
+                  >
+                    <span class="font-medium text-white">구약 강해</span>
+                    <span class="text-[10px] text-[#7E8694]">OT</span>
+                  </button>
+                  <button
+                    onclick="setFilter('exposition', 'nt')"
+                    class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block cursor-pointer"
+                  >
+                    <span class="font-medium text-white">신약 강해</span>
+                    <span class="text-[10px] text-[#7E8694]">NT</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- 2. 조직신학 Dropdown (Set, 신론, 인간론, 기독론, 구원론, 교회론, 종말론) -->
           <div class="relative group">
             <button
@@ -445,6 +496,26 @@
               <a href="commentary.html?sub=set" onclick="toggleMobileMenu(false)" class="block py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• Set (전집 및 완간 세트)</a>
               <a href="commentary.html?sub=ot" onclick="toggleMobileMenu(false)" class="block py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 구약 주석 (Old Testament)</a>
               <a href="commentary.html?sub=nt" onclick="toggleMobileMenu(false)" class="block py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 신약 주석 (New Testament)</a>
+            </div>
+          </div>
+
+          <!-- Accordion: 성경강해 -->
+          <div class="border border-[#2B2F36] rounded-lg overflow-hidden bg-[#1F2228]">
+            <button
+              onclick="toggleMobileAccordion('exposition')"
+              class="w-full text-left px-3.5 py-2.5 flex items-center justify-between text-white font-semibold hover:text-[#DFC075]"
+            >
+              <span class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
+                <span>성경강해</span>
+              </span>
+              <svg id="mobile-arrow-exposition" class="w-4 h-4 text-[#C39738] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div id="mobile-sub-exposition" class="hidden px-4 pb-2.5 pt-1 space-y-1 text-xs border-t border-[#2B2F36] bg-[#17191C]">
+              <button onclick="setFilter('exposition', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-1.5 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 성경강해 전체보기</button>
+              <button onclick="setFilter('exposition', 'set'); toggleMobileMenu(false);" class="w-full text-left block py-1.5 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• Set (전집 및 완간 세트)</button>
+              <button onclick="setFilter('exposition', 'ot'); toggleMobileMenu(false);" class="w-full text-left block py-1.5 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 구약 강해 (Old Testament)</button>
+              <button onclick="setFilter('exposition', 'nt'); toggleMobileMenu(false);" class="w-full text-left block py-1.5 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 신약 강해 (New Testament)</button>
             </div>
           </div>
 
@@ -883,9 +954,13 @@
           <div>
             <label class="block font-semibold text-[#17191C] mb-1">카테고리 *</label>
             <select id="form-book-category" required class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
-              <option value="dogmatics">개혁교의학 (dogmatics)</option>
-              <option value="puritan-gems">청교도 보화 (puritan-gems)</option>
-              <option value="family">가정예배 & 영성 (family)</option>
+              <option value="commentary">성경주석 (Commentary)</option>
+              <option value="exposition">성경 강해 (Exposition)</option>
+              <option value="dogmatics">조직신학 (Dogmatics)</option>
+              <option value="historical">역사신학 (Historical)</option>
+              <option value="christian-life">크리스천 라이프 (Christian Life)</option>
+              <option value="puritan-works">청교도저작 전집 (Puritan Works)</option>
+              <option value="ebook">전자책 전용 (eBook / PDF)</option>
             </select>
           </div>
         </div>
@@ -1947,6 +2022,7 @@
       const primaryTabs = [
         { key: 'all', label: '전체 도서 (All)' },
         { key: 'commentary', label: '성경주석' },
+        { key: 'exposition', label: '성경 강해' },
         { key: 'dogmatics', label: '조직신학' },
         { key: 'historical', label: '역사신학' },
         { key: 'christian-life', label: '크리스천 라이프' },
@@ -1973,6 +2049,12 @@
       const subcategoriesMap = {
         commentary: [
           { key: 'all', label: '전체 주석' },
+          { key: 'set', label: 'Set (세트)' },
+          { key: 'ot', label: '구약' },
+          { key: 'nt', label: '신약' }
+        ],
+        exposition: [
+          { key: 'all', label: '전체 강해' },
           { key: 'set', label: 'Set (세트)' },
           { key: 'ot', label: '구약' },
           { key: 'nt', label: '신약' }
@@ -2019,6 +2101,7 @@
       const catNames = {
         'all': '전체 도서',
         'commentary': '성경주석',
+        'exposition': '성경 강해',
         'dogmatics': '조직신학',
         'historical': '역사신학',
         'christian-life': '크리스천 라이프',

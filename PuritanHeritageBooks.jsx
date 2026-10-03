@@ -1667,6 +1667,7 @@ export default function PuritanHeritageBooksApp() {
           {[
             { key: 'all', label: '전체 도서 (All)' },
             { key: 'commentary', label: '성경주석' },
+            { key: 'exposition', label: '성경 강해' },
             { key: 'dogmatics', label: '조직신학' },
             { key: 'historical', label: '역사신학' },
             { key: 'christian-life', label: '크리스천 라이프' },
@@ -1687,18 +1688,18 @@ export default function PuritanHeritageBooksApp() {
           ))}
         </div>
 
-        {/* Secondary Subcategory Pills for Commentary & Dogmatics */}
-        {(selectedCategory === 'commentary' || selectedCategory === 'dogmatics') && (
+        {/* Secondary Subcategory Pills for Commentary, Exposition & Dogmatics */}
+        {(selectedCategory === 'commentary' || selectedCategory === 'exposition' || selectedCategory === 'dogmatics') && (
           <div className="flex flex-wrap justify-center items-center gap-2 mb-8">
-            {selectedCategory === 'commentary' && [
-              { key: 'all', label: '전체 주석' },
+            {(selectedCategory === 'commentary' || selectedCategory === 'exposition') && [
+              { key: 'all', label: selectedCategory === 'exposition' ? '전체 강해' : '전체 주석' },
               { key: 'set', label: 'Set (세트)' },
               { key: 'ot', label: '구약' },
               { key: 'nt', label: '신약' }
             ].map(sub => (
               <button
                 key={sub.key}
-                onClick={() => selectFilter('commentary', sub.key, false)}
+                onClick={() => selectFilter(selectedCategory, sub.key, false)}
                 className={`px-3.5 py-1.5 rounded-full text-xs transition-all ${
                   selectedSubcategory === sub.key
                     ? 'bg-[#C39738] text-[#17191C] font-bold shadow-xs'
@@ -1745,6 +1746,7 @@ export default function PuritanHeritageBooksApp() {
                   const catNames = {
                     'all': '전체 도서',
                     'commentary': '성경주석',
+                    'exposition': '성경 강해',
                     'dogmatics': '조직신학',
                     'historical': '역사신학',
                     'christian-life': '크리스천 라이프',
@@ -2675,9 +2677,13 @@ export default function PuritanHeritageBooksApp() {
                     onChange={(e) => setFormBook({ ...formBook, category: e.target.value })}
                     className="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
                   >
-                    <option value="dogmatics">개혁교의학 (dogmatics)</option>
-                    <option value="puritan-gems">청교도 보화 (puritan-gems)</option>
-                    <option value="family">가정예배 & 영성 (family)</option>
+                    <option value="commentary">성경주석 (Commentary)</option>
+                    <option value="exposition">성경 강해 (Exposition)</option>
+                    <option value="dogmatics">조직신학 (Dogmatics)</option>
+                    <option value="historical">역사신학 (Historical)</option>
+                    <option value="christian-life">크리스천 라이프 (Christian Life)</option>
+                    <option value="puritan-works">청교도저작 전집 (Puritan Works)</option>
+                    <option value="ebook">전자책 전용 (eBook / PDF)</option>
                   </select>
                 </div>
               </div>

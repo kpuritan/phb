@@ -212,6 +212,9 @@
         <button onclick="filterAdminCategory('commentary')" class="admin-cat-tab px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-white text-[#5E6470] hover:bg-[#EDE9E1] border border-[#E4DFD7]">
           성경주석
         </button>
+        <button onclick="filterAdminCategory('exposition')" class="admin-cat-tab px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-white text-[#5E6470] hover:bg-[#EDE9E1] border border-[#E4DFD7]">
+          성경 강해
+        </button>
         <button onclick="filterAdminCategory('historical')" class="admin-cat-tab px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-white text-[#5E6470] hover:bg-[#EDE9E1] border border-[#E4DFD7]">
           역사신학
         </button>
@@ -329,6 +332,7 @@
                 class="w-full px-3 py-2 bg-[#FAF8F5] border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:outline-none focus:border-[#6E1B2A] focus:bg-white">
                 <option value="dogmatics">조직신학 (Dogmatics)</option>
                 <option value="commentary">성경주석 (Commentary)</option>
+                <option value="exposition">성경 강해 (Exposition)</option>
                 <option value="historical">역사신학 (Historical)</option>
                 <option value="christian-life">크리스천 라이프 (Christian Life)</option>
                 <option value="puritan-works">청교도저작 전집 (Puritan Works)</option>
@@ -1490,6 +1494,7 @@
         const catMap = {
           'dogmatics': '조직신학',
           'commentary': '성경주석',
+          'exposition': '성경 강해',
           'historical': '역사신학',
           'christian-life': '크리스천 라이프',
           'puritan-works': '청교도저작 전집',
@@ -1837,6 +1842,7 @@
         document.getElementById('form-original-title').value = book.originalTitle || '';
         document.getElementById('form-author').value = book.author || '';
         document.getElementById('form-translator').value = book.translator || '';
+        handleFormCategoryChange(book.category || 'dogmatics');
         document.getElementById('form-category').value = book.category || 'dogmatics';
         document.getElementById('form-subcategory').value = book.subCategory || 'all';
         document.getElementById('form-series').value = book.series || '';
@@ -2117,9 +2123,10 @@
           <option value="ecclesiology">교회론</option>
           <option value="eschatology">종말론</option>
         `;
-      } else if (cat === 'commentary') {
+      } else if (cat === 'commentary' || cat === 'exposition') {
         subSelect.innerHTML = `
-          <option value="all">성경주석 전체</option>
+          <option value="all">${cat === 'exposition' ? '성경강해 전체' : '성경주석 전체'}</option>
+          <option value="set">전집/세트 (Set)</option>
           <option value="ot">구약 (OT)</option>
           <option value="nt">신약 (NT)</option>
         `;
@@ -2128,6 +2135,7 @@
           <option value="all">기본 분류</option>
         `;
       }
+    }
     // Clean TOC items: Remove "차례", "목차", leading bullets, trailing dots and page numbers
     function cleanBookToc(toc) {
       if (!toc) return [];
