@@ -1205,7 +1205,7 @@ export default function PuritanHeritageBooksApp() {
             <span className="text-[#3A3F4A]">|</span>
             <a href="#login" className="hover:text-[#C39738] transition-colors">마이페이지</a>
             <span className="text-[#3A3F4A]">|</span>
-            <a href="#about" className="hover:text-[#C39738] transition-colors font-semibold text-[#E4DFD7]">
+            <a href="about.html" target="_blank" rel="noopener noreferrer" className="hover:text-[#C39738] transition-colors font-semibold text-[#E4DFD7]">
               출판 사명선언문
             </a>
             <span className="text-[#3A3F4A]">|</span>
@@ -1495,7 +1495,7 @@ export default function PuritanHeritageBooksApp() {
                   <span className="text-[9px] bg-[#6E1B2A] text-white px-1.5 py-0.2 rounded font-sans">PDF</span>
                 </button>
                 <span className="text-[#3A3F4A]">|</span>
-                <a href="#about" className="hover:text-[#DFC075] transition-colors">PHB 소개</a>
+                <a href="about.html" target="_blank" rel="noopener noreferrer" className="hover:text-[#DFC075] transition-colors">PHB 소개</a>
               </div>
 
             </div>
@@ -1654,7 +1654,7 @@ export default function PuritanHeritageBooksApp() {
                   </button>
                 </div>
                 <a 
-                  href="#about" 
+                  href="about.html" target="_blank" rel="noopener noreferrer" 
                   onClick={() => setMobileMenuOpen(false)}
                   className="block text-center text-[#A6ADB8] hover:text-[#DFC075] py-1 text-[11px]"
                 >
@@ -2412,7 +2412,7 @@ export default function PuritanHeritageBooksApp() {
             <div className="flex space-x-4 items-center">
               <a href="#privacy" className="hover:text-white">개인정보처리방침</a>
               <a href="#terms" className="hover:text-white">이용약관</a>
-              <a href="#confession" className="hover:text-white">도서출판 사명문</a>
+              <a href="about.html" target="_blank" rel="noopener noreferrer" className="hover:text-white">도서출판 사명문</a>
               <span className="text-[#3A3F4A]">|</span>
               <button
                 onClick={() => isAdmin ? setBookManagerModalOpen(true) : setAdminLoginModalOpen(true)}

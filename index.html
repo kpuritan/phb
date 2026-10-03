@@ -3450,14 +3450,7 @@
       syncDynamicBooks();
       renderCategoryTabs();
       renderBooksGrid();
-      renderQuote();
-      renderConfessions();
       updateCartUI();
-
-      setInterval(() => {
-        quoteIndex = (quoteIndex + 1) % PURITAN_QUOTES.length;
-        renderQuote();
-      }, 7000);
     });
   </script>
 </body>
