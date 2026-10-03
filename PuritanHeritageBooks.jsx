@@ -1286,19 +1286,7 @@ export default function PuritanHeritageBooksApp() {
                 </button>
               </div>
 
-              {/* Cart Drawer Button */}
-              <button
-                onClick={() => setIsCartOpen(true)}
-                className="relative p-2 sm:p-2.5 rounded-full bg-[#F8F7F4] hover:bg-[#EDE9E1] border border-[#E4DFD7] text-[#17191C] transition-all group flex-shrink-0"
-                aria-label="장바구니 열기"
-              >
-                <ShoppingBag className="w-5 h-5 text-[#17191C] group-hover:text-[#6E1B2A] transition-colors" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#6E1B2A] text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
+              
 
               {/* Mobile Hamburger Menu Button */}
               <button

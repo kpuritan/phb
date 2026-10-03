@@ -190,17 +190,7 @@
             </button>
           </div>
 
-          <!-- Cart Drawer Trigger -->
-          <button
-            onclick="toggleCart(true)"
-            class="relative p-2 sm:p-2.5 rounded-full bg-[#FAF8F5] hover:bg-[#EDE9E1] border border-[#E4DFD7] text-[#17191C] transition-all group flex-shrink-0"
-            aria-label="장바구니 열기"
-          >
-            <svg class="w-5 h-5 text-[#17191C] group-hover:text-[#6E1B2A] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-            <span id="header-cart-count" class="absolute -top-1 -right-1 bg-[#6E1B2A] text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
-              2
-            </span>
-          </button>
+          
 
           <!-- Mobile Hamburger Menu Button -->
           <button
@@ -2596,153 +2586,18 @@
       }
     }
 
-    // Book Preview Modal
+    // Book Detail: Open in New Window/Tab
     function openBookPreview(bookId) {
-      const book = BOOKS_DATA.find(b => b.id === bookId);
-      if (!book) return;
-
-      const storeLinks = getStoreLinks(book);
-
-      document.getElementById('preview-modal-header-title').innerText = book.title;
+      window.open(`book-detail.html?id=${encodeURIComponent(bookId)}`, '_blank');
+    }
       document.getElementById('preview-modal-price').innerText = `${book.price.toLocaleString()}원`;
       document.getElementById('preview-modal-add-cart-btn').onclick = () => {
-        addToCart(book.id);
-        closeBookPreview();
-      };
-
-      const body = document.getElementById('preview-modal-body');
-      body.innerHTML = `
-        <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 items-start pb-6 border-b border-[#E4DFD7]">
-          <div class="sm:col-span-4 flex justify-center">
-            <div class="w-36 h-52 bg-gradient-to-br ${book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]'} rounded shadow-book p-3 flex flex-col justify-between text-center relative overflow-hidden">
-              ${(book.coverUrl || book.coverImage) ? `
-                <img src="${book.coverUrl || book.coverImage}" alt="${book.title}" class="absolute inset-0 w-full h-full object-cover z-0" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 pointer-events-none z-10"></div>
-                <div class="absolute inset-2 border border-[#C39738]/30 pointer-events-none z-20"></div>
-              ` : `
-                <span class="text-[7px] font-cinzel text-[#DFC075] tracking-wider uppercase block truncate">${(book.series || 'PHB CLASSICS').split('(')[0]}</span>
-                <h4 class="text-xs font-serifKr font-bold text-white leading-snug">${(book.title || '').split('(')[0]}</h4>
-                <span class="text-[8px] font-serifKr text-[#E4DFD7]">${book.author || ''}</span>
-              `}
-            </div>
-          </div>
-          <div class="sm:col-span-8 space-y-2">
-            <span class="text-xs font-semibold text-[#8C2538] block">${book.series}</span>
-            <h3 class="text-xl font-serifKr font-bold text-[#17191C]">${book.title}</h3>
-            <p class="text-xs text-[#5E6470] italic">${book.originalTitle}</p>
-            <div class="grid grid-cols-2 gap-y-1 text-xs text-[#5E6470] pt-2">
-              <p><strong class="text-[#17191C]">저자:</strong> ${book.author}</p>
-              <p><strong class="text-[#17191C]">역자:</strong> ${book.translator}</p>
-              <p><strong class="text-[#17191C]">정가:</strong> ${book.price.toLocaleString()}원</p>
-              <p><strong class="text-[#17191C]">분량:</strong> ${book.pages}</p>
-              <p><strong class="text-[#17191C]">출간일:</strong> ${book.pubDate}</p>
-              <p><strong class="text-[#17191C]">ISBN:</strong> ${book.isbn}</p>
-            </div>
-            <div class="pt-2">
-              <span class="bg-[#EDE9E1] text-[#6E1B2A] text-[11px] font-semibold px-2.5 py-1 rounded border border-[#E4DFD7] inline-block">
-                ${book.confessionTag}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- ========================================== -->
-        <!-- 서점별 구매 바로가기 (종이책 & e-Book) -->
-        <!-- ========================================== -->
-        <div id="modal-stores-section" class="bg-gradient-to-br from-[#FAF8F5] to-[#F2EFE9] p-5 sm:p-6 rounded-xl border-2 border-[#DFC075]/70 shadow-sm space-y-5">
-          <!-- 1. 종이책 서점 로고 배너 -->
-          <div>
-            <div class="text-[#1e6e28] text-xs sm:text-sm font-bold flex items-center justify-between mb-2">
-              <span>- 종이책 서점 로고를 선택해서 클릭하시면 해당 도서로 이동합니다.</span>
-              <span class="text-[10px] font-semibold text-[#8C2538] bg-[#6E1B2A]/10 px-2 py-0.5 rounded border border-[#6E1B2A]/20 hidden sm:inline-block">
-                10% 정가할인 혜택
-              </span>
-            </div>
-            <div class="border border-[#D5D9E0] bg-white rounded overflow-hidden grid grid-cols-2 sm:grid-cols-4 shadow-2xs">
-              <!-- 네이버 스마트스토어 -->
-              <a href="${storeLinks.paper.naver}" target="_blank" rel="noopener noreferrer"
-                class="flex items-center justify-center p-3.5 sm:p-4 border-r border-b sm:border-b-0 border-[#D5D9E0] hover:bg-[#F8F9FA] transition-colors group" title="네이버 스마트스토어에서 종이책 구매">
-                ${STORE_LOGOS.naver}
-              </a>
-
-              <!-- 교보문고 -->
-              <a href="${storeLinks.paper.kyobo}" target="_blank" rel="noopener noreferrer"
-                class="flex items-center justify-center p-3.5 sm:p-4 sm:border-r border-b sm:border-b-0 border-[#D5D9E0] hover:bg-[#F8F9FA] transition-colors group" title="교보문고에서 종이책 구매">
-                ${STORE_LOGOS.kyobo}
-              </a>
-
-              <!-- 알라딘 -->
-              <a href="${storeLinks.paper.aladin}" target="_blank" rel="noopener noreferrer"
-                class="flex items-center justify-center p-3.5 sm:p-4 border-r border-[#D5D9E0] hover:bg-[#F8F9FA] transition-colors group" title="알라딘에서 종이책 구매">
-                ${STORE_LOGOS.aladin}
-              </a>
-
-              <!-- 예스24 -->
-              <a href="${storeLinks.paper.yes24}" target="_blank" rel="noopener noreferrer"
-                class="flex items-center justify-center p-3.5 sm:p-4 hover:bg-[#F8F9FA] transition-colors group" title="예스24(YES24)에서 종이책 구매">
-                ${STORE_LOGOS.yes24}
-              </a>
-            </div>
-          </div>
-
-          <!-- 2. e-Book (전자책) 서점 로고 배너 -->
-          <div class="pt-2 border-t border-[#E4DFD7]">
-            <div class="text-[#1e6e28] text-xs sm:text-sm font-bold flex items-center justify-between mb-2">
-              <span>- 전자책 서점 로고를 선택해서 클릭하시면 해당 eBook으로 이동합니다.</span>
-              ${book.isEbook ? '<span class="text-[10px] font-semibold text-[#0057B3] bg-[#0070E0]/10 px-2 py-0.5 rounded border border-[#0070E0]/20 hidden sm:inline-block">e-Book 발행 도서</span>' : '<span class="text-[10px] text-[#7E8694] bg-[#EDE9E1] px-2 py-0.5 rounded hidden sm:inline-block">e-Book 준비중 (조회 가능)</span>'}
-            </div>
-
-            <div class="border border-[#D5D9E0] bg-white rounded overflow-hidden grid grid-cols-3 divide-x divide-[#D5D9E0] shadow-2xs">
-              <!-- 알라딘 e-Book -->
-              <a href="${storeLinks.ebook.aladin}" target="_blank" rel="noopener noreferrer"
-                class="flex items-center justify-center p-3.5 sm:p-4 hover:bg-[#F8F9FA] transition-colors group" title="알라딘 eBook에서 구매">
-                ${STORE_LOGOS.aladin}
-              </a>
-
-              <!-- 예스24 e-Book -->
-              <a href="${storeLinks.ebook.yes24}" target="_blank" rel="noopener noreferrer"
-                class="flex items-center justify-center p-3.5 sm:p-4 hover:bg-[#F8F9FA] transition-colors group" title="예스24 eBook에서 구매">
-                ${STORE_LOGOS.yes24}
-              </a>
-
-              <!-- 교보문고 e-Book -->
-              <a href="${storeLinks.ebook.kyobo}" target="_blank" rel="noopener noreferrer"
-                class="flex items-center justify-center p-3.5 sm:p-4 hover:bg-[#F8F9FA] transition-colors group" title="교보문고 sam/eBook에서 구매">
-                ${STORE_LOGOS.kyoboEbook}
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="space-y-2">
-          <h4 class="font-serifKr font-bold text-base text-[#17191C]">도서 상세 소개</h4>
-          <p class="text-[#5E6470] leading-relaxed text-xs sm:text-sm bg-white p-4 rounded border border-[#E4DFD7]">${book.description}</p>
-        </div>
-
-        <div class="space-y-2">
-          <h4 class="font-serifKr font-bold text-base text-[#17191C]">도서 목차 (Table of Contents)</h4>
-          <div class="bg-white p-4 rounded border border-[#E4DFD7] space-y-2 text-xs sm:text-sm">
-            ${book.toc.map(t => `<div class="py-1 border-b border-[#F8F7F4] last:border-none">• ${t}</div>`).join('')}
-          </div>
-        </div>
-
-        <div class="space-y-2">
-          <h4 class="font-serifKr font-bold text-base text-[#17191C]">본문 및 서문 맛보기</h4>
-          <div class="bg-[#EDE9E1] p-5 rounded-lg border-l-4 border-[#6E1B2A] font-serifKr text-xs sm:text-sm text-[#17191C] leading-relaxed italic">
-            ${book.excerpt}
-          </div>
-        </div>
-      `;
-
-      const modal = document.getElementById('book-preview-modal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
-
     function closeBookPreview() {
       const modal = document.getElementById('book-preview-modal');
-      modal.classList.remove('flex');
-      modal.classList.add('hidden');
+      if (modal) {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+      }
     }
 
 

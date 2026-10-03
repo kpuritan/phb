@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="page-head-title">도서 상세 정보 | 퓨리탄 헤리티지 북스 (PHB)</title>
+  <meta name="description" content="퓨리탄 헤리티지 북스 도서 상세 정보 및 서점 구매 안내" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Fonts: Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            phb: {
+              charcoal: '#17191C',
+              burgundy: '#6E1B2A',
+              gold: '#C39738',
+              goldLight: '#DFC075',
+              border: '#E4DFD7',
+            }
+          },
+          fontFamily: {
+            serifKr: ['"Noto Serif KR"', 'serif'],
+            serifEn: ['"Cormorant Garamond"', 'serif'],
+            cinzel: ['"Cinzel"', 'serif'],
+            sans: ['"Noto Sans KR"', '-apple-system', 'sans-serif'],
+          },
+          boxShadow: {
+            'book': '-8px 12px 28px rgba(0, 0, 0, 0.28), -2px 4px 10px rgba(0, 0, 0, 0.15)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { background-color: #FAF8F5; color: #17191C; font-family: 'Noto Sans KR', -apple-system, sans-serif; }
+    .luxury-ambient-glow {
+      background: radial-gradient(circle at 50% 30%, rgba(195,151,56,0.09) 0%, rgba(110,27,42,0.03) 45%, transparent 75%);
+    }
+  </style>
+
+  <!-- Firebase SDK for Real-time Sync -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-[#6E1B2A] selection:text-white bg-[#FAF8F5]">
+
+  <!-- Top Bar -->
+  <div class="bg-[#52131F] text-white py-1.5 px-4 text-xs font-serifKr border-b border-[#3D0E17]">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+      <div class="flex items-center space-x-2 text-[11px] tracking-wide">
+        <span class="bg-[#C39738] text-[#17191C] px-1.5 py-0.5 rounded text-[10px] font-bold">공식 출판사</span>
+        <span>역사적 개혁주의 신학 & 청교도 정본 출판사 (Puritan Heritage Books)</span>
+      </div>
+      <div class="flex items-center space-x-4 text-[11px] text-[#E0D5CF]">
+        <a href="index.html" class="hover:text-[#DFC075] transition-colors">스토어 홈으로</a>
+        <span class="text-[#80313E]">|</span>
+        <a target="_blank" rel="noopener noreferrer" href="about.html" class="hover:text-[#DFC075] transition-colors font-serifKr font-semibold text-white">출판 사명선언문</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#EAE5DC] shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div class="flex items-center justify-between h-20">
+        <a href="index.html" class="flex items-center space-x-3 group">
+          <div class="w-11 h-11 sm:w-12 sm:h-12 rounded bg-[#17191C] border-2 border-[#C39738] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+            <div class="text-center text-[#DFC075]">
+              <span class="font-cinzel text-sm sm:text-base font-black block leading-none">PHB</span>
+              <span class="text-[7px] tracking-widest text-[#E4DFD7] uppercase font-bold">Veritas</span>
+            </div>
+          </div>
+          <div>
+            <div class="font-cinzel text-base sm:text-xl font-bold tracking-tight text-[#17191C] group-hover:text-[#6E1B2A] transition-colors">
+              PURITAN HERITAGE BOOKS
+            </div>
+            <div class="text-[11px] text-[#5E6470] tracking-wider font-serifKr flex items-center space-x-1.5">
+              <span>퓨리탄 헤리티지 북스</span>
+              <span class="text-[#C39738]">•</span>
+              <span class="font-sans text-[10px] text-[#8C2538] font-semibold">도서 상세 안내</span>
+            </div>
+          </div>
+        </a>
+
+        <div class="flex items-center space-x-3">
+          <a href="index.html" class="px-4 py-2 text-xs font-semibold text-[#17191C] bg-[#FAF8F5] hover:bg-[#EDE9E1] border border-[#E4DFD7] rounded-lg transition-colors flex items-center gap-1.5">
+            <i class="fas fa-arrow-left text-[10px]"></i> 전체 도서 목록
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 w-full">
+    
+    <div id="loading-spinner" class="py-24 text-center">
+      <div class="inline-block w-8 h-8 border-4 border-[#C39738] border-t-transparent rounded-full animate-spin"></div>
+      <p class="mt-4 text-xs sm:text-sm text-[#7E8694] font-serifKr">도서 정보를 불러오는 중입니다...</p>
+    </div>
+
+    <div id="book-content-container" class="hidden bg-white rounded-2xl border border-[#E4DFD7] shadow-xl overflow-hidden">
+      
+      <!-- Top Book Banner Header -->
+      <div class="bg-[#17191C] text-white p-5 sm:p-7 border-b-2 border-[#C39738] flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span id="book-series-badge" class="font-cinzel text-xs font-bold text-[#DFC075] tracking-widest uppercase block mb-1">PHB CLASSICS</span>
+          <h1 id="book-main-title" class="text-xl sm:text-3xl font-serifKr font-bold text-white"></h1>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-[#A6ADB8]">정가</span>
+          <span id="book-main-price" class="text-xl sm:text-2xl font-bold text-[#DFC075]"></span>
+        </div>
+      </div>
+
+      <div class="p-6 sm:p-10 space-y-10">
+        
+        <!-- Book Key Info Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start pb-8 border-b border-[#E4DFD7]">
+          
+          <!-- Cover Image / Box -->
+          <div class="md:col-span-4 flex justify-center">
+            <div id="book-cover-container" class="w-52 h-72 sm:w-60 sm:h-84 rounded-lg shadow-book p-4 flex flex-col justify-between text-center relative overflow-hidden transition-transform duration-300 hover:scale-[1.02]">
+              <!-- Image injected -->
+            </div>
+          </div>
+
+          <!-- Metadata -->
+          <div class="md:col-span-8 space-y-4 font-sans">
+            <div>
+              <span id="book-series-sub" class="text-xs sm:text-sm font-semibold text-[#8C2538] block mb-1"></span>
+              <h2 id="book-sub-title" class="text-2xl sm:text-3xl font-serifKr font-bold text-[#17191C] leading-snug"></h2>
+              <p id="book-orig-title" class="text-xs sm:text-sm text-[#5E6470] italic mt-1"></p>
+            </div>
+
+            <p id="book-tagline" class="text-sm font-serifKr text-[#17191C] bg-[#FAF8F5] p-3.5 rounded-lg border-l-4 border-[#C39738] leading-relaxed"></p>
+
+            <div class="grid grid-cols-2 gap-y-2.5 text-xs sm:text-sm text-[#5E6470] pt-2 border-t border-[#F0ECE1]">
+              <p><strong class="text-[#17191C]">저자:</strong> <span id="book-author"></span></p>
+              <p><strong class="text-[#17191C]">역자:</strong> <span id="book-translator"></span></p>
+              <p><strong class="text-[#17191C]">정가:</strong> <span id="book-price-info"></span></p>
+              <p><strong class="text-[#17191C]">분량:</strong> <span id="book-pages"></span></p>
+              <p><strong class="text-[#17191C]">출간일:</strong> <span id="book-pubdate"></span></p>
+              <p><strong class="text-[#17191C]">ISBN:</strong> <span id="book-isbn"></span></p>
+            </div>
+
+            <div class="pt-3 flex flex-wrap gap-2">
+              <span id="book-confession-tag" class="bg-[#EDE9E1] text-[#6E1B2A] text-xs font-semibold px-3 py-1.5 rounded-md border border-[#E4DFD7] inline-block">
+              </span>
+              <span id="book-type-tag" class="bg-[#17191C] text-[#DFC075] text-xs font-semibold px-3 py-1.5 rounded-md inline-block">
+                종이책 & PDF
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 서점별 구매 바로가기 (종이책 & e-Book) -->
+        <!-- ========================================== -->
+        <div id="book-stores-section" class="bg-gradient-to-br from-[#FAF8F5] to-[#F2EFE9] p-6 sm:p-8 rounded-2xl border-2 border-[#DFC075]/70 shadow-sm space-y-6">
+          
+          <!-- 1. 종이책 구매 서점 로고 배너 -->
+          <div>
+            <div class="text-[#1e6e28] text-sm sm:text-base font-bold flex items-center justify-between mb-3">
+              <span>📖 종이책 구매 — 서점 로고를 클릭하시면 해당 도서 페이지로 바로 이동합니다</span>
+              <span class="text-xs font-semibold text-[#8C2538] bg-[#6E1B2A]/10 px-2.5 py-1 rounded border border-[#6E1B2A]/20">
+                10% 정가할인
+              </span>
+            </div>
+            <div class="border border-[#D5D9E0] bg-white rounded-xl overflow-hidden grid grid-cols-2 sm:grid-cols-4 shadow-2xs divide-y sm:divide-y-0 sm:divide-x divide-[#D5D9E0]">
+              <!-- 네이버 스마트스토어 -->
+              <a id="link-paper-naver" href="#" target="_blank" rel="noopener noreferrer"
+                class="flex items-center justify-center p-4 hover:bg-[#F8F9FA] transition-colors group" title="네이버 스마트스토어에서 구매">
+              </a>
+              <!-- 교보문고 -->
+              <a id="link-paper-kyobo" href="#" target="_blank" rel="noopener noreferrer"
+                class="flex items-center justify-center p-4 hover:bg-[#F8F9FA] transition-colors group" title="교보문고에서 구매">
+              </a>
+              <!-- 알라딘 -->
+              <a id="link-paper-aladin" href="#" target="_blank" rel="noopener noreferrer"
+                class="flex items-center justify-center p-4 hover:bg-[#F8F9FA] transition-colors group" title="알라딘에서 구매">
+              </a>
+              <!-- 예스24 -->
+              <a id="link-paper-yes24" href="#" target="_blank" rel="noopener noreferrer"
+                class="flex items-center justify-center p-4 hover:bg-[#F8F9FA] transition-colors group" title="예스24(YES24)에서 구매">
+              </a>
+            </div>
+          </div>
+
+          <!-- 2. 전자책 (e-Book) 서점 로고 배너 -->
+          <div class="pt-4 border-t border-[#E4DFD7]">
+            <div class="text-[#1e6e28] text-sm sm:text-base font-bold flex items-center justify-between mb-3">
+              <span>📱 전자책 (eBook / PDF) 구매 — 서점 로고를 클릭하시면 전자책으로 바로 이동합니다</span>
+              <span id="ebook-status-badge" class="text-xs font-semibold text-[#0057B3] bg-[#0070E0]/10 px-2.5 py-1 rounded border border-[#0070E0]/20">
+                e-Book 지원
+              </span>
+            </div>
+            <div class="border border-[#D5D9E0] bg-white rounded-xl overflow-hidden grid grid-cols-3 divide-x divide-[#D5D9E0] shadow-2xs">
+              <!-- 알라딘 eBook -->
+              <a id="link-ebook-aladin" href="#" target="_blank" rel="noopener noreferrer"
+                class="flex items-center justify-center p-4 hover:bg-[#F8F9FA] transition-colors group" title="알라딘 eBook에서 구매">
+              </a>
+              <!-- 예스24 eBook -->
+              <a id="link-ebook-yes24" href="#" target="_blank" rel="noopener noreferrer"
+                class="flex items-center justify-center p-4 hover:bg-[#F8F9FA] transition-colors group" title="예스24 eBook에서 구매">
+              </a>
+              <!-- 교보문고 sam/eBook -->
+              <a id="link-ebook-kyobo" href="#" target="_blank" rel="noopener noreferrer"
+                class="flex items-center justify-center p-4 hover:bg-[#F8F9FA] transition-colors group" title="교보문고 eBook에서 구매">
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Section 1: 도서 상세 소개 -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-2 border-b-2 border-[#C39738] pb-2">
+            <span class="w-2.5 h-2.5 bg-[#6E1B2A] rounded-full"></span>
+            <h3 class="font-serifKr font-bold text-lg text-[#17191C]">도서 상세 소개</h3>
+          </div>
+          <div id="book-description" class="text-[#4A5568] leading-relaxed text-sm sm:text-base bg-[#FAF8F5] p-5 sm:p-6 rounded-xl border border-[#E4DFD7] whitespace-pre-line"></div>
+        </div>
+
+        <!-- Section 2: 목차 (Table of Contents) -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-2 border-b-2 border-[#C39738] pb-2">
+            <span class="w-2.5 h-2.5 bg-[#6E1B2A] rounded-full"></span>
+            <h3 class="font-serifKr font-bold text-lg text-[#17191C]">도서 목차 (Table of Contents)</h3>
+          </div>
+          <div id="book-toc" class="bg-[#FAF8F5] p-5 sm:p-6 rounded-xl border border-[#E4DFD7] space-y-2 text-sm text-[#4A5568]"></div>
+        </div>
+
+        <!-- Section 3: 본문 및 서문 맛보기 -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-2 border-b-2 border-[#C39738] pb-2">
+            <span class="w-2.5 h-2.5 bg-[#6E1B2A] rounded-full"></span>
+            <h3 class="font-serifKr font-bold text-lg text-[#17191C]">본문 및 서문 맛보기</h3>
+          </div>
+          <div id="book-excerpt" class="bg-[#EDE9E1] p-6 sm:p-8 rounded-xl border-l-4 border-[#6E1B2A] font-serifKr text-sm sm:text-base text-[#17191C] leading-relaxed italic whitespace-pre-line"></div>
+        </div>
+
+        <!-- Bottom Action Bar -->
+        <div class="pt-6 border-t border-[#E4DFD7] flex flex-wrap items-center justify-between gap-4">
+          <a href="index.html" class="px-6 py-3 bg-[#FAF8F5] hover:bg-[#EDE9E1] text-[#17191C] font-semibold text-xs sm:text-sm rounded-xl border border-[#E4DFD7] transition-all flex items-center gap-2">
+            <i class="fas fa-list"></i> 전체 도서 카탈로그로 돌아가기
+          </a>
+          <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="px-5 py-3 bg-[#17191C] hover:bg-[#2C313A] text-white text-xs sm:text-sm font-semibold rounded-xl shadow transition-all">
+            맨 위로 이동 ↑
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#17191C] text-[#A6ADB8] py-10 text-xs border-t-2 border-[#C39738] mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>&copy; 2026 Puritan Heritage Books (PHB). All Rights Reserved. Soli Deo Gloria.</div>
+      <div class="flex gap-4">
+        <a target="_blank" rel="noopener noreferrer" href="about.html" class="hover:text-white">PHB 사명선언문</a>
+        <a href="shipping.html" class="hover:text-white">배송안내</a>
+        <a href="index.html" class="hover:text-[#DFC075]">스토어 홈</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const STORE_LOGOS = {
+      aladin: `
+        <svg viewBox="0 0 170 46" class="h-9 sm:h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+          <text x="6" y="32" font-family="'Noto Sans KR', sans-serif" font-size="24" font-weight="900" fill="#2C337B" letter-spacing="-1.5">알라딘</text>
+          <g transform="translate(74, 4)">
+            <path d="M2 23 C12 22 20 19 30 15 C22 20 14 24 3 26 Z" fill="#F8A51D"/>
+            <circle cx="39" cy="8.5" r="2.8" fill="#F8A51D"/>
+            <path d="M28 13.5 C36 11 44 11 51 13.5 C45 15.5 34 15.5 28 13.5 Z" fill="#F8A51D"/>
+            <path d="M26 16.5 C36 18.5 47 18.5 54 15.5 C48 24 37 27 24 23.5 C24 20.5 25 18 26 16.5 Z" fill="#E6007E"/>
+            <path d="M26 23.5 C34 26.5 43 25.5 49 20.5 C45 28 37 29.5 27 27 Z" fill="#2E3192"/>
+            <path d="M28 27 C34 29 40 28 44 24.5 C40 30 33 31 29 29 Z" fill="#E6007E"/>
+            <path d="M29 30.5 C34 31.5 39 31.5 42 29.5 C40 33.5 32 34 28 32.5 Z" fill="#F8A51D"/>
+            <path d="M52 14.5 C57 12.5 61.5 10 62.5 6 C63.5 1.5 58 -1.5 53.5 -0.5 C49 0.5 48 4.5 50.5 7.5 C53 10.5 56.5 9.5 57 7.5 C57.5 5.5 55 4 53 4 C51.5 4 52 2.5 54 2.5 C57.5 2.5 59 5.5 57.5 7.5 C55.5 10.5 51.5 12.5 48.5 14.5 Z" fill="#5C55A5"/>
+          </g>
+        </svg>
+      `,
+      yes24: `
+        <svg viewBox="0 0 170 46" class="h-9 sm:h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+          <path d="M78 7 C78 5.5 79.5 4 81 4 C82.5 4 83.5 5.5 83.5 7 L82 14 C82 15.5 80.5 16.5 79 16.5 C77.5 16.5 76.5 15.5 76.5 14 Z" fill="#E51921"/>
+          <path d="M88 7 C88 5.5 89.5 4 91 4 C92.5 4 93.5 5.5 93.5 7 L92 14 C92 15.5 90.5 16.5 89 16.5 C87.5 16.5 86.5 15.5 86.5 14 Z" fill="#E51921"/>
+          <text x="8" y="31" font-family="'Arial', 'Helvetica', sans-serif" font-size="22" font-weight="900" fill="#677282" letter-spacing="0.5">YES</text>
+          <text x="67" y="32" font-family="'Arial', 'Helvetica', sans-serif" font-size="24" font-weight="900" fill="#677282" letter-spacing="-1">24</text>
+          <path d="M68 34 C76 42.5 92 42.5 100 34" stroke="#0077C8" stroke-width="4.8" stroke-linecap="round"/>
+          <text x="108" y="31" font-family="'Arial', 'Helvetica', sans-serif" font-size="21" font-weight="900" fill="#677282" letter-spacing="0">.COM</text>
+        </svg>
+      `,
+      kyoboEbook: `
+        <svg viewBox="0 0 170 46" class="h-9 sm:h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(73, 2)">
+            <path d="M2 7 C2 3 7 0 13 0 C19 0 23 4 23 9 C23 15 17 17.5 10 16.5 C6 15.5 2 12.5 2 7 Z" fill="#43B02A"/>
+            <circle cx="7" cy="7.5" r="1.5" fill="white"/>
+            <path d="M12 16 L12 20" stroke="#43B02A" stroke-width="2.6" stroke-linecap="round"/>
+          </g>
+          <text x="6" y="37" font-family="'Arial', 'Noto Sans KR', sans-serif" font-size="20" font-weight="900" fill="#004785" letter-spacing="1.2">KYOBO</text>
+          <text x="106" y="37" font-family="'Arial', 'Noto Sans KR', sans-serif" font-size="20" font-weight="500" fill="#004785" letter-spacing="-0.5">eBook</text>
+        </svg>
+      `,
+      kyobo: `
+        <svg viewBox="0 0 170 46" class="h-9 sm:h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(10, 10)">
+            <path d="M2 6 C2 2.5 6 0 11 0 C16 0 19.5 3.5 19.5 8 C19.5 13 14 15 8 14 C5 13 2 10.5 2 6 Z" fill="#43B02A"/>
+            <circle cx="6" cy="6.5" r="1.3" fill="white"/>
+            <path d="M10 13.5 L10 17" stroke="#43B02A" stroke-width="2.2" stroke-linecap="round"/>
+          </g>
+          <text x="36" y="30" font-family="'Noto Sans KR', sans-serif" font-size="20" font-weight="900" fill="#17191C" letter-spacing="-1">교보문고</text>
+          <text x="114" y="29" font-family="'Arial', sans-serif" font-size="11" font-weight="800" fill="#7E8694" letter-spacing="0.5">KYOBO</text>
+        </svg>
+      `,
+      naver: `
+        <svg viewBox="0 0 170 46" class="h-9 sm:h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="9" width="26" height="26" rx="5" fill="#03C75A"/>
+          <path d="M16 27 L16 16 L21 23.5 L26 16 L26 27" stroke="white" stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+          <g transform="translate(40, 25)">
+            <text x="0" y="0" font-family="'Arial', 'Noto Sans KR', sans-serif" font-size="15" font-weight="900" fill="#17191C">smart</text>
+            <text x="44" y="0" font-family="'Arial', 'Noto Sans KR', sans-serif" font-size="15" font-weight="900" fill="#03C75A">store</text>
+            <text x="0" y="11" font-family="'Noto Sans KR', sans-serif" font-size="9" font-weight="600" fill="#7E8694">네이버 스마트스토어</text>
+          </g>
+        </svg>
+      `
+    };
+
+    function getStoreLinks(book) {
+      if (!book) return { paper: {}, ebook: {} };
+      const cleanTitle = (book.title || '').split('(')[0].trim();
+      const query = encodeURIComponent(cleanTitle);
+      const custom = book.storeLinks || {};
+
+      return {
+        paper: {
+          naver: custom.naver || `https://search.shopping.naver.com/search/all?query=${encodeURIComponent('퓨리탄 헤리티지 ' + cleanTitle)}`,
+          aladin: custom.aladin || `https://www.aladin.co.kr/search/wsearchresult.aspx?SearchWord=${query}`,
+          kyobo: custom.kyobo || `https://search.kyobobook.co.kr/search?keyword=${query}`,
+          yes24: custom.yes24 || `https://www.yes24.com/Product/Search?domain=BOOK&query=${query}`,
+        },
+        ebook: {
+          aladin: custom.ebookAladin || `https://www.aladin.co.kr/search/wsearchresult.aspx?SearchWord=${query}&SearchTarget=eBook`,
+          yes24: custom.ebookYes24 || `https://www.yes24.com/Product/Search?domain=EBOOK&query=${query}`,
+          kyobo: custom.ebookKyobo || `https://search.kyobobook.co.kr/search?keyword=${query}&gbCode=EBK`,
+        }
+      };
+    }
+
+    function getParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    function initPage() {
+      const bookId = getParam('id');
+      if (!bookId) {
+        document.getElementById('loading-spinner').innerHTML = `
+          <div class="text-center py-12">
+            <p class="text-sm text-[#8C2538] font-bold">도서 ID가 지정되지 않았습니다.</p>
+            <a href="index.html" class="mt-4 inline-block px-4 py-2 bg-[#17191C] text-white text-xs rounded-lg">전체 목록으로</a>
+          </div>
+        `;
+        return;
+      }
+
+      // Load books from localStorage
+      let books = [];
+      try {
+        const saved = localStorage.getItem('phb_books_list') || localStorage.getItem('phb_books') || localStorage.getItem('phb_custom_books');
+        if (saved) {
+          books = JSON.parse(saved);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+
+      let book = Array.isArray(books) ? books.find(b => String(b.id) === String(bookId)) : null;
+
+      if (!book) {
+        document.getElementById('loading-spinner').innerHTML = `
+          <div class="text-center py-12">
+            <p class="text-sm text-[#8C2538] font-bold">해당 도서를 찾을 수 없습니다.</p>
+            <a href="index.html" class="mt-4 inline-block px-4 py-2 bg-[#17191C] text-white text-xs rounded-lg">전체 목록으로</a>
+          </div>
+        `;
+        return;
+      }
+
+      renderBook(book);
+    }
+
+    function renderBook(book) {
+      document.title = `${book.title} | 퓨리탄 헤리티지 북스 (PHB)`;
+      document.getElementById('page-head-title').innerText = `${book.title} | 퓨리탄 헤리티지 북스`;
+
+      document.getElementById('book-series-badge').innerText = book.series || 'PHB CLASSICS';
+      document.getElementById('book-series-sub').innerText = book.series || 'PHB CLASSICS';
+      document.getElementById('book-main-title').innerText = book.title;
+      document.getElementById('book-sub-title').innerText = book.title;
+      document.getElementById('book-orig-title').innerText = book.originalTitle || '';
+      document.getElementById('book-tagline').innerText = book.tagline || '역사적 개혁주의와 청교도 신학의 정수를 담은 정본 서적입니다.';
+
+      document.getElementById('book-main-price').innerText = `${Number(book.price || 0).toLocaleString()}원`;
+      document.getElementById('book-price-info').innerText = `${Number(book.price || 0).toLocaleString()}원 (정가 ${Number(book.originalPrice || book.price || 0).toLocaleString()}원 / 10% 할인가)`;
+      document.getElementById('book-author').innerText = book.author || '-';
+      document.getElementById('book-translator').innerText = book.translator || '-';
+      document.getElementById('book-pages').innerText = book.pages || '-';
+      document.getElementById('book-pubdate').innerText = book.pubDate || '-';
+      document.getElementById('book-isbn').innerText = book.isbn || '-';
+      document.getElementById('book-confession-tag').innerText = book.confessionTag || '개혁주의 표준문서';
+
+      // Cover render
+      const coverBox = document.getElementById('book-cover-container');
+      coverBox.className = `w-52 h-72 sm:w-60 sm:h-84 bg-gradient-to-br ${book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]'} rounded-lg shadow-book p-4 flex flex-col justify-between text-center relative overflow-hidden`;
+
+      if (book.coverUrl || book.coverImage) {
+        coverBox.innerHTML = `
+          <img src="${book.coverUrl || book.coverImage}" alt="${book.title}" class="absolute inset-0 w-full h-full object-cover z-0" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 pointer-events-none z-10"></div>
+          <div class="absolute inset-2 border border-[#C39738]/30 pointer-events-none z-20"></div>
+        `;
+      } else {
+        coverBox.innerHTML = `
+          <span class="text-[9px] font-cinzel text-[#DFC075] tracking-wider uppercase block truncate">${(book.series || 'PHB CLASSICS').split('(')[0]}</span>
+          <h4 class="text-sm font-serifKr font-bold text-white leading-snug">${(book.title || '').split('(')[0]}</h4>
+          <span class="text-[10px] font-serifKr text-[#E4DFD7]">${book.author || ''}</span>
+        `;
+      }
+
+      // Store Links
+      const storeLinks = getStoreLinks(book);
+      const pNaver = document.getElementById('link-paper-naver');
+      const pKyobo = document.getElementById('link-paper-kyobo');
+      const pAladin = document.getElementById('link-paper-aladin');
+      const pYes24 = document.getElementById('link-paper-yes24');
+
+      pNaver.href = storeLinks.paper.naver;
+      pNaver.innerHTML = STORE_LOGOS.naver;
+      pKyobo.href = storeLinks.paper.kyobo;
+      pKyobo.innerHTML = STORE_LOGOS.kyobo;
+      pAladin.href = storeLinks.paper.aladin;
+      pAladin.innerHTML = STORE_LOGOS.aladin;
+      pYes24.href = storeLinks.paper.yes24;
+      pYes24.innerHTML = STORE_LOGOS.yes24;
+
+      const eAladin = document.getElementById('link-ebook-aladin');
+      const eYes24 = document.getElementById('link-ebook-yes24');
+      const eKyobo = document.getElementById('link-ebook-kyobo');
+
+      eAladin.href = storeLinks.ebook.aladin;
+      eAladin.innerHTML = STORE_LOGOS.aladin;
+      eYes24.href = storeLinks.ebook.yes24;
+      eYes24.innerHTML = STORE_LOGOS.yes24;
+      eKyobo.href = storeLinks.ebook.kyobo;
+      eKyobo.innerHTML = STORE_LOGOS.kyoboEbook;
+
+      // Description
+      document.getElementById('book-description').innerText = book.description || '상세 소개가 등록되어 있지 않습니다.';
+
+      // TOC
+      const tocContainer = document.getElementById('book-toc');
+      if (Array.isArray(book.toc) && book.toc.length > 0) {
+        tocContainer.innerHTML = book.toc.map(t => `<div class="py-1.5 border-b border-[#EAE5DC] last:border-none font-serifKr">• ${t}</div>`).join('');
+      } else {
+        tocContainer.innerHTML = '<p class="text-xs text-[#7E8694]">등록된 상세 목차가 없습니다.</p>';
+      }
+
+      // Excerpt
+      document.getElementById('book-excerpt').innerText = book.excerpt || '본문 맛보기가 준비 중입니다.';
+
+      // Reveal
+      document.getElementById('loading-spinner').classList.add('hidden');
+      document.getElementById('book-content-container').classList.remove('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', initPage);
+  </script>
+</body>
+</html>
