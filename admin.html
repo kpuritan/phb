@@ -1840,22 +1840,7 @@
         const tocVal = document.getElementById('form-toc').value.trim();
         const tocArray = tocVal ? tocVal.split('\n').map(s => s.trim()).filter(Boolean) : [];
         let finalCoverUrl = document.getElementById('form-cover-url') ? document.getElementById('form-cover-url').value.trim() : '';
-        const coverFileInput = document.getElementById('form-cover-file');
-        if (coverFileInput && coverFileInput.files && coverFileInput.files[0]) {
-          const file = coverFileInput.files[0];
-          if (typeof storage !== 'undefined' && storage) {
-            try {
-              const ref = storage.ref(`covers/${id}_${Date.now()}_${file.name}`);
-              await ref.put(file);
-              finalCoverUrl = await ref.getDownloadURL();
-            } catch (e) {
-              console.warn('Storage upload failed, using Data URL fallback:', e);
-              finalCoverUrl = currentCoverDataUrl || '';
-            }
-          } else if (currentCoverDataUrl) {
-            finalCoverUrl = currentCoverDataUrl;
-          }
-        } else if (!finalCoverUrl && currentCoverDataUrl) {
+        if (currentCoverDataUrl) {
           finalCoverUrl = currentCoverDataUrl;
         }
 
