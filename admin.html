@@ -158,10 +158,13 @@
       </div>
 
       <div class="flex items-center flex-wrap gap-2.5">
-        <button onclick="refreshData()" class="px-3.5 py-2.5 bg-[#FAF8F5] hover:bg-[#EDE9E1] text-[#5E6470] border border-[#E4DFD7] rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors">
+        <button onclick="syncAllToCloud()" class="px-4 py-2.5 bg-[#17191C] hover:bg-[#23272D] text-[#DFC075] border border-[#C39738]/60 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm cursor-pointer" title="현재 등록된 모든 도서를 클라우드(Firebase)에 전체 동기화하여 모든 사용자에게 즉시 공개합니다">
+          <i class="fas fa-cloud-upload-alt text-[#DFC075]"></i> 전체 클라우드 동기화
+        </button>
+        <button onclick="refreshData()" class="px-3.5 py-2.5 bg-[#FAF8F5] hover:bg-[#EDE9E1] text-[#5E6470] border border-[#E4DFD7] rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer">
           <i class="fas fa-sync-alt" id="refresh-icon"></i> 새로고침
         </button>
-        <button onclick="openBookModal()" class="px-5 py-2.5 bg-[#6E1B2A] hover:bg-[#8C2538] text-white rounded-xl text-xs font-semibold shadow-md transition-all flex items-center gap-2">
+        <button onclick="openBookModal()" class="px-5 py-2.5 bg-[#6E1B2A] hover:bg-[#8C2538] text-white rounded-xl text-xs font-semibold shadow-md transition-all flex items-center gap-2 cursor-pointer">
           <i class="fas fa-plus-circle text-[#DFC075]"></i>
           <span>새 도서 등록하기</span>
         </button>
@@ -1289,6 +1292,30 @@
       }
     }
 
+    async function syncAllToCloud() {
+      if (!db) {
+        alert('Firebase 연결을 찾을 수 없습니다.');
+        return;
+      }
+      if (!confirm(`현재 관리자 화면에 등록된 도서(${allBooks.length}권) 전체를 클라우드(Firebase)에 업로드하시겠습니까?\n모든 기기와 방문자 화면에 즉시 동기화됩니다.`)) {
+        return;
+      }
+
+      showToast('클라우드 전체 동기화 업로드 중...');
+      try {
+        let successCount = 0;
+        for (const book of allBooks) {
+          await db.collection("phb_books").doc(book.id).set(book, { merge: true });
+          successCount++;
+        }
+        showToast(`성공! 총 ${successCount}권의 도서가 클라우드에 완벽 동기화되었습니다.`);
+        alert(`🎉 총 ${successCount}권의 도서가 클라우드(Firebase)에 성공적으로 동기화되었습니다!\n이제 스마트폰이나 다른 컴퓨터에서 새로고침하시면 즉시 나타납니다.`);
+      } catch (err) {
+        console.error('syncAllToCloud error:', err);
+        alert('동기화 중 오류가 발생했습니다: ' + (err.message || err));
+      }
+    }
+
     // Load Books Data cleanly from LocalStorage / Firestore / Initial Seed
     async function loadBooksData() {
       const refreshIcon = document.getElementById('refresh-icon');
@@ -1841,13 +1868,17 @@
           updatedAt: new Date().toISOString()
         };
 
-        try {
-          // Save to Firestore
-          if (db) {
+        // Save to Firestore
+        if (db) {
+          try {
             await db.collection("phb_books").doc(id).set(bookData, { merge: true });
+            console.log("Firestore book saved successfully:", id);
+          } catch (err) {
+            console.error("Firestore save error:", err);
+            alert("⚠️ 클라우드(Firebase) 전송 중 오류가 발생했습니다: " + (err.message || err));
           }
-        } catch (err) {
-          console.warn("Firestore save warning:", err);
+        } else {
+          alert("⚠️ Firebase 데이터베이스 연결이 초기화되지 않았습니다. 인터넷 연결을 확인해 주세요.");
         }
 
         // Update local state
