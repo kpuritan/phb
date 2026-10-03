@@ -1199,12 +1199,14 @@
   <script>
     // Firebase Config for Realtime Sync
     const firebaseConfig = {
-      apiKey: "AIzaSyCJbOaiElCypwgtPgbwdnudn3VC737fMrs",
-      authDomain: "kpuritan-home.firebaseapp.com",
-      projectId: "kpuritan-home",
-      storageBucket: "kpuritan-home.firebasestorage.app",
-      messagingSenderId: "1071220455502",
-      appId: "1:1071220455502:web:7f6f59b48c48a73437f8f0"
+      apiKey: "AIzaSyC0Nz7gw6Y1BiRb4ICd6deL1DOBUQ77J6M",
+      authDomain: "phbooks-bbea9.firebaseapp.com",
+      databaseURL: "https://phbooks-bbea9-default-rtdb.firebaseio.com",
+      projectId: "phbooks-bbea9",
+      storageBucket: "phbooks-bbea9.firebasestorage.app",
+      messagingSenderId: "790301308914",
+      appId: "1:790301308914:web:16fc61e64bcf42cad45d6b",
+      measurementId: "G-Z69QD7S6HF"
     };
     if (typeof firebase !== 'undefined' && !firebase.apps.length) {
       try {
@@ -1793,9 +1795,9 @@
       }
       if (db) {
         try {
-          BOOKS_DATA.forEach(b => {
-            db.collection("phb_books").doc(b.id).set(b, { merge: true }).catch(() => {});
-          });
+          for (const b of BOOKS_DATA) {
+            await db.collection("phb_books").doc(b.id).set(b, { merge: true });
+          }
         } catch (e) {
           console.warn("Firestore sync warning:", e);
         }
@@ -3093,7 +3095,7 @@
       if (localList !== null) {
         try {
           const parsed = JSON.parse(localList);
-          if (Array.isArray(parsed)) {
+          if (Array.isArray(parsed) && parsed.length > 0) {
             BOOKS_DATA = parsed;
           }
         } catch (e) {}
@@ -3104,7 +3106,6 @@
       // 2. Real-time Firestore Sync (Ensures all visitors see admin additions/changes immediately)
       if (db) {
         try {
-          // Listen for real-time updates
           db.collection("phb_books").onSnapshot((snapshot) => {
             if (!snapshot.empty) {
               const firestoreBooks = [];
@@ -3121,10 +3122,13 @@
                 renderCategoryTabs();
                 renderBooksGrid();
                 renderHeroSlider();
+                if (typeof renderManagerBookTable === 'function') {
+                  renderManagerBookTable();
+                }
               }
             }
           }, (err) => {
-            console.warn("Firestore snapshot listener notice:", err);
+            console.warn("Firestore realtime sync notice:", err);
           });
         } catch (err) {
           console.warn("Firestore sync offline:", err);
