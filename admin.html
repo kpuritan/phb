@@ -480,24 +480,55 @@
             </div>
           </div>
 
-          <!-- Boolean Checkboxes -->
-          <div class="flex flex-wrap items-center gap-6 pt-2 border-t border-[#F1ECE4]">
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" id="form-is-new" class="rounded border-[#E4DFD7] text-[#6E1B2A] focus:ring-0" />
-              <span class="font-medium text-[#17191C]">신간 (NEW) 표시</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" id="form-is-preorder" class="rounded border-[#E4DFD7] text-[#6E1B2A] focus:ring-0" />
-              <span class="font-medium text-[#17191C]">예약판매 (Pre-order) 표시</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" id="form-is-hardcover" class="rounded border-[#E4DFD7] text-[#6E1B2A] focus:ring-0" />
-              <span class="font-medium text-[#17191C]">양장본 (Hardcover)</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" id="form-is-ebook" class="rounded border-[#E4DFD7] text-[#6E1B2A] focus:ring-0" />
-              <span class="font-medium text-[#17191C]">전자책 (eBook) 지원</span>
-            </label>
+          <!-- Book Format & Badges -->
+          <div class="space-y-3 pt-2 border-t border-[#F1ECE4]">
+            <div>
+              <label class="block font-semibold text-[#17191C] mb-1.5">
+                <i class="fas fa-book text-[#6E1B2A] mr-1"></i> 도서 출판 형태 (Format) <span class="text-red-500">*</span>
+              </label>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-[#E4DFD7] bg-[#FAF8F5] hover:bg-white cursor-pointer has-[:checked]:border-[#6E1B2A] has-[:checked]:bg-[#6E1B2A]/5">
+                  <input type="radio" name="form-book-format" id="form-format-paper" value="paper" checked class="text-[#6E1B2A] focus:ring-0" />
+                  <div>
+                    <span class="block font-bold text-xs text-[#17191C]">종이책 (Paperback)</span>
+                    <span class="block text-[10px] text-[#7E8694]">일반 무선철 종이책</span>
+                  </div>
+                </label>
+                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-[#E4DFD7] bg-[#FAF8F5] hover:bg-white cursor-pointer has-[:checked]:border-[#6E1B2A] has-[:checked]:bg-[#6E1B2A]/5">
+                  <input type="radio" name="form-book-format" id="form-format-hardcover" value="hardcover" class="text-[#6E1B2A] focus:ring-0" />
+                  <div>
+                    <span class="block font-bold text-xs text-[#17191C]">양장본 (Hardcover)</span>
+                    <span class="block text-[10px] text-[#7E8694]">고급 하드커버 양장</span>
+                  </div>
+                </label>
+                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-[#E4DFD7] bg-[#FAF8F5] hover:bg-white cursor-pointer has-[:checked]:border-[#6E1B2A] has-[:checked]:bg-[#6E1B2A]/5">
+                  <input type="radio" name="form-book-format" id="form-format-ebook" value="ebook" class="text-[#6E1B2A] focus:ring-0" />
+                  <div>
+                    <span class="block font-bold text-xs text-[#6E1B2A]">전자책 전용 (PDF)</span>
+                    <span class="block text-[10px] text-[#7E8694]">종이책 없이 전자책만</span>
+                  </div>
+                </label>
+                <label class="flex items-center gap-2 p-2.5 rounded-lg border border-[#E4DFD7] bg-[#FAF8F5] hover:bg-white cursor-pointer has-[:checked]:border-[#6E1B2A] has-[:checked]:bg-[#6E1B2A]/5">
+                  <input type="radio" name="form-book-format" id="form-format-both" value="both" class="text-[#6E1B2A] focus:ring-0" />
+                  <div>
+                    <span class="block font-bold text-xs text-[#17191C]">종이책 + 전자책 (둘 다)</span>
+                    <span class="block text-[10px] text-[#7E8694]">종이책 및 PDF 병행</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Additional Badges -->
+            <div class="flex flex-wrap items-center gap-6 pt-1">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="form-is-new" class="rounded border-[#E4DFD7] text-[#6E1B2A] focus:ring-0" />
+                <span class="font-medium text-[#17191C]">신간 (NEW) 뱃지</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="form-is-preorder" class="rounded border-[#E4DFD7] text-[#6E1B2A] focus:ring-0" />
+                <span class="font-medium text-[#17191C]">예약판매 (Pre-order) 뱃지</span>
+              </label>
+            </div>
           </div>
 
         </div>
@@ -1660,8 +1691,22 @@
 
         document.getElementById('form-is-new').checked = !!book.isNew;
         document.getElementById('form-is-preorder').checked = !!book.isPreorder;
-        document.getElementById('form-is-hardcover').checked = !!book.isHardcover;
-        document.getElementById('form-is-ebook').checked = !!book.isEbook;
+        
+        // Format radio setup
+        const isEbookCategory = (book.category === 'ebook') || (String(book.subCategory || '').toLowerCase() === 'ebook');
+        const isOnlyEbook = isEbookCategory || (book.isEbook && !book.isHardcover && !book.isPaper);
+        
+        if (isOnlyEbook) {
+          document.getElementById('form-format-ebook').checked = true;
+        } else if (book.isHardcover && book.isEbook) {
+          document.getElementById('form-format-both').checked = true;
+        } else if (book.isEbook) {
+          document.getElementById('form-format-both').checked = true;
+        } else if (book.isHardcover) {
+          document.getElementById('form-format-hardcover').checked = true;
+        } else {
+          document.getElementById('form-format-paper').checked = true;
+        }
 
         // Stores
         const s = book.storeLinks || {};
@@ -1782,12 +1827,17 @@
         confessionTag: document.getElementById('form-confession-tag').value.trim() || '개혁주의 표준문서',
         coverGradient: document.getElementById('form-cover-gradient').value,
         coverUrl: finalCoverUrl || (typeof uploadedCoverDataUrl !== 'undefined' ? uploadedCoverDataUrl : '') || '',
-        coverImage: finalCoverUrl || (typeof uploadedCoverDataUrl !== 'undefined' ? uploadedCoverDataUrl : '') || '',
+        const selectedFormat = document.querySelector('input[name="form-book-format"]:checked')?.value || 'paper';
+        const isHardcover = (selectedFormat === 'hardcover');
+        const isEbook = (selectedFormat === 'ebook' || selectedFormat === 'both');
+        const isPaper = (selectedFormat === 'paper' || selectedFormat === 'hardcover' || selectedFormat === 'both');
 
         isNew: document.getElementById('form-is-new').checked,
         isPreorder: document.getElementById('form-is-preorder').checked,
-        isHardcover: document.getElementById('form-is-hardcover').checked,
-        isEbook: document.getElementById('form-is-ebook').checked,
+        isHardcover: isHardcover,
+        isEbook: isEbook,
+        isPaper: isPaper,
+        format: selectedFormat,
 
         storeLinks: {
           naver: document.getElementById('form-link-naver').value.trim(),
