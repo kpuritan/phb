@@ -866,7 +866,7 @@
                 <button onclick="refreshIframe()" class="btn" title="다시 시도">
                     <i class="fas fa-sync-alt"></i> <span>새로고침</span>
                 </button>
-                <a href="#" id="direct-link" class="btn btn-primary show-mobile" target="_blank">
+                <a href="#" id="direct-link" class="btn btn-primary show-mobile">
                     <i class="fas fa-download"></i> <span>다운로드</span>
                 </a>
                 <button onclick="window.close(); if(!window.closed) history.back();" class="btn">
@@ -1157,9 +1157,9 @@
                             const pt = p.trim();
                             // Styling subtopics
                             if (pt.startsWith('[') || pt.startsWith('첫째') || pt.startsWith('둘째') || pt.startsWith('셋째')) {
-                                return `<h3 class="body-sub-title">${pt.replace(urlRegex, '<a href="$1" target="_blank" style="color:var(--accent-color); text-decoration:underline;">$1</a>').replace(/\n/g, '<br>')}</h3>`;
+                                return `<h3 class="body-sub-title">${pt.replace(urlRegex, '<a href="$1" style="color:var(--accent-color); text-decoration:underline;">$1</a>').replace(/\n/g, '<br>')}</h3>`;
                             }
-                            return `<p class="body-paragraph">${pt.replace(urlRegex, '<a href="$1" target="_blank" style="color:var(--accent-color); text-decoration:underline;">$1</a>').replace(/\n/g, '<br>')}</p>`;
+                            return `<p class="body-paragraph">${pt.replace(urlRegex, '<a href="$1" style="color:var(--accent-color); text-decoration:underline;">$1</a>').replace(/\n/g, '<br>')}</p>`;
                         }).join('');
                     }
 
@@ -1185,10 +1185,10 @@
                                             </div>
                                         </div>
                                         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                                            <a href="${rawFileUrl}" target="_blank" download style="background: #1a342a; color: #ffffff; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.84rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                                            <a href="${rawFileUrl}" download style="background: #1a342a; color: #ffffff; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.84rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
                                                 <i class="fas fa-download"></i> 다운로드
                                             </a>
-                                            <a href="${rawFileUrl}" target="_blank" style="background: #8c6d46; color: #ffffff; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.84rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                                            <a href="${rawFileUrl}" style="background: #8c6d46; color: #ffffff; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.84rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
                                                 <i class="fas fa-external-link-alt"></i> 새 창에서 전체보기
                                             </a>
                                         </div>
@@ -1216,7 +1216,7 @@
                                             <span style="font-size: 0.82rem; color: #718096;">자료 파일을 다운로드하여 확인하세요.</span>
                                         </div>
                                     </div>
-                                    <a href="${rawFileUrl}" target="_blank" download style="background: #1a342a; color: #ffffff; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 0.86rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                                    <a href="${rawFileUrl}" download style="background: #1a342a; color: #ffffff; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 0.86rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
                                         <i class="fas fa-download"></i> 파일 다운로드
                                     </a>
                                 </div>

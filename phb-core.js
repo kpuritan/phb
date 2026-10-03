@@ -781,7 +781,7 @@ function renderCartDrawer() {
 
 // 5. Book Preview / Detail Controller
 function openBookPreview(bookId) {
-  window.open(`book-detail.html?id=${encodeURIComponent(bookId)}`, '_blank');
+  window.location.href = `book-detail.html?id=${encodeURIComponent(bookId)}`;
 }
 
 function closeBookPreview() {

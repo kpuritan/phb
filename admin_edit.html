@@ -647,10 +647,10 @@
                 updateRecommendedSubtopics();
 
                 const currentCover = document.getElementById('current-cover');
-                currentCover.innerHTML = data.coverUrl ? `<a href="${data.coverUrl}" target="_blank">기존 표지 보기</a>` : "없음";
+                currentCover.innerHTML = data.coverUrl ? `<a href="${data.coverUrl}">기존 표지 보기</a>` : "없음";
 
                 const currentFile = document.getElementById('current-file');
-                currentFile.innerHTML = data.fileUrl ? `<a href="${data.fileUrl}" target="_blank">기존 파일 보기</a>` : "없음";
+                currentFile.innerHTML = data.fileUrl ? `<a href="${data.fileUrl}">기존 파일 보기</a>` : "없음";
 
             } catch (error) {
                 console.error("loadPost error:", error);
