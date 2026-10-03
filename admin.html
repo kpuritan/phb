@@ -1292,6 +1292,46 @@
       }
     }
 
+    async function compressBase64Image(dataUrl, maxWidth = 350, maxHeight = 500, quality = 0.75) {
+      if (!dataUrl || !dataUrl.startsWith('data:image')) return dataUrl;
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let w = img.width;
+          let h = img.height;
+          if (w > maxWidth || h > maxHeight) {
+            if (w / maxWidth > h / maxHeight) {
+              h = Math.round((h * maxWidth) / w);
+              w = maxWidth;
+            } else {
+              w = Math.round((w * maxHeight) / h);
+              h = maxHeight;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
+      });
+    }
+
+    async function sanitizeBookForFirestore(book) {
+      const clean = { ...book };
+      // Firestore field size limit is 1,048,487 bytes (1MB). Compress base64 strings if too large.
+      if (clean.coverImage && clean.coverImage.startsWith('data:image') && clean.coverImage.length > 500000) {
+        clean.coverImage = await compressBase64Image(clean.coverImage);
+      }
+      if (clean.coverUrl && clean.coverUrl.startsWith('data:image') && clean.coverUrl.length > 500000) {
+        clean.coverUrl = clean.coverImage;
+      }
+      return clean;
+    }
+
     async function syncAllToCloud() {
       if (!db) {
         alert('Firebase 연결을 찾을 수 없습니다.');
@@ -1304,10 +1344,13 @@
       showToast('클라우드 전체 동기화 업로드 중...');
       try {
         let successCount = 0;
-        for (const book of allBooks) {
-          await db.collection("phb_books").doc(book.id).set(book, { merge: true });
+        for (let i = 0; i < allBooks.length; i++) {
+          const cleanBook = await sanitizeBookForFirestore(allBooks[i]);
+          allBooks[i] = cleanBook;
+          await db.collection("phb_books").doc(cleanBook.id).set(cleanBook, { merge: true });
           successCount++;
         }
+        localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
         showToast(`성공! 총 ${successCount}권의 도서가 클라우드에 완벽 동기화되었습니다.`);
         alert(`🎉 총 ${successCount}권의 도서가 클라우드(Firebase)에 성공적으로 동기화되었습니다!\n이제 스마트폰이나 다른 컴퓨터에서 새로고침하시면 즉시 나타납니다.`);
       } catch (err) {
@@ -1824,7 +1867,7 @@
         const isEbook = ebookEnabled || (selectedFormat === 'ebook' || selectedFormat === 'both');
         const isPaper = paperEnabled || (selectedFormat === 'paper' || selectedFormat === 'hardcover' || selectedFormat === 'both');
 
-        const bookData = {
+        const bookData = await sanitizeBookForFirestore({
           id,
           title: document.getElementById('form-title').value.trim(),
           originalTitle: document.getElementById('form-original-title').value.trim(),
@@ -1866,7 +1909,7 @@
           toc: tocArray,
           excerpt: document.getElementById('form-excerpt').value.trim(),
           updatedAt: new Date().toISOString()
-        };
+        });
 
         // Save to Firestore
         if (db) {
