@@ -2843,125 +2843,131 @@
 
     async function handleBookFormSubmit(e) {
       e.preventDefault();
-      const bookId = document.getElementById('form-book-id').value;
-      const title = document.getElementById('form-book-title').value.trim();
-      const originalTitle = document.getElementById('form-book-original-title').value.trim();
-      const author = document.getElementById('form-book-author').value.trim();
-      const translator = document.getElementById('form-book-translator').value.trim();
-      const series = document.getElementById('form-book-series').value.trim() || 'PHB 출간도서';
-      const category = document.getElementById('form-book-category').value;
-      const originalPrice = parseInt(document.getElementById('form-book-original-price').value, 10) || 0;
-      const price = parseInt(document.getElementById('form-book-price').value, 10) || originalPrice;
-      const discountRate = originalPrice > 0 ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0;
-      const coverGradient = document.getElementById('form-book-gradient').value;
-      const pages = document.getElementById('form-book-pages').value.trim() || '상세정보 참조';
-      const pubDate = document.getElementById('form-book-pubdate').value.trim() || '2026. 10.';
-      const isNew = document.getElementById('form-book-isnew').checked;
-      const isPreorder = document.getElementById('form-book-ispreorder').checked;
-      
-      const selectedFormat = document.querySelector('input[name="form-book-format-radio"]:checked')?.value || 'paper';
-      const isHardcover = (selectedFormat === 'hardcover');
-      const isEbook = (selectedFormat === 'ebook' || selectedFormat === 'both');
-      const isPaper = (selectedFormat === 'paper' || selectedFormat === 'hardcover' || selectedFormat === 'both');
+      try {
+        const bookId = document.getElementById('form-book-id').value;
+        const title = document.getElementById('form-book-title').value.trim();
+        const originalTitle = document.getElementById('form-book-original-title').value.trim();
+        const author = document.getElementById('form-book-author').value.trim();
+        const translator = document.getElementById('form-book-translator').value.trim();
+        const series = document.getElementById('form-book-series').value.trim() || 'PHB 출간도서';
+        const category = document.getElementById('form-book-category').value;
+        const originalPrice = parseInt(document.getElementById('form-book-original-price').value, 10) || 0;
+        const price = parseInt(document.getElementById('form-book-price').value, 10) || originalPrice;
+        const discountRate = originalPrice > 0 ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0;
+        const coverGradient = document.getElementById('form-book-gradient').value;
+        const pages = document.getElementById('form-book-pages').value.trim() || '상세정보 참조';
+        const pubDate = document.getElementById('form-book-pubdate').value.trim() || '2026. 10.';
+        const isNew = document.getElementById('form-book-isnew').checked;
+        const isPreorder = document.getElementById('form-book-ispreorder').checked;
+        
+        const selectedFormat = document.querySelector('input[name="form-book-format-radio"]:checked')?.value || 'paper';
+        const isHardcover = (selectedFormat === 'hardcover');
+        const isEbook = (selectedFormat === 'ebook' || selectedFormat === 'both');
+        const isPaper = (selectedFormat === 'paper' || selectedFormat === 'hardcover' || selectedFormat === 'both');
 
-      const tagline = document.getElementById('form-book-tagline').value.trim();
-      const description = document.getElementById('form-book-description').value.trim();
-      const toc = document.getElementById('form-book-toc').value.split('\n').map(s => s.trim()).filter(Boolean);
-      const excerpt = document.getElementById('form-book-excerpt').value.trim();
+        const tagline = document.getElementById('form-book-tagline').value.trim();
+        const description = document.getElementById('form-book-description').value.trim();
+        const toc = document.getElementById('form-book-toc').value.split('\n').map(s => s.trim()).filter(Boolean);
+        const excerpt = document.getElementById('form-book-excerpt').value.trim();
 
-      // Cover image upload / URL handling
-      let finalCoverUrl = document.getElementById('form-book-cover-url') ? document.getElementById('form-book-cover-url').value.trim() : '';
-      const coverFileInput = document.getElementById('form-book-cover-file');
-      if (coverFileInput && coverFileInput.files && coverFileInput.files[0]) {
-        const file = coverFileInput.files[0];
-        if (typeof storage !== 'undefined' && storage) {
-          try {
-            const ref = storage.ref(`covers/${bookId || Date.now()}_${Date.now()}_${file.name}`);
-            await ref.put(file);
-            finalCoverUrl = await ref.getDownloadURL();
-          } catch(err) {
-            console.warn('Storage upload error, using local data URL:', err);
+        // Cover image upload / URL handling
+        let finalCoverUrl = document.getElementById('form-book-cover-url') ? document.getElementById('form-book-cover-url').value.trim() : '';
+        const coverFileInput = document.getElementById('form-book-cover-file');
+        if (coverFileInput && coverFileInput.files && coverFileInput.files[0]) {
+          const file = coverFileInput.files[0];
+          if (typeof storage !== 'undefined' && storage) {
+            try {
+              const ref = storage.ref(`covers/${bookId || Date.now()}_${Date.now()}_${file.name}`);
+              await ref.put(file);
+              finalCoverUrl = await ref.getDownloadURL();
+            } catch(err) {
+              console.warn('Storage upload error, using local data URL:', err);
+              finalCoverUrl = currentBookFormCoverDataUrl;
+            }
+          } else {
             finalCoverUrl = currentBookFormCoverDataUrl;
           }
-        } else {
+        } else if (!finalCoverUrl && currentBookFormCoverDataUrl) {
           finalCoverUrl = currentBookFormCoverDataUrl;
         }
-      } else if (!finalCoverUrl && currentBookFormCoverDataUrl) {
-        finalCoverUrl = currentBookFormCoverDataUrl;
-      }
 
-      if (bookId) {
-        // Edit existing book
-        const idx = BOOKS_DATA.findIndex(b => b.id === bookId);
-        if (idx !== -1) {
-          BOOKS_DATA[idx] = {
-            ...BOOKS_DATA[idx],
+        if (bookId) {
+          // Edit existing book
+          const idx = BOOKS_DATA.findIndex(b => b.id === bookId);
+          if (idx !== -1) {
+            const existingBook = BOOKS_DATA[idx];
+            BOOKS_DATA[idx] = {
+              ...BOOKS_DATA[idx],
+              title,
+              originalTitle: originalTitle || title,
+              author,
+              translator: translator || '역자 미상',
+              series,
+              category,
+              originalPrice,
+              price,
+              discountRate: Math.max(0, discountRate),
+              coverGradient,
+              coverUrl: finalCoverUrl || (document.getElementById('form-book-cover-url')?.value.trim()) || (existingBook ? (existingBook.coverUrl || '') : ''),
+              coverImage: finalCoverUrl || (document.getElementById('form-book-cover-url')?.value.trim()) || (existingBook ? (existingBook.coverImage || '') : ''),
+              pages,
+              pubDate,
+              isNew,
+              isPreorder,
+              isHardcover,
+              isEbook,
+              isPaper,
+              format: selectedFormat,
+              tagline: tagline || BOOKS_DATA[idx].tagline,
+              description: description || BOOKS_DATA[idx].description,
+              toc: toc.length > 0 ? toc : BOOKS_DATA[idx].toc,
+              excerpt: excerpt || BOOKS_DATA[idx].excerpt
+            };
+            showToast(`'${title}' 도서 정보가 수정되었습니다.`);
+          }
+        } else {
+          // Add new book
+          const newBook = {
+            id: 'phb-' + String(Date.now()).slice(-6),
             title,
             originalTitle: originalTitle || title,
             author,
             translator: translator || '역자 미상',
             series,
             category,
-            originalPrice,
-            price,
-            discountRate: Math.max(0, discountRate),
-            coverGradient,
-            coverUrl: finalCoverUrl || (document.getElementById('form-book-cover-url')?.value.trim()) || (existingBook ? existingBook.coverUrl : ''),
-            coverImage: finalCoverUrl || (document.getElementById('form-book-cover-url')?.value.trim()) || (existingBook ? existingBook.coverImage : ''),
-            pages,
-            pubDate,
             isNew,
             isPreorder,
             isHardcover,
             isEbook,
             isPaper,
             format: selectedFormat,
-            tagline: tagline || BOOKS_DATA[idx].tagline,
-            description: description || BOOKS_DATA[idx].description,
-            toc: toc.length > 0 ? toc : BOOKS_DATA[idx].toc,
-            excerpt: excerpt || BOOKS_DATA[idx].excerpt
+            price,
+            originalPrice,
+            discountRate: Math.max(0, discountRate),
+            pages,
+            isbn: '979-11-984501-' + Math.floor(10 + Math.random() * 89) + '-0',
+            pubDate,
+            tagline: tagline || `${author}의 대표작 정본 출간`,
+            coverGradient,
+            coverUrl: finalCoverUrl,
+            coverImage: finalCoverUrl,
+            confessionTag: '개혁주의 표준문서 연계',
+            description: description || '퓨리탄 헤리티지 북스에서 정본으로 출간한 개혁주의 고전 문헌입니다.',
+            toc: toc.length > 0 ? toc : ['제1장 서론', '제2장 본론', '제3장 결론 및 실천적 적용'],
+            excerpt: excerpt || '“하나님의 말씀은 모든 신앙과 삶의 유일한 최고 권위입니다.”'
           };
-          showToast(`'${title}' 도서 정보가 수정되었습니다.`);
+          BOOKS_DATA.unshift(newBook);
+          showToast(`새 도서 '${title}'(이)가 등록되었습니다.`);
         }
-      } else {
-        // Add new book
-        const newBook = {
-          id: 'phb-' + String(Date.now()).slice(-6),
-          title,
-          originalTitle: originalTitle || title,
-          author,
-          translator: translator || '역자 미상',
-          series,
-          category,
-          isNew,
-          isPreorder,
-          isHardcover,
-          isEbook,
-          isPaper,
-          format: selectedFormat,
-          price,
-          originalPrice,
-          discountRate: Math.max(0, discountRate),
-          pages,
-          isbn: '979-11-984501-' + Math.floor(10 + Math.random() * 89) + '-0',
-          pubDate,
-          tagline: tagline || `${author}의 대표작 정본 출간`,
-          coverGradient,
-          coverUrl: finalCoverUrl,
-          coverImage: finalCoverUrl,
-          confessionTag: '개혁주의 표준문서 연계',
-          description: description || '퓨리탄 헤리티지 북스에서 정본으로 출간한 개혁주의 고전 문헌입니다.',
-          toc: toc.length > 0 ? toc : ['제1장 서론', '제2장 본론', '제3장 결론 및 실천적 적용'],
-          excerpt: excerpt || '“하나님의 말씀은 모든 신앙과 삶의 유일한 최고 권위입니다.”'
-        };
-        BOOKS_DATA.unshift(newBook);
-        showToast(`새 도서 '${title}'(이)가 등록되었습니다.`);
-      }
 
-      saveBooksData();
-      renderBooksGrid();
-      renderManagerBookTable();
-      closeBookFormModal();
+        saveBooksData();
+        renderBooksGrid();
+        renderManagerBookTable();
+        closeBookFormModal();
+      } catch (err) {
+        console.error('Book form submit error:', err);
+        alert('도서 등록 중 오류가 발생했습니다: ' + (err.message || err));
+      }
     }
 
     async function deleteBook(bookId) {
