@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>역사신학 총서 | 퓨리탄 헤리티지 북스 (PHB)</title>
+  <meta name="description" content="종교개혁사와 청교도의 유산, 웨스트민스터 총회와 교회사 고전" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            phb: {
+              charcoal: '#17191C',
+              burgundy: '#6E1B2A',
+              gold: '#C39738',
+              goldLight: '#DFC075',
+              border: '#E4DFD7',
+            }
+          },
+          fontFamily: {
+            serifKr: ['"Noto Serif KR"', 'serif'],
+            serifEn: ['"Cormorant Garamond"', 'serif'],
+            cinzel: ['"Cinzel"', 'serif'],
+            sans: ['"Noto Sans KR"', '-apple-system', 'sans-serif'],
+          },
+          boxShadow: {
+            'book': '-6px 6px 18px rgba(0, 0, 0, 0.22), -2px 2px 6px rgba(0, 0, 0, 0.12)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { background-color: #FAF8F5; color: #17191C; font-family: 'Noto Sans KR', -apple-system, sans-serif; }
+    .book-spine-effect {
+      box-shadow: inset 4px 0 8px rgba(0, 0, 0, 0.4), inset -2px 0 5px rgba(255, 255, 255, 0.1), -8px 10px 22px rgba(0, 0, 0, 0.35);
+    }
+  </style>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-[#6E1B2A] selection:text-white">
+
+  <!-- Top Bar -->
+  <div class="bg-[#52131F] text-white py-1.5 px-4 text-xs font-serifKr border-b border-[#3D0E17]">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+      <div class="flex items-center space-x-2 text-[11px] tracking-wide">
+        <span class="bg-[#C39738] text-[#17191C] px-1.5 py-0.5 rounded text-[10px] font-bold">공식 출판사</span>
+        <span>역사적 개혁주의 신학 & 청교도 정본 출판사 (Puritan Heritage Books)</span>
+      </div>
+      <div class="flex items-center space-x-4 text-[11px] text-[#E0D5CF]">
+        <a href="shipping.html" class="hover:text-[#DFC075] transition-colors">주문/배송조회</a>
+        <span class="text-[#80313E]">|</span>
+        <a href="about.html" class="hover:text-[#DFC075] transition-colors font-serifKr font-semibold text-white">출판 사명선언문</a>
+        <span class="text-[#80313E]">|</span>
+        <a href="javascript:void(0)" onclick="handleAdminTriggerClick()" class="hover:text-[#DFC075] text-[#DFC075] transition-colors font-medium flex items-center gap-1 cursor-pointer">
+          <span>👑</span> <span id="top-admin-trigger-text">관리자 모드</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#EAE5DC] shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div class="flex items-center justify-between h-20 gap-3 xl:gap-8">
+        <a href="index.html" class="flex items-center space-x-3 flex-shrink-0 group">
+          <div class="w-11 h-11 sm:w-12 sm:h-12 rounded bg-[#17191C] border-2 border-[#C39738] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform flex-shrink-0">
+            <div class="text-center text-[#DFC075]">
+              <span class="font-cinzel text-base sm:text-lg font-black leading-none block">PHB</span>
+              <span class="text-[7px] tracking-widest text-[#E4DFD7] uppercase font-bold">Veritas</span>
+            </div>
+          </div>
+          <div>
+            <div class="font-cinzel text-base sm:text-lg lg:text-xl xl:text-2xl font-bold tracking-tight text-[#17191C] group-hover:text-[#6E1B2A] transition-colors whitespace-nowrap">
+              PURITAN HERITAGE BOOKS
+            </div>
+            <div class="text-[11px] text-[#5E6470] tracking-wider font-serifKr flex items-center space-x-1.5 whitespace-nowrap">
+              <span>퓨리탄 헤리티지 북스</span>
+              <span class="text-[#C39738]">•</span>
+              <span class="font-sans text-[10px] text-[#8C2538] font-semibold">역사신학 총서 (Historical Theology)</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Search & Cart -->
+        <div class="flex items-center space-x-3">
+          <div class="relative hidden sm:block w-48 lg:w-64">
+            <input type="text" id="page-search-input" placeholder="도서명 검색..." oninput="handlePageSearch(this.value)" class="w-full bg-[#FAF8F5] border border-[#E4DFD7] text-xs rounded-full pl-8 pr-4 py-2 focus:outline-none focus:border-[#C39738]" />
+            <div class="absolute left-2.5 top-2.5 text-[#5E6470]">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+          </div>
+
+          <button onclick="toggleCart(true)" class="relative p-2.5 rounded-full bg-[#FAF8F5] hover:bg-[#EDE9E1] border border-[#E4DFD7] text-[#17191C] transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+            <span id="header-cart-count" class="absolute -top-1 -right-1 bg-[#6E1B2A] text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">0</span>
+          </button>
+          
+          <button onclick="toggleMobileMenu(true)" class="md:hidden p-2 rounded-lg bg-[#FAF8F5] border border-[#E4DFD7] text-[#17191C]">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GNB -->
+    <nav class="bg-[#17191C] text-[#E4DFD7] border-t border-[#2B2F36] hidden md:block">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-12 text-xs font-medium">
+          <div class="flex items-center space-x-1 lg:space-x-2">
+            <a href="index.html" class="px-3 py-2 rounded font-serifKr text-[#A6ADB8] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors">전체도서</a>
+            <a href="commentary.html" class="px-3 py-2 rounded font-serifKr text-[#A6ADB8] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors">성경주석</a>
+            <a href="dogmatics.html" class="px-3 py-2 rounded font-serifKr text-[#A6ADB8] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors">조직신학</a>
+            <a href="historical.html" class="px-3 py-2 rounded font-serifKr text-[#DFC075] bg-[#23272D] font-bold transition-colors border-b-2 border-[#DFC075]">역사신학</a>
+            <a href="christian-life.html" class="px-3 py-2 rounded font-serifKr text-[#A6ADB8] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors">크리스천 라이프</a>
+            <a href="puritan-works.html" class="px-3 py-2 rounded font-serifKr text-[#A6ADB8] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors">청교도저작 전집</a>
+          </div>
+          <div class="hidden lg:flex items-center space-x-4 text-xs text-[#A6ADB8]">
+            <a href="ebook.html" class="hover:text-[#DFC075] flex items-center gap-1.5 transition-colors">
+              <span>전자책 (eBook)</span>
+              <span class="text-[9px] bg-[#6E1B2A] text-white px-1.5 py-0.2 rounded font-sans">ePub</span>
+            </a>
+            <span class="text-[#3A3F4A]">|</span>
+            <a href="about.html" class="hover:text-[#DFC075] transition-colors">PHB 소개</a>
+            <span class="text-[#3A3F4A]">|</span>
+            <a href="admin.html" class="hover:text-white font-semibold flex items-center gap-1 transition-colors">
+              <i class="fas fa-cog text-[10px]"></i>
+              <span>도서 관리</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Banner -->
+  <section class="bg-gradient-to-r from-[#17191C] via-[#23272D] to-[#17191C] text-white py-12 px-4 border-b-2 border-[#C39738]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl space-y-3">
+        <span class="text-xs font-cinzel font-bold text-[#DFC075] uppercase tracking-widest block">Historical Theology Series • 역사신학 총서</span>
+        <h1 class="text-2xl sm:text-4xl font-serifKr font-bold text-white leading-tight">
+          종교개혁과 청교도 역사의 섭리적 발자취
+        </h1>
+        <p class="text-xs sm:text-sm text-[#E4DFD7] font-serifKr leading-relaxed opacity-90">
+          16세기 종교개혁과 17세기 영국 청교도 혁명, 웨스트민스터 총회와 교회사 명저들을 철저한 사료 검증을 거친 정본으로 출간합니다.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full space-y-8">
+    
+    <!-- Subcategory Tabs -->
+    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-[#EAE5DC] pb-4">
+      <div class="flex flex-wrap gap-2 text-xs font-medium font-serifKr" id="sub-filter-tabs">
+        <button onclick="setPageSubFilter('all')" data-sub="all" class="sub-tab px-4 py-2 rounded-lg bg-[#17191C] text-[#DFC075] font-bold shadow-xs">역사신학 전체보기</button>
+        <button onclick="setPageSubFilter('reformation')" data-sub="reformation" class="sub-tab px-4 py-2 rounded-lg bg-white border border-[#E4DFD7] text-[#5E6470] hover:bg-[#FAF8F5]">종교개혁사 (Reformation)</button>
+        <button onclick="setPageSubFilter('puritan-history')" data-sub="puritan-history" class="sub-tab px-4 py-2 rounded-lg bg-white border border-[#E4DFD7] text-[#5E6470] hover:bg-[#FAF8F5]">청교도 역사 (Puritans)</button>
+        <button onclick="setPageSubFilter('westminster')" data-sub="westminster" class="sub-tab px-4 py-2 rounded-lg bg-white border border-[#E4DFD7] text-[#5E6470] hover:bg-[#FAF8F5]">웨스트민스터 총회</button>
+      </div>
+      <div class="text-xs text-[#7E8694]">
+        총 <strong id="catalog-count" class="text-[#6E1B2A] font-bold">0</strong>권의 도서
+      </div>
+    </div>
+
+    <!-- Books Grid -->
+    <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+      <!-- Dynamic cards rendered here -->
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#17191C] text-[#A6ADB8] pt-12 pb-8 text-xs border-t-2 border-[#C39738] mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>&copy; 2026 Puritan Heritage Books (PHB). Soli Deo Gloria.</div>
+      <div class="flex gap-4">
+        <a href="about.html" class="hover:text-white">PHB 사명선언문</a>
+        <a href="shipping.html" class="hover:text-white">주문/배송조회</a>
+        <a href="privacy.html" class="hover:text-white">개인정보처리방침</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Book Preview Modal -->
+  <div id="book-preview-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white text-[#17191C] w-full max-w-4xl rounded-2xl border border-[#C39738] shadow-2xl overflow-hidden relative max-h-[90vh] flex flex-col">
+      <div class="bg-[#17191C] text-white p-4 px-6 flex justify-between items-center border-b border-[#C39738]">
+        <span class="font-cinzel text-xs font-bold text-[#DFC075] uppercase">Book Detail Preview</span>
+        <button onclick="closeBookPreview()" class="text-[#A6ADB8] hover:text-white text-lg">&times;</button>
+      </div>
+      <div class="p-6 sm:p-8 overflow-y-auto space-y-6 flex-1 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 items-start pb-6 border-b border-[#E4DFD7]">
+          <div class="sm:col-span-4 flex justify-center">
+            <div id="preview-cover-box" class="w-36 h-52 rounded shadow-book p-3 flex flex-col justify-between text-center relative overflow-hidden"></div>
+          </div>
+          <div class="sm:col-span-8 space-y-2">
+            <span id="preview-series" class="text-xs font-semibold text-[#8C2538] block"></span>
+            <h3 id="preview-title" class="text-xl font-serifKr font-bold text-[#17191C]"></h3>
+            <p id="preview-orig-title" class="text-xs text-[#5E6470] italic"></p>
+            <div class="grid grid-cols-2 gap-y-1 text-xs text-[#5E6470] pt-2">
+              <p><strong>저자:</strong> <span id="preview-author"></span></p>
+              <p><strong>역자:</strong> <span id="preview-translator"></span></p>
+              <p><strong>정가:</strong> <span id="preview-orig-price" class="line-through text-[#7E8694]"></span> &rarr; <strong id="preview-price" class="text-[#6E1B2A] text-sm"></strong></p>
+              <p><strong>분량:</strong> <span id="preview-pages"></span></p>
+            </div>
+            <div class="pt-4 flex gap-2">
+              <button id="preview-add-cart-btn" class="px-5 py-2.5 bg-[#6E1B2A] hover:bg-[#8C2538] text-white rounded font-bold">장바구니 담기</button>
+            </div>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <h4 class="font-bold text-[#17191C] font-serifKr text-sm">도서 소개</h4>
+          <p id="preview-description" class="text-[#4A5568] leading-relaxed"></p>
+        </div>
+        <div class="space-y-2">
+          <h4 class="font-bold text-[#17191C] font-serifKr text-sm">목차</h4>
+          <ul id="preview-toc" class="list-disc list-inside space-y-1 text-[#5E6470]"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Drawer -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <div onclick="toggleCart(false)" class="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"></div>
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-white text-[#17191C] shadow-2xl flex flex-col justify-between border-l border-[#E4DFD7]">
+        <div class="p-6 bg-[#17191C] text-white flex items-center justify-between border-b border-[#C39738]">
+          <span class="font-cinzel text-sm font-bold text-[#DFC075] uppercase">Cart</span>
+          <button onclick="toggleCart(false)" class="text-[#A6ADB8] hover:text-white text-lg">&times;</button>
+        </div>
+        <div id="cart-items-container" class="p-6 overflow-y-auto flex-1 divide-y divide-[#E4DFD7]"></div>
+        <div class="p-6 bg-[#FAF8F5] border-t border-[#E4DFD7] space-y-4">
+          <div class="flex justify-between text-base font-bold text-[#17191C]"><span>최종 결제 금액</span><span id="cart-total" class="text-[#6E1B2A]">0원</span></div>
+          <button onclick="openStoreCheckout()" class="w-full py-3 bg-[#6E1B2A] text-white text-xs font-bold rounded-lg shadow">온라인 서점 바로 주문하기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="store-checkout-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#F8F7F4] text-[#17191C] w-full max-w-2xl rounded-xl border border-[#C39738] shadow-2xl overflow-hidden p-6 space-y-4">
+      <div class="flex justify-between items-center border-b pb-3"><span class="font-bold text-sm">온라인 서점 구매</span><button onclick="closeStoreCheckoutModal()">&times;</button></div>
+      <div id="store-checkout-items-list" class="space-y-3 text-xs"></div>
+    </div>
+  </div>
+
+  <!-- Mobile Drawer -->
+  <div id="mobile-menu-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <div onclick="toggleMobileMenu(false)" class="absolute inset-0 bg-black/60 backdrop-blur-xs"></div>
+    <div class="fixed inset-y-0 left-0 max-w-full flex pr-10">
+      <div class="w-80 bg-[#17191C] text-[#F8F7F4] shadow-2xl flex flex-col justify-between border-r border-[#C39738]/40 p-5 space-y-4 font-serifKr text-xs">
+        <div class="flex justify-between items-center pb-3 border-b border-[#2B2F36]">
+          <span class="font-cinzel text-white font-bold text-sm">PURITAN HERITAGE</span>
+          <button onclick="toggleMobileMenu(false)" class="text-[#A6ADB8] hover:text-white">&times;</button>
+        </div>
+        <div class="space-y-2 flex-1 overflow-y-auto">
+          <a href="index.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 전체도서</a>
+          <a href="commentary.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 성경주석</a>
+          <a href="dogmatics.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 조직신학</a>
+          <a href="historical.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 역사신학</a>
+          <a href="christian-life.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 크리스천 라이프</a>
+          <a href="puritan-works.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 청교도저작 전집</a>
+          <a href="ebook.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 전자책 (eBook)</a>
+          <a href="shipping.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 주문/배송조회</a>
+          <a href="about.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 출판 사명선언문</a>
+          <a href="admin.html" class="block py-2 text-[#C39738] font-bold">• 관리자 대시보드</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="phb-core.js"></script>
+  <script>
+    let pageSubFilter = 'all';
+    let pageSearch = '';
+
+    
+        function getPageBooks() {
+          return CURRENT_BOOKS.filter(b => {
+            const isHistorical = b.category === 'historical' || (b.series && b.series.includes('역사신학'));
+            if (!isHistorical) return false;
+            if (pageSubFilter !== 'all' && b.subCategory !== pageSubFilter) return false;
+            if (pageSearch) {
+              const q = pageSearch.toLowerCase();
+              return b.title.toLowerCase().includes(q) || (b.author && b.author.toLowerCase().includes(q));
+            }
+            return true;
+          });
+        }
+        
+
+    function renderPageBooks() {
+      const container = document.getElementById('books-grid');
+      const countEl = document.getElementById('catalog-count');
+      const books = getPageBooks();
+      if (countEl) countEl.innerText = books.length;
+      if (!container) return;
+
+      if (books.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center space-y-3 bg-white rounded-xl border border-[#EAE5DC]">
+            <p class="text-sm text-[#5E6470]">해당 분류의 도서가 아직 등록되지 않았거나 검색 결과가 없습니다.</p>
+            <button onclick="setPageSubFilter('all')" class="text-xs text-[#6E1B2A] font-bold hover:underline">전체보기 &rarr;</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = books.map(b => generateBookCardHtml(b)).join('');
+    }
+
+    function setPageSubFilter(sub) {
+      pageSubFilter = sub;
+      document.querySelectorAll('#sub-filter-tabs .sub-tab').forEach(btn => {
+        if (btn.getAttribute('data-sub') === sub) {
+          btn.className = 'sub-tab px-4 py-2 rounded-lg bg-[#17191C] text-[#DFC075] font-bold shadow-xs';
+        } else {
+          btn.className = 'sub-tab px-4 py-2 rounded-lg bg-white border border-[#E4DFD7] text-[#5E6470] hover:bg-[#FAF8F5]';
+        }
+      });
+      renderPageBooks();
+    }
+
+    function handlePageSearch(val) {
+      pageSearch = val.trim();
+      renderPageBooks();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const sub = urlParams.get('sub');
+      if (sub) {
+        pageSubFilter = sub;
+      }
+      setPageSubFilter(pageSubFilter);
+      syncDynamicBooks(() => renderPageBooks());
+    });
+  </script>
+</body>
+</html>
