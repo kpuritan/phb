@@ -1492,7 +1492,7 @@ export default function PuritanHeritageBooksApp() {
                   className="hover:text-[#DFC075] flex items-center gap-1.5 transition-colors"
                 >
                   <span>전자책 (eBook)</span>
-                  <span className="text-[9px] bg-[#6E1B2A] text-white px-1.5 py-0.2 rounded font-sans">ePub</span>
+                  <span className="text-[9px] bg-[#6E1B2A] text-white px-1.5 py-0.2 rounded font-sans">PDF</span>
                 </button>
                 <span className="text-[#3A3F4A]">|</span>
                 <a href="#about" className="hover:text-[#DFC075] transition-colors">PHB 소개</a>
@@ -1632,8 +1632,8 @@ export default function PuritanHeritageBooksApp() {
                   onClick={() => { selectFilter('ebook', 'all'); setMobileMenuOpen(false); }}
                   className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-medium"
                 >
-                  <span>전자책 (eBook / ePub)</span>
-                  <span className="text-[9px] bg-[#6E1B2A] text-white px-1.5 py-0.5 rounded font-sans">ePub</span>
+                  <span>전자책 (eBook / PDF)</span>
+                  <span className="text-[9px] bg-[#6E1B2A] text-white px-1.5 py-0.5 rounded font-sans">PDF</span>
                 </button>
               </div>
 
@@ -3210,7 +3210,7 @@ export default function PuritanHeritageBooksApp() {
                       onChange={(e) => setFormBook({ ...formBook, isEbook: e.target.checked })}
                       className="rounded text-[#6E1B2A]"
                     />
-                    <span>전자책 지원 (ePub)</span>
+                    <span>전자책 지원 (PDF)</span>
                   </label>
                 </div>
               </div>
@@ -3373,7 +3373,7 @@ export default function PuritanHeritageBooksApp() {
                             {b.isPreorder && <span className="bg-[#6E1B2A] text-white text-[9px] px-1.5 py-0.5 rounded">사전예약</span>}
                             {b.isNew && <span className="bg-[#C39738] text-[#17191C] font-bold text-[9px] px-1.5 py-0.5 rounded">신간</span>}
                             {b.isHardcover && <span className="bg-[#17191C] text-[#C39738] text-[9px] px-1.5 py-0.5 rounded">양장</span>}
-                            {b.isEbook && <span className="bg-[#2D333B] text-[#DFC075] text-[9px] px-1.5 py-0.5 rounded">ePub</span>}
+                            {b.isEbook && <span className="bg-[#2D333B] text-[#DFC075] text-[9px] px-1.5 py-0.5 rounded">PDF</span>}
                           </div>
                         </td>
                         <td className="p-3 text-right">

@@ -1104,7 +1104,7 @@ function generateBookCardHtml(book) {
           ${book.isPreorder ? '<span class="bg-[#6E1B2A] text-white text-[9px] font-bold px-2 py-0.5 rounded shadow">사전예약</span>' : ''}
           ${book.isNew ? '<span class="bg-[#C39738] text-[#17191C] text-[9px] font-bold px-2 py-0.5 rounded shadow">신간</span>' : ''}
           ${book.isHardcover ? '<span class="bg-[#17191C] text-[#DFC075] text-[9px] font-bold px-1.5 py-0.5 rounded border border-[#C39738]/40 shadow">양장</span>' : ''}
-          ${book.isEbook ? '<span class="bg-[#2D333B] text-white text-[9px] font-medium px-1.5 py-0.5 rounded shadow">ePub</span>' : ''}
+          ${book.isEbook ? '<span class="bg-[#2D333B] text-white text-[9px] font-medium px-1.5 py-0.5 rounded shadow">PDF</span>' : ''}
         </div>
       </div>
 
