@@ -1785,10 +1785,9 @@
 
     async function saveBooksData() {
       try {
+        localStorage.setItem('phb_books_list', JSON.stringify(BOOKS_DATA));
         localStorage.setItem('phb_books', JSON.stringify(BOOKS_DATA));
-        localStorage.setItem('phb_books_list', JSON.stringify(BOOKS_DATA));
-        localStorage.setItem('phb_books_list', JSON.stringify(BOOKS_DATA));
-      localStorage.setItem('phb_custom_books', JSON.stringify(BOOKS_DATA));
+        localStorage.setItem('phb_custom_books', JSON.stringify(BOOKS_DATA));
       } catch (e) {
         console.error('Failed to save books to localStorage:', e);
       }

@@ -1347,21 +1347,28 @@
         localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
       }
 
-      // 2. Try Firestore sync in background if available
+      // 2. Real-time Firestore sync listener
       if (db) {
         try {
-          const snapshot = await db.collection("phb_books").get();
-          if (!snapshot.empty) {
-            const firestoreBooks = [];
-            snapshot.forEach(function(doc) {
-              firestoreBooks.push(Object.assign({ id: doc.id }, doc.data()));
-            });
-            // If firestore has items and local is unchanged, take firestore
-            if (firestoreBooks.length > 0) {
-              allBooks = firestoreBooks;
-              localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+          db.collection("phb_books").onSnapshot(function(snapshot) {
+            if (!snapshot.empty) {
+              const firestoreBooks = [];
+              snapshot.forEach(function(doc) {
+                firestoreBooks.push(Object.assign({ id: doc.id }, doc.data()));
+              });
+              if (firestoreBooks.length > 0) {
+                allBooks = firestoreBooks;
+                try {
+                  localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+                  localStorage.setItem('phb_books', JSON.stringify(allBooks));
+                  localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
+                } catch (e) {}
+                renderAdminBooks();
+              }
             }
-          }
+          }, function(err) {
+            console.warn("Admin Firestore snapshot notice:", err);
+          });
         } catch (err) {
           console.warn("Firestore offline mode:", err);
         }
