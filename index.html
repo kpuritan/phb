@@ -12,10 +12,11 @@
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Fonts: Google Fonts -->
+  <!-- Fonts: Pretendard & Noto Sans KR & Inter (Modern Clean Gothic) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
@@ -39,10 +40,10 @@
             }
           },
           fontFamily: {
-            serifKr: ['"Noto Serif KR"', 'KoPubWorldBatang', 'serif'],
-            serifEn: ['"Cormorant Garamond"', '"Cinzel"', 'serif'],
-            cinzel: ['"Cinzel"', 'serif'],
-            sans: ['"Noto Sans KR"', 'Pretendard', '-apple-system', 'sans-serif'],
+            serifKr: ['"Pretendard"', '"Noto Sans KR"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            serifEn: ['"Inter"', '"Pretendard"', '-apple-system', 'sans-serif'],
+            cinzel: ['"Inter"', '"Pretendard"', '-apple-system', 'sans-serif'],
+            sans: ['"Pretendard"', '"Noto Sans KR"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
           },
           boxShadow: {
             'book': '-6px 6px 18px rgba(0, 0, 0, 0.22), -2px 2px 6px rgba(0, 0, 0, 0.12)',
@@ -55,10 +56,13 @@
   </script>
 
   <style>
+    * {
+      font-family: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
+    }
     body {
       background-color: #FAF8F5;
       color: #17191C;
-      font-family: 'Noto Sans KR', -apple-system, sans-serif;
+      font-family: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif !important;
       overflow-x: hidden;
     }
     .book-spine-effect {
@@ -238,6 +242,8 @@
                   <div class="py-1">
                     <a
                       href="commentary.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block"
                     >
                       <span class="font-medium text-white">성경주석 전체보기</span>
@@ -245,6 +251,8 @@
                     </a>
                     <a
                       href="commentary.html?sub=set"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block"
                     >
                       <span class="font-medium text-white">Set (전집/세트)</span>
@@ -252,6 +260,8 @@
                     </a>
                     <a
                       href="commentary.html?sub=ot"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block"
                     >
                       <span class="font-medium text-white">구약 (Old Testament)</span>
@@ -259,6 +269,8 @@
                     </a>
                     <a
                       href="commentary.html?sub=nt"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block"
                     >
                       <span class="font-medium text-white">신약 (New Testament)</span>
@@ -289,12 +301,16 @@
                   <div class="py-1">
                     <a
                       href="dogmatics.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors font-medium text-white block"
                     >
                       조직신학 전체보기
                     </a>
                     <a
                       href="dogmatics.html?sub=set"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block"
                     >
                       <span class="font-medium text-white">Set (전집/세트)</span>
@@ -304,6 +320,8 @@
                   <div class="grid grid-cols-2 gap-0.5 py-1 px-1">
                     <a
                       href="dogmatics.html?sub=theology-proper"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors block"
                     >
                       <span class="block font-medium text-white">신론</span>
@@ -311,6 +329,8 @@
                     </a>
                     <a
                       href="dogmatics.html?sub=anthropology"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors block"
                     >
                       <span class="block font-medium text-white">인간론</span>
@@ -318,6 +338,8 @@
                     </a>
                     <a
                       href="dogmatics.html?sub=christology"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors block"
                     >
                       <span class="block font-medium text-white">기독론</span>
@@ -325,6 +347,8 @@
                     </a>
                     <a
                       href="dogmatics.html?sub=soteriology"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors block"
                     >
                       <span class="block font-medium text-white">구원론</span>
@@ -332,6 +356,8 @@
                     </a>
                     <a
                       href="dogmatics.html?sub=ecclesiology"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors block"
                     >
                       <span class="block font-medium text-white">교회론</span>
@@ -339,6 +365,8 @@
                     </a>
                     <a
                       href="dogmatics.html?sub=eschatology"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors block"
                     >
                       <span class="block font-medium text-white">종말론</span>
@@ -383,6 +411,8 @@
           <div class="hidden lg:flex items-center space-x-4 text-xs text-[#A6ADB8]">
             <a
               href="ebook.html"
+              target="_blank"
+              rel="noopener noreferrer"
               class="hover:text-[#DFC075] flex items-center gap-1.5 transition-colors"
             >
               <span>전자책 (eBook)</span>

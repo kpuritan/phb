@@ -12,7 +12,8 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <script>
@@ -29,9 +30,10 @@
             }
           },
           fontFamily: {
-            serifKr: ['"Noto Serif KR"', 'serif'],
-            cinzel: ['"Cinzel"', 'serif'],
-            sans: ['"Noto Sans KR"', '-apple-system', 'sans-serif'],
+            serifKr: ['"Pretendard"', '"Noto Sans KR"', '-apple-system', 'sans-serif'],
+            serifEn: ['"Inter"', '"Pretendard"', '-apple-system', 'sans-serif'],
+            cinzel: ['"Inter"', '"Pretendard"', '-apple-system', 'sans-serif'],
+            sans: ['"Pretendard"', '"Noto Sans KR"', '-apple-system', 'sans-serif'],
           }
         }
       }
@@ -39,6 +41,9 @@
   </script>
 
   <style>
+    * {
+      font-family: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
+    }
     body { background-color: #FAF8F5; color: #17191C; font-family: 'Noto Sans KR', -apple-system, sans-serif; }
   </style>
 
