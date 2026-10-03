@@ -135,7 +135,7 @@
           
           <!-- Cover Image / Box -->
           <div class="md:col-span-4 flex justify-center">
-            <div id="book-cover-container" class="w-52 h-72 sm:w-60 sm:h-84 rounded-lg shadow-book p-4 flex flex-col justify-between text-center relative overflow-hidden transition-transform duration-300 hover:scale-[1.02]">
+            <div id="book-cover-container" class="w-48 sm:w-56 md:w-64 rounded-lg shadow-book relative overflow-hidden transition-transform duration-300 hover:scale-[1.02]" style="aspect-ratio: 2/3;">
               <!-- Image injected -->
             </div>
           </div>
@@ -514,11 +514,12 @@
 
       // Cover render
       const coverBox = document.getElementById('book-cover-container');
-      coverBox.className = `w-52 h-72 sm:w-60 sm:h-84 bg-gradient-to-br ${book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]'} rounded-lg shadow-book p-4 flex flex-col justify-between text-center relative overflow-hidden`;
+      const gradient = book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]';
 
       if (book.coverUrl || book.coverImage) {
+        coverBox.style.background = '#111';
         coverBox.innerHTML = `
-          <img src="${book.coverUrl || book.coverImage}" alt="${book.title}" class="absolute inset-0 w-full h-full object-contain z-0" style="background:#111;" />
+          <img src="${book.coverUrl || book.coverImage}" alt="${book.title}" class="absolute inset-0 w-full h-full object-contain z-0" />
           <div class="absolute inset-2 border border-[#C39738]/30 pointer-events-none z-20"></div>
         `;
       } else {
