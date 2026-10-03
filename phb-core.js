@@ -612,6 +612,12 @@ async function syncDynamicBooks(onUpdateCallback) {
             firestoreBooks.push({ id: doc.id, ...doc.data() });
           });
           if (firestoreBooks.length > 0) {
+            // displayOrder 기준 정렬 (값 없으면 맨 뒤)
+            firestoreBooks.sort((a, b) => {
+              const oa = (typeof a.displayOrder === 'number') ? a.displayOrder : 9999;
+              const ob = (typeof b.displayOrder === 'number') ? b.displayOrder : 9999;
+              return oa - ob;
+            });
             CURRENT_BOOKS = firestoreBooks;
             try {
               localStorage.setItem('phb_books_list', JSON.stringify(CURRENT_BOOKS));
