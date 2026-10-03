@@ -1444,12 +1444,12 @@ export default function PuritanHeritageBooksApp() {
                   역사신학
                 </button>
 
-                {/* 4. 크리스천 라이프 */}
+                {/* 4. 그리스도인의 삶 */}
                 <button
                   onClick={() => selectFilter('christian-life', 'all')}
                   className="px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-serif font-semibold"
                 >
-                  크리스천 라이프
+                  그리스도인의 삶
                 </button>
 
                 {/* 5. 청교도저작 전집 */}
@@ -1581,14 +1581,14 @@ export default function PuritanHeritageBooksApp() {
                   <span className="text-xs text-[#7E8694]">교회사</span>
                 </button>
 
-                {/* 4. 크리스천 라이프 */}
+                {/* 4. 그리스도인의 삶 */}
                 <button
                   onClick={() => { selectFilter('christian-life', 'all'); setMobileMenuOpen(false); }}
                   className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-semibold"
                 >
                   <span className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
-                    <span>크리스천 라이프</span>
+                    <span>그리스도인의 삶</span>
                   </span>
                   <span className="text-xs text-[#7E8694]">경건•성화</span>
                 </button>
@@ -1670,7 +1670,7 @@ export default function PuritanHeritageBooksApp() {
             { key: 'exposition', label: '성경 강해' },
             { key: 'dogmatics', label: '조직신학' },
             { key: 'historical', label: '역사신학' },
-            { key: 'christian-life', label: '크리스천 라이프' },
+            { key: 'christian-life', label: '그리스도인의 삶' },
             { key: 'puritan-works', label: '청교도저작 전집' },
             { key: 'ebook', label: '전자책 (eBook)' }
           ].map((tab) => (
@@ -1749,7 +1749,7 @@ export default function PuritanHeritageBooksApp() {
                     'exposition': '성경 강해',
                     'dogmatics': '조직신학',
                     'historical': '역사신학',
-                    'christian-life': '크리스천 라이프',
+                    'christian-life': '그리스도인의 삶',
                     'puritan-works': '청교도저작 전집',
                     'ebook': '전자책(eBook)'
                   };
@@ -2681,7 +2681,7 @@ export default function PuritanHeritageBooksApp() {
                     <option value="exposition">성경 강해 (Exposition)</option>
                     <option value="dogmatics">조직신학 (Dogmatics)</option>
                     <option value="historical">역사신학 (Historical)</option>
-                    <option value="christian-life">크리스천 라이프 (Christian Life)</option>
+                    <option value="christian-life">그리스도인의 삶 (Christian Life)</option>
                     <option value="puritan-works">청교도저작 전집 (Puritan Works)</option>
                     <option value="ebook">전자책 전용 (eBook / PDF)</option>
                   </select>

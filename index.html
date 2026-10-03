@@ -165,266 +165,137 @@
           </div>
         </a>
 
-        <!-- Center: Desktop Category Menus (GNB) -->
-        <nav class="hidden lg:flex items-center space-x-1 text-xs font-medium flex-1 justify-center">
+        <!-- Center: Desktop Main Menu & Search -->
+        <div class="hidden md:flex items-center space-x-3 lg:space-x-5 flex-1 justify-center">
           
-          <!-- 0. 전체 도서 -->
-          <button
-            onclick="setFilter('all', 'all')"
-            data-cat="all"
-            class="gnb-nav-btn px-2.5 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors"
+          <!-- 1. 소개 -->
+          <a
+            href="about.html"
+            class="px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-medium text-xs sm:text-sm whitespace-nowrap"
           >
-            전체도서
-          </button>
+            소개
+          </a>
 
-          <!-- 1. 성경주석 Dropdown (Set, 구약, 신약) -->
+          <!-- 2. PHB 도서 Dropdown -->
           <div class="relative group">
             <button
-              onclick="setFilter('commentary', 'all')"
-              data-cat="commentary"
-              class="gnb-nav-btn flex items-center space-x-1 px-2.5 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-semibold"
+              onclick="setFilter('all', 'all')"
+              data-cat="books"
+              class="gnb-nav-btn flex items-center space-x-1.5 px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-semibold text-xs sm:text-sm whitespace-nowrap cursor-pointer"
             >
-              <span>성경주석</span>
-              <svg class="w-3 h-3 text-[#C39738] group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              <span>PHB 도서</span>
+              <svg class="w-3.5 h-3.5 text-[#C39738] group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
 
-            <div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50 min-w-[210px] animate-fadeIn">
-              <div class="bg-[#17191C] border border-[#C39738]/50 rounded-b-lg shadow-2xl py-2 px-1 text-xs divide-y divide-[#2B2F36]">
-                <div class="px-3 py-1.5 flex items-center justify-between text-[10px] font-cinzel text-[#DFC075] tracking-wider uppercase">
-                  <span>Commentaries</span>
-                  <span class="text-[#7E8694]">정본 주석</span>
+            <div class="absolute left-0 top-full pt-1.5 hidden group-hover:block z-50 min-w-[260px] animate-fadeIn">
+              <div class="bg-[#17191C] border border-[#C39738]/50 rounded-b-xl shadow-2xl py-2 px-1 text-xs divide-y divide-[#2B2F36]">
+                <div class="px-3.5 py-1.5 flex items-center justify-between text-[10px] font-cinzel text-[#DFC075] tracking-wider uppercase">
+                  <span>PHB Books Collection</span>
+                  <span class="text-[#7E8694]">출판 카테고리</span>
                 </div>
                 <div class="py-1">
-                  <a
-                    href="commentary.html"
-                    class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block"
+                  <!-- 성경주석 -->
+                  <button
+                    onclick="setFilter('commentary', 'all')"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer"
                   >
-                    <span class="font-medium text-white">성경주석 전체보기</span>
-                    <span class="text-[10px] text-[#A6ADB8]">All</span>
-                  </a>
-                  <a
-                    href="commentary.html?sub=set"
-                    class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block"
-                  >
-                    <span class="font-medium text-white">Set (전집/세트)</span>
-                    <span class="text-[10px] bg-[#6E1B2A] text-[#DFC075] px-1.5 py-0.5 rounded font-cinzel">완간</span>
-                  </a>
-                  <a
-                    href="commentary.html?sub=ot"
-                    class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block"
-                  >
-                    <span class="font-medium text-white">구약 (Old Testament)</span>
-                    <span class="text-[10px] text-[#7E8694]">시편•예언서</span>
-                  </a>
-                  <a
-                    href="commentary.html?sub=nt"
-                    class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block"
-                  >
-                    <span class="font-medium text-white">신약 (New Testament)</span>
-                    <span class="text-[10px] text-[#7E8694]">복음•서신서</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+                    <span class="font-medium text-xs sm:text-sm">성경주석</span>
+                    <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Commentaries</span>
+                  </button>
 
-          <!-- 성경 강해 Dropdown -->
-          <div class="relative group">
-            <button
-              onclick="setFilter('exposition', 'all')"
-              data-cat="exposition"
-              class="gnb-nav-btn flex items-center space-x-1 px-2.5 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-semibold"
-            >
-              <span>성경강해</span>
-              <svg class="w-3 h-3 text-[#C39738] group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-            </button>
-
-            <div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50 min-w-[210px] animate-fadeIn">
-              <div class="bg-[#17191C] border border-[#C39738]/50 rounded-b-lg shadow-2xl py-2 px-1 text-xs divide-y divide-[#2B2F36]">
-                <div class="px-3 py-1.5 flex items-center justify-between text-[10px] font-cinzel text-[#DFC075] tracking-wider uppercase">
-                  <span>Expositions</span>
-                  <span class="text-[#7E8694]">성경 강해</span>
-                </div>
-                <div class="py-1">
+                  <!-- 성경 강해 -->
                   <button
                     onclick="setFilter('exposition', 'all')"
-                    class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block cursor-pointer"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer"
                   >
-                    <span class="font-medium text-white">성경강해 전체보기</span>
-                    <span class="text-[10px] text-[#A6ADB8]">All</span>
+                    <span class="font-medium text-xs sm:text-sm">성경 강해</span>
+                    <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Exposition</span>
                   </button>
+
+                  <!-- 조직 신학 -->
                   <button
-                    onclick="setFilter('exposition', 'set')"
-                    class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block cursor-pointer"
+                    onclick="setFilter('dogmatics', 'all')"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer"
                   >
-                    <span class="font-medium text-white">Set (전집/세트)</span>
-                    <span class="text-[10px] bg-[#6E1B2A] text-[#DFC075] px-1.5 py-0.5 rounded font-cinzel">세트</span>
+                    <span class="font-medium text-xs sm:text-sm">조직 신학</span>
+                    <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Dogmatics</span>
                   </button>
+
+                  <!-- 역사 신학 -->
                   <button
-                    onclick="setFilter('exposition', 'ot')"
-                    class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block cursor-pointer"
+                    onclick="setFilter('historical', 'all')"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer"
                   >
-                    <span class="font-medium text-white">구약 강해</span>
-                    <span class="text-[10px] text-[#7E8694]">OT</span>
+                    <span class="font-medium text-xs sm:text-sm">역사 신학</span>
+                    <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Historical</span>
                   </button>
+
+                  <!-- 그리스도인의 삶 -->
                   <button
-                    onclick="setFilter('exposition', 'nt')"
-                    class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block cursor-pointer"
+                    onclick="setFilter('christian-life', 'all')"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer"
                   >
-                    <span class="font-medium text-white">신약 강해</span>
-                    <span class="text-[10px] text-[#7E8694]">NT</span>
+                    <span class="font-medium text-xs sm:text-sm">그리스도인의 삶</span>
+                    <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Christian Life</span>
+                  </button>
+
+                  <!-- 청교도 저작 전집 -->
+                  <button
+                    onclick="setFilter('puritan-works', 'all')"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer"
+                  >
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-medium text-xs sm:text-sm">청교도 저작 전집</span>
+                      <span class="text-[9px] bg-[#C39738] text-[#17191C] px-1 py-0.2 rounded font-bold">정본</span>
+                    </div>
+                    <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Puritan Works</span>
+                  </button>
+                </div>
+                <div class="pt-1 px-1">
+                  <button
+                    onclick="setFilter('all', 'all')"
+                    class="w-full text-left px-3 py-1.5 text-[11px] text-[#DFC075] hover:bg-[#23272D] rounded transition-colors flex items-center justify-between cursor-pointer"
+                  >
+                    <span>• 전체 도서 목록 보기 (All)</span>
+                    <span>&rarr;</span>
                   </button>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- 2. 조직신학 Dropdown (Set, 신론, 인간론, 기독론, 구원론, 교회론, 종말론) -->
-          <div class="relative group">
-            <button
-              onclick="setFilter('dogmatics', 'all')"
-              data-cat="dogmatics"
-              class="gnb-nav-btn flex items-center space-x-1 px-2.5 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-semibold"
-            >
-              <span>조직신학</span>
-              <svg class="w-3 h-3 text-[#C39738] group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-            </button>
-
-            <div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50 min-w-[310px] animate-fadeIn">
-              <div class="bg-[#17191C] border border-[#C39738]/50 rounded-b-lg shadow-2xl py-2 px-1 text-xs divide-y divide-[#2B2F36]">
-                <div class="px-3 py-1.5 flex items-center justify-between text-[10px] font-cinzel text-[#DFC075] tracking-wider uppercase">
-                  <span>Reformed Dogmatics</span>
-                  <span class="text-[#7E8694]">개혁교의학</span>
-                </div>
-                <div class="py-1">
-                  <a
-                    href="dogmatics.html"
-                    class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors font-medium text-white block"
-                  >
-                    조직신학 전체보기
-                  </a>
-                  <a
-                    href="dogmatics.html?sub=set"
-                    class="w-full text-left px-3 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between block"
-                  >
-                    <span class="font-medium text-white">Set (전집/세트)</span>
-                    <span class="text-[10px] bg-[#6E1B2A] text-white px-1.5 py-0.5 rounded font-sans">교의학 대계</span>
-                  </a>
-                </div>
-                <div class="grid grid-cols-2 gap-0.5 py-1 px-1">
-                  <a
-                    href="dogmatics.html?sub=theology-proper"
-                    class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors block"
-                  >
-                    <span class="block font-medium text-white">신론</span>
-                    <span class="block text-[9px] text-[#7E8694]">하나님의 존재•속성</span>
-                  </a>
-                  <a
-                    href="dogmatics.html?sub=anthropology"
-                    class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors block"
-                  >
-                    <span class="block font-medium text-white">인간론</span>
-                    <span class="block text-[9px] text-[#7E8694]">창조•타락•사중상태</span>
-                  </a>
-                  <a
-                    href="dogmatics.html?sub=christology"
-                    class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors block"
-                  >
-                    <span class="block font-medium text-white">기독론</span>
-                    <span class="block text-[9px] text-[#7E8694]">그리스도의 인격•영광</span>
-                  </a>
-                  <a
-                    href="dogmatics.html?sub=soteriology"
-                    class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors block"
-                  >
-                    <span class="block font-medium text-white">구원론</span>
-                    <span class="block text-[9px] text-[#7E8694]">언약신학•구원의 서정</span>
-                  </a>
-                  <a
-                    href="dogmatics.html?sub=ecclesiology"
-                    class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors block"
-                  >
-                    <span class="block font-medium text-white">교회론</span>
-                    <span class="block text-[9px] text-[#7E8694]">참된 교회표지•성례</span>
-                  </a>
-                  <a
-                    href="dogmatics.html?sub=eschatology"
-                    class="text-left px-2.5 py-1.5 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors block"
-                  >
-                    <span class="block font-medium text-white">종말론</span>
-                    <span class="block text-[9px] text-[#7E8694]">재림•성도의 영원한 안식</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 3. 역사신학 -->
-          <button
-            onclick="setFilter('historical', 'all')"
-            data-cat="historical"
-            class="gnb-nav-btn px-2.5 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-semibold"
+          <!-- 3. 전자책 -->
+          <a
+            href="ebook.html"
+            class="flex items-center space-x-1.5 px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-medium text-xs sm:text-sm whitespace-nowrap"
           >
-            역사신학
-          </button>
+            <span>전자책</span>
+            <span class="text-[9px] bg-[#6E1B2A] text-white px-1.5 py-0.5 rounded font-sans">PDF</span>
+          </a>
 
-          <!-- 4. 크리스천 라이프 -->
-          <button
-            onclick="setFilter('christian-life', 'all')"
-            data-cat="christian-life"
-            class="gnb-nav-btn px-2.5 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-semibold"
-          >
-            크리스천 라이프
-          </button>
-
-          <!-- 5. 청교도저작 전집 -->
-          <button
-            onclick="setFilter('puritan-works', 'all')"
-            data-cat="puritan-works"
-            class="gnb-nav-btn px-2.5 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-semibold flex items-center gap-1"
-          >
-            <span>청교도저작 전집</span>
-            <span class="text-[9px] bg-[#C39738] text-[#17191C] px-1 py-0.2 rounded font-bold">정본</span>
-          </button>
-
-        </nav>
-
-        <!-- Right Controls: Search, eBook, PHB 소개, Login, Sign Up -->
-        <div class="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-          
-          <!-- Search Input Box -->
-          <div class="relative hidden xl:block w-36 2xl:w-48 flex-shrink-0">
+          <!-- 4. 그리고 그 옆에 검색란 놓는걸로 -->
+          <div class="relative w-48 lg:w-60 flex-shrink-0">
             <input
               id="header-search-input"
               type="text"
               placeholder="도서 검색..."
               oninput="handleSearch(this.value)"
-              class="w-full bg-[#23272D] border border-[#3A3F4A] text-xs rounded-full pl-7 pr-3 py-1.5 text-white placeholder-[#7E8694] focus:outline-none focus:border-[#C39738] transition-all"
+              class="w-full bg-[#23272D] border border-[#3A3F4A] text-xs rounded-full pl-8 pr-3 py-1.5 text-white placeholder-[#7E8694] focus:outline-none focus:border-[#C39738] transition-all"
             />
             <div class="absolute left-2.5 top-2 text-[#7E8694]">
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
           </div>
 
-          <!-- Utility Links -->
-          <div class="hidden md:flex items-center space-x-2 text-xs text-[#A6ADB8]">
-            <a
-              href="ebook.html"
-              class="hover:text-[#DFC075] flex items-center gap-1 transition-colors px-1.5 py-1"
-            >
-              <span>전자책</span>
-              <span class="text-[9px] bg-[#6E1B2A] text-white px-1 py-0.2 rounded">PDF</span>
-            </a>
-            <span class="text-[#3A3F4A]">|</span>
-            <a href="about.html" class="hover:text-[#DFC075] transition-colors px-1.5 py-1">소개</a>
-          </div>
+        </div>
 
-          <!-- Login & Sign Up Actions -->
+        <!-- Right Controls: Login, Sign Up & Mobile Hamburger -->
+        <div class="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
           <div class="hidden sm:flex items-center space-x-1.5 text-xs font-medium">
-            <button onclick="openAuthModal('login')" class="text-[#E4DFD7] hover:text-[#DFC075] px-2 py-1.5 rounded transition-colors whitespace-nowrap">
+            <button onclick="openAuthModal('login')" class="text-[#E4DFD7] hover:text-[#DFC075] px-2.5 py-1.5 rounded transition-colors whitespace-nowrap">
               로그인
             </button>
-            <button onclick="openAuthModal('signup')" class="bg-[#6E1B2A] hover:bg-[#8C2538] text-white px-2.5 py-1 rounded text-xs font-semibold transition-all shadow-xs whitespace-nowrap border border-[#8C2538]">
+            <button onclick="openAuthModal('signup')" class="bg-[#6E1B2A] hover:bg-[#8C2538] text-white px-3 py-1.5 rounded text-xs font-semibold transition-all shadow-xs whitespace-nowrap border border-[#8C2538]">
               회원가입
             </button>
           </div>
@@ -432,7 +303,7 @@
           <!-- Mobile Hamburger Menu Button -->
           <button
             onclick="toggleMobileMenu(true)"
-            class="lg:hidden p-2 rounded-lg bg-[#23272D] hover:bg-[#2C313A] border border-[#3A3F4A] text-white transition-all"
+            class="md:hidden p-2 rounded-lg bg-[#23272D] hover:bg-[#2C313A] border border-[#3A3F4A] text-white transition-all"
             aria-label="전체 메뉴 열기"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
@@ -468,129 +339,68 @@
         </div>
 
         <!-- Drawer Accordion Navigation -->
-        <div class="flex-1 overflow-y-auto p-4 space-y-1 text-sm font-serifKr">
+        <div class="flex-1 overflow-y-auto p-4 space-y-2 text-sm font-serifKr">
           
+          <!-- 1. 소개 -->
           <a
-            href="index.html"
+            href="about.html"
             onclick="toggleMobileMenu(false)"
-            class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-medium block"
+            class="w-full text-left px-3.5 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-medium block"
           >
-            <span>전체 도서 둘러보기</span>
-            <span class="text-xs text-[#7E8694]">All</span>
+            <span>소개 (About PHB)</span>
+            <span class="text-xs text-[#7E8694]">&rarr;</span>
           </a>
 
-          <!-- Accordion 1: 성경주석 (Set, 구약, 신약) -->
+          <!-- 2. PHB 도서 Accordion -->
           <div class="border border-[#2B2F36] rounded-lg overflow-hidden bg-[#1F2228]">
             <button
-              onclick="toggleMobileAccordion('commentary')"
+              onclick="toggleMobileAccordion('books')"
               class="w-full text-left px-3.5 py-2.5 flex items-center justify-between text-white font-semibold hover:text-[#DFC075]"
             >
               <span class="flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
-                <span>성경주석</span>
+                <span>PHB 도서</span>
               </span>
-              <svg id="mobile-arrow-commentary" class="w-4 h-4 text-[#C39738] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              <svg id="mobile-arrow-books" class="w-4 h-4 text-[#C39738] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
-            <div id="mobile-sub-commentary" class="hidden px-4 pb-2.5 pt-1 space-y-1 text-xs border-t border-[#2B2F36] bg-[#17191C]">
-              <a href="commentary.html" onclick="toggleMobileMenu(false)" class="block py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 성경주석 전체보기</a>
-              <a href="commentary.html?sub=set" onclick="toggleMobileMenu(false)" class="block py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• Set (전집 및 완간 세트)</a>
-              <a href="commentary.html?sub=ot" onclick="toggleMobileMenu(false)" class="block py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 구약 주석 (Old Testament)</a>
-              <a href="commentary.html?sub=nt" onclick="toggleMobileMenu(false)" class="block py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 신약 주석 (New Testament)</a>
+            <div id="mobile-sub-books" class="hidden px-4 pb-2.5 pt-1 space-y-1 text-xs border-t border-[#2B2F36] bg-[#17191C]">
+              <button onclick="setFilter('commentary', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 성경주석 (Commentaries)</button>
+              <button onclick="setFilter('exposition', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 성경 강해 (Exposition)</button>
+              <button onclick="setFilter('dogmatics', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 조직 신학 (Dogmatics)</button>
+              <button onclick="setFilter('historical', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 역사 신학 (Historical)</button>
+              <button onclick="setFilter('christian-life', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 그리스도인의 삶 (Christian Life)</button>
+              <button onclick="setFilter('puritan-works', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 청교도 저작 전집 (Puritan Works)</button>
+              <button onclick="setFilter('all', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-2 text-[#DFC075] font-semibold border-t border-[#2B2F36] mt-1 cursor-pointer">• 전체 도서 둘러보기 (All)</button>
             </div>
           </div>
 
-          <!-- Accordion: 성경강해 -->
-          <div class="border border-[#2B2F36] rounded-lg overflow-hidden bg-[#1F2228]">
-            <button
-              onclick="toggleMobileAccordion('exposition')"
-              class="w-full text-left px-3.5 py-2.5 flex items-center justify-between text-white font-semibold hover:text-[#DFC075]"
-            >
-              <span class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
-                <span>성경강해</span>
-              </span>
-              <svg id="mobile-arrow-exposition" class="w-4 h-4 text-[#C39738] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-            </button>
-            <div id="mobile-sub-exposition" class="hidden px-4 pb-2.5 pt-1 space-y-1 text-xs border-t border-[#2B2F36] bg-[#17191C]">
-              <button onclick="setFilter('exposition', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-1.5 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 성경강해 전체보기</button>
-              <button onclick="setFilter('exposition', 'set'); toggleMobileMenu(false);" class="w-full text-left block py-1.5 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• Set (전집 및 완간 세트)</button>
-              <button onclick="setFilter('exposition', 'ot'); toggleMobileMenu(false);" class="w-full text-left block py-1.5 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 구약 강해 (Old Testament)</button>
-              <button onclick="setFilter('exposition', 'nt'); toggleMobileMenu(false);" class="w-full text-left block py-1.5 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 신약 강해 (New Testament)</button>
-            </div>
-          </div>
-
-          <!-- Accordion 2: 조직신학 (Set, 신론, 인간론, 기독론, 구원론, 교회론, 종말론) -->
-          <div class="border border-[#2B2F36] rounded-lg overflow-hidden bg-[#1F2228]">
-            <button
-              onclick="toggleMobileAccordion('dogmatics')"
-              class="w-full text-left px-3.5 py-2.5 flex items-center justify-between text-white font-semibold hover:text-[#DFC075]"
-            >
-              <span class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
-                <span>조직신학</span>
-              </span>
-              <svg id="mobile-arrow-dogmatics" class="w-4 h-4 text-[#C39738] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-            </button>
-            <div id="mobile-sub-dogmatics" class="hidden px-4 pb-2.5 pt-1 space-y-1 text-xs border-t border-[#2B2F36] bg-[#17191C]">
-              <a href="dogmatics.html" onclick="toggleMobileMenu(false)" class="block py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 조직신학 전체보기</a>
-              <a href="dogmatics.html?sub=set" onclick="toggleMobileMenu(false)" class="block py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• Set (교의학 전집 세트)</a>
-              <a href="dogmatics.html?sub=theology-proper" onclick="toggleMobileMenu(false)" class="block py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 신론 (Theology Proper)</a>
-              <a href="dogmatics.html?sub=anthropology" onclick="toggleMobileMenu(false)" class="block py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 인간론 (Anthropology)</a>
-              <a href="dogmatics.html?sub=christology" onclick="toggleMobileMenu(false)" class="block py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 기독론 (Christology)</a>
-              <a href="dogmatics.html?sub=soteriology" onclick="toggleMobileMenu(false)" class="block py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 구원론 (Soteriology)</a>
-              <a href="dogmatics.html?sub=ecclesiology" onclick="toggleMobileMenu(false)" class="block py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 교회론 (Ecclesiology)</a>
-              <a href="dogmatics.html?sub=eschatology" onclick="toggleMobileMenu(false)" class="block py-1.5 text-[#E4DFD7] hover:text-[#DFC075]">• 종말론 (Eschatology)</a>
-            </div>
-          </div>
-
-          <!-- 3. 역사신학 -->
-          <a
-            href="historical.html"
-            onclick="toggleMobileMenu(false)"
-            class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-semibold block"
-          >
-            <span class="flex items-center gap-2">
-              <span class="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
-              <span>역사신학</span>
-            </span>
-            <span class="text-xs text-[#7E8694]">교회사</span>
-          </a>
-
-          <!-- 4. 크리스천 라이프 -->
-          <a
-            href="christian-life.html"
-            onclick="toggleMobileMenu(false)"
-            class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-semibold block"
-          >
-            <span class="flex items-center gap-2">
-              <span class="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
-              <span>크리스천 라이프</span>
-            </span>
-            <span class="text-xs text-[#7E8694]">경건•성화</span>
-          </a>
-
-          <!-- 5. 청교도저작 전집 -->
-          <a
-            href="puritan-works.html"
-            onclick="toggleMobileMenu(false)"
-            class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-semibold block"
-          >
-            <span class="flex items-center gap-2">
-              <span class="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
-              <span>청교도저작 전집</span>
-            </span>
-            <span class="text-[9px] bg-[#C39738] text-[#17191C] px-1 py-0.5 rounded font-bold">정본</span>
-          </a>
-
-          <!-- 6. 전자책 -->
+          <!-- 3. 전자책 -->
           <a
             href="ebook.html"
             onclick="toggleMobileMenu(false)"
-            class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-medium block"
+            class="w-full text-left px-3.5 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-medium block"
           >
-            <span>전자책 (eBook / PDF)</span>
-            <span class="text-[9px] bg-[#6E1B2A] text-white px-1.5 py-0.5 rounded font-sans">PDF</span>
+            <div class="flex items-center gap-2">
+              <span>전자책 (eBook / PDF)</span>
+              <span class="text-[9px] bg-[#6E1B2A] text-white px-1.5 py-0.5 rounded font-sans">PDF</span>
+            </div>
+            <span class="text-xs text-[#7E8694]">&rarr;</span>
           </a>
+
+          <!-- 4. 모바일 검색창 -->
+          <div class="pt-2 px-1">
+            <div class="relative w-full">
+              <input
+                type="text"
+                placeholder="도서 검색..."
+                oninput="handleSearch(this.value)"
+                class="w-full bg-[#23272D] border border-[#3A3F4A] text-xs rounded-full pl-8 pr-3 py-2 text-white placeholder-[#7E8694] focus:outline-none focus:border-[#C39738]"
+              />
+              <div class="absolute left-3 top-2.5 text-[#7E8694]">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              </div>
+            </div>
+          </div>
 
         </div>
 
@@ -958,7 +768,7 @@
               <option value="exposition">성경 강해 (Exposition)</option>
               <option value="dogmatics">조직신학 (Dogmatics)</option>
               <option value="historical">역사신학 (Historical)</option>
-              <option value="christian-life">크리스천 라이프 (Christian Life)</option>
+              <option value="christian-life">그리스도인의 삶 (Christian Life)</option>
               <option value="puritan-works">청교도저작 전집 (Puritan Works)</option>
               <option value="ebook">전자책 전용 (eBook / PDF)</option>
             </select>
@@ -1967,7 +1777,8 @@
       const gnbButtons = document.querySelectorAll('.gnb-nav-btn');
       gnbButtons.forEach(btn => {
         const cat = btn.getAttribute('data-cat');
-        if (cat === currentCategory) {
+        const isBooks = cat === 'books' && ['all', 'commentary', 'exposition', 'dogmatics', 'historical', 'christian-life', 'puritan-works'].includes(currentCategory);
+        if (cat === currentCategory || isBooks) {
           btn.classList.add('text-[#DFC075]', 'bg-[#23272D]', 'border-b-2', 'border-[#C39738]');
           btn.classList.remove('text-[#F8F7F4]', 'text-white');
         } else {
@@ -2025,7 +1836,7 @@
         { key: 'exposition', label: '성경 강해' },
         { key: 'dogmatics', label: '조직신학' },
         { key: 'historical', label: '역사신학' },
-        { key: 'christian-life', label: '크리스천 라이프' },
+        { key: 'christian-life', label: '그리스도인의 삶' },
         { key: 'puritan-works', label: '청교도저작 전집' },
         { key: 'ebook', label: '전자책 (eBook)' }
       ];
@@ -2104,7 +1915,7 @@
         'exposition': '성경 강해',
         'dogmatics': '조직신학',
         'historical': '역사신학',
-        'christian-life': '크리스천 라이프',
+        'christian-life': '그리스도인의 삶',
         'puritan-works': '청교도저작 전집',
         'ebook': '전자책(eBook)'
       };
