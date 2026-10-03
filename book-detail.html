@@ -519,8 +519,7 @@
 
       if (book.coverUrl || book.coverImage) {
         coverBox.innerHTML = `
-          <img src="${book.coverUrl || book.coverImage}" alt="${book.title}" class="absolute inset-0 w-full h-full object-cover z-0" />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 pointer-events-none z-10"></div>
+          <img src="${book.coverUrl || book.coverImage}" alt="${book.title}" class="absolute inset-0 w-full h-full object-contain z-0" style="background:#111;" />
           <div class="absolute inset-2 border border-[#C39738]/30 pointer-events-none z-20"></div>
         `;
       } else {
