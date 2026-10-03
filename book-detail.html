@@ -505,9 +505,9 @@
       eKyobo.href = storeLinks.ebook.kyobo;
       eKyobo.innerHTML = STORE_LOGOS.kyoboEbook;
 
-      // Check if ebook-only
-      const isEbookCategory = book.category === 'ebook';
-      const isOnlyEbook = isEbookCategory || (book.isEbook && book.isEbookOnly);
+      // Check if ebook-only (카테고리가 ebook이거나 종이책 없이 전자책만 지원하는 경우)
+      const isEbookCategory = (book.category === 'ebook') || (String(book.subCategory || '').toLowerCase() === 'ebook');
+      const isOnlyEbook = isEbookCategory || (book.isEbook && !book.isHardcover && !book.isbn?.startsWith('979-11-984501-0'));
       const paperStoreSection = document.getElementById('section-paper-stores');
       const ebookStoreSection = document.getElementById('section-ebook-stores');
       const bookTypeTag = document.getElementById('book-type-tag');

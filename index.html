@@ -2436,6 +2436,7 @@
               </span>
             </div>
 
+            ${book.category === 'ebook' ? '' : `
             <!-- 종이책 구매 서점 로고 배너 -->
             <div>
               <div class="text-[#1e6e28] text-xs font-bold mb-1.5 flex items-center justify-between">
@@ -2460,12 +2461,13 @@
                 </a>
               </div>
             </div>
+            `}
 
             <!-- 전자책 구매 서점 로고 배너 -->
-            <div class="pt-2 border-t border-[#F8F7F4]">
+            <div class="${book.category === 'ebook' ? '' : 'pt-2 border-t border-[#F8F7F4]'}">
               <div class="text-[#1e6e28] text-xs font-bold mb-1.5 flex items-center justify-between">
                 <span>- 전자책 서점 로고를 선택해서 클릭하시면 해당 eBook으로 이동합니다.</span>
-                ${book.isEbook ? '<span class="text-[9px] text-[#0057B3] font-semibold">eBook 지원</span>' : '<span class="text-[9px] text-[#7E8694]">eBook 준비중</span>'}
+                ${book.isEbook || book.category === 'ebook' ? '<span class="text-[9px] text-[#0057B3] font-semibold">eBook 지원</span>' : '<span class="text-[9px] text-[#7E8694]">eBook 준비중</span>'}
               </div>
               <div class="border border-[#D5D9E0] bg-white rounded overflow-hidden grid grid-cols-3 divide-x divide-[#D5D9E0] shadow-2xs">
                 <a href="${storeLinks.ebook.aladin}" target="_blank" rel="noopener noreferrer"
