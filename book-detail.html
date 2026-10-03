@@ -233,7 +233,7 @@
             <span class="w-2.5 h-2.5 bg-[#6E1B2A] rounded-full"></span>
             <h3 class="font-serifKr font-bold text-lg text-[#17191C]">도서 상세 소개</h3>
           </div>
-          <div id="book-description" class="text-[#4A5568] leading-relaxed text-sm sm:text-base bg-[#FAF8F5] p-5 sm:p-6 rounded-xl border border-[#E4DFD7] whitespace-pre-line"></div>
+          <div id="book-description" class="text-[#4A5568] leading-relaxed text-sm sm:text-base bg-[#FAF8F5] p-5 sm:p-6 rounded-xl border border-[#E4DFD7] space-y-4"></div>
         </div>
 
         <!-- Section 2: 목차 (Table of Contents) -->
@@ -251,7 +251,7 @@
             <span class="w-2.5 h-2.5 bg-[#6E1B2A] rounded-full"></span>
             <h3 class="font-serifKr font-bold text-lg text-[#17191C]">본문 및 서문 맛보기</h3>
           </div>
-          <div id="book-excerpt" class="bg-[#EDE9E1] p-6 sm:p-8 rounded-xl border-l-4 border-[#6E1B2A] font-serifKr text-sm sm:text-base text-[#17191C] leading-relaxed italic whitespace-pre-line"></div>
+          <div id="book-excerpt" class="bg-[#EDE9E1] p-6 sm:p-8 rounded-xl border-l-4 border-[#6E1B2A] font-serifKr text-sm sm:text-base text-[#17191C] leading-relaxed italic space-y-4"></div>
         </div>
 
         <!-- Bottom Action Bar -->
@@ -598,23 +598,123 @@
         }
       }
 
-      // Description
-      document.getElementById('book-description').innerText = book.description || '상세 소개가 등록되어 있지 않습니다.';
+      // Description: Awkward line breaks cleaned into smooth, readable paragraphs
+      const descContainer = document.getElementById('book-description');
+      if (descContainer) {
+        const cleanParas = formatCleanDescriptionParagraphs(book.description);
+        if (cleanParas.length > 0) {
+          descContainer.innerHTML = cleanParas.map(p => `<p class="leading-relaxed font-sans text-[#4A5568] text-sm sm:text-base break-keep text-justify">${p}</p>`).join('');
+        } else {
+          descContainer.innerHTML = '<p class="text-xs text-[#7E8694]">상세 소개가 등록되어 있지 않습니다.</p>';
+        }
+      }
 
-      // TOC
+      // TOC: Filter out '차례', strip dots and page numbers
       const tocContainer = document.getElementById('book-toc');
-      if (Array.isArray(book.toc) && book.toc.length > 0) {
-        tocContainer.innerHTML = book.toc.map(t => `<div class="py-1.5 border-b border-[#EAE5DC] last:border-none font-serifKr">• ${t}</div>`).join('');
-      } else {
-        tocContainer.innerHTML = '<p class="text-xs text-[#7E8694]">등록된 상세 목차가 없습니다.</p>';
+      if (tocContainer) {
+        const cleanItems = cleanBookToc(book.toc);
+        if (cleanItems.length > 0) {
+          tocContainer.innerHTML = cleanItems.map(t => `<div class="py-2 border-b border-[#EAE5DC] last:border-none font-serifKr text-sm text-[#3A3F4A] flex items-start gap-2.5"><span class="text-[#6E1B2A] font-bold mt-0.5">•</span><span class="break-keep leading-relaxed">${t}</span></div>`).join('');
+        } else {
+          tocContainer.innerHTML = '<p class="text-xs text-[#7E8694]">등록된 상세 목차가 없습니다.</p>';
+        }
       }
 
       // Excerpt
-      document.getElementById('book-excerpt').innerText = book.excerpt || '본문 맛보기가 준비 중입니다.';
+      const excerptContainer = document.getElementById('book-excerpt');
+      if (excerptContainer) {
+        const cleanExcerptParas = formatCleanDescriptionParagraphs(book.excerpt);
+        if (cleanExcerptParas.length > 0) {
+          excerptContainer.innerHTML = cleanExcerptParas.map(p => `<p class="leading-relaxed break-keep text-justify">${p}</p>`).join('');
+        } else {
+          excerptContainer.innerText = '본문 맛보기가 준비 중입니다.';
+        }
+      }
 
       // Reveal
       document.getElementById('loading-spinner').classList.add('hidden');
       document.getElementById('book-content-container').classList.remove('hidden');
+    }
+
+    // Clean TOC items: Remove "차례", "목차", leading bullets, trailing dots and page numbers
+    // Clean TOC items: Remove "차례", "목차", leading bullets, trailing dots and page numbers
+    function cleanBookToc(toc) {
+      if (!toc) return [];
+      const list = Array.isArray(toc) ? toc : String(toc).split('\n');
+      const cleaned = [];
+
+      for (let item of list) {
+        if (!item) continue;
+        let s = String(item).trim();
+        if (!s) continue;
+
+        // 1. Remove standalone headers like '차례', '차 례', '목차', '목 차', 'Contents', 'Table of Contents'
+        const normalized = s.replace(/[\s•\-*·:\[\]\(\)\{\}\/]/g, '').toLowerCase();
+        if (['차례', '목차', 'contents', 'tableofcontents', '도서목차', '목차차례', '차례contents', '목차contents', '차례목차', '목차차례'].includes(normalized) ||
+            /^(차\s*례|목\s*차|table\s*of\s*contents|contents)[\s:：\(\[\{]*$/i.test(s)) {
+          continue;
+        }
+
+        // 2. Strip leading bullets/dashes/stars/numbers like "• ", "- ", "* "
+        s = s.replace(/^[\s•\-*·]+\s*/, '');
+
+        // 3. Remove leader dots, dashes, tildes, and page numbers at the end
+        // E.g. " . . . . . . . . . . . . . . . . . . . . . . . . . 12", " … 12", " · · · 12", " 12"
+        s = s.replace(/[\s.·…\-_~]+(\d+|[ivxlcdm]+)\s*p?\s*$/i, '');
+
+        // 4. Remove any remaining trailing dots, dashes, tildes or spaces
+        s = s.replace(/[\s.·…\-_~]+$/, '');
+
+        s = s.trim();
+        if (s) {
+          cleaned.push(s);
+        }
+      }
+      return cleaned;
+    }
+
+    // Clean Description: Fix awkward line breaks while preserving true paragraphs
+    function formatCleanDescriptionParagraphs(desc) {
+      if (!desc) return [];
+      const text = String(desc).replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+      const rawParas = text.split(/\n\s*\n/);
+      const cleanedParas = [];
+
+      for (let rawPara of rawParas) {
+        const rawLines = rawPara.split('\n').map(l => l.trim()).filter(Boolean);
+        if (rawLines.length === 0) continue;
+
+        let merged = rawLines[0];
+        for (let i = 1; i < rawLines.length; i++) {
+          merged += ' ' + rawLines[i];
+        }
+
+        // Fix accidental space before Korean particles and verb/adjective endings
+        merged = merged.replace(/([가-힣])\s+(은|는|이|가|을|를|의|에|에게|에서|과|와|로|으로|도|만|서|지|고|며|나|이나|처럼|마저|조차)(?=[\s,.\?!\"'”』\)]|$)/g, '$1$2');
+
+        // Fix common PDF/Word OCR mid-word split artifacts
+        const wordFixes = [
+          [/히\s+브리서/g, '히브리서'],
+          [/때\s+문입니다/g, '때문입니다'],
+          [/도\s+덕적/g, '도덕적'],
+          [/성\s+육신/g, '성육신'],
+          [/따\s+라서/g, '따라서'],
+          [/신\s+학과/g, '신학과'],
+          [/성\s+도의/g, '성도의'],
+          [/있\s+습니다/g, '있습니다'],
+          [/분리하\s+지/g, '분리하지']
+        ];
+        for (let [re, target] of wordFixes) {
+          merged = merged.replace(re, target);
+        }
+
+        merged = merged.replace(/[ \t]+/g, ' ').trim();
+        if (merged) {
+          cleanedParas.push(merged);
+        }
+      }
+
+      return cleanedParas;
     }
 
     document.addEventListener('DOMContentLoaded', initPage);

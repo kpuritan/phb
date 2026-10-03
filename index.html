@@ -2832,9 +2832,9 @@
         const isPaper = (selectedFormat === 'paper' || selectedFormat === 'hardcover' || selectedFormat === 'both');
 
         const tagline = document.getElementById('form-book-tagline').value.trim();
-        const description = document.getElementById('form-book-description').value.trim();
-        const toc = document.getElementById('form-book-toc').value.split('\n').map(s => s.trim()).filter(Boolean);
-        const excerpt = document.getElementById('form-book-excerpt').value.trim();
+        const description = cleanBookDescription(document.getElementById('form-book-description').value.trim());
+        const toc = cleanBookToc(document.getElementById('form-book-toc').value);
+        const excerpt = cleanBookDescription(document.getElementById('form-book-excerpt').value.trim());
 
         // Cover image upload / URL handling
         let finalCoverUrl = document.getElementById('form-book-cover-url') ? document.getElementById('form-book-cover-url').value.trim() : '';
@@ -3068,7 +3068,11 @@
         try {
           const parsed = JSON.parse(localList);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            BOOKS_DATA = parsed;
+            BOOKS_DATA = parsed.map(b => {
+              if (b.toc) b.toc = cleanBookToc(b.toc);
+              if (b.description) b.description = cleanBookDescription(b.description);
+              return b;
+            });
           }
         } catch (e) {}
       } else {
@@ -3082,7 +3086,10 @@
             if (!snapshot.empty) {
               const firestoreBooks = [];
               snapshot.forEach(doc => {
-                firestoreBooks.push({ id: doc.id, ...doc.data() });
+                const book = { id: doc.id, ...doc.data() };
+                if (book.toc) book.toc = cleanBookToc(book.toc);
+                if (book.description) book.description = cleanBookDescription(book.description);
+                firestoreBooks.push(book);
               });
               if (firestoreBooks.length > 0) {
                 BOOKS_DATA = firestoreBooks;
@@ -3287,6 +3294,94 @@
     window.handleAdminLogin = handleAdminLogin;
     window.openBookPreview = openBookPreview;
     window.closeBookPreview = closeBookPreview;
+
+    // Clean TOC items: Remove "차례", "목차", leading bullets, trailing dots and page numbers
+    function cleanBookToc(toc) {
+      if (!toc) return [];
+      const list = Array.isArray(toc) ? toc : String(toc).split('\n');
+      const cleaned = [];
+
+      for (let item of list) {
+        if (!item) continue;
+        let s = String(item).trim();
+        if (!s) continue;
+
+        // 1. Remove standalone headers like '차례', '차 례', '목차', '목 차', 'Contents', 'Table of Contents'
+        const normalized = s.replace(/[\s•\-*·:\[\]\(\)\{\}\/]/g, '').toLowerCase();
+        if (['차례', '목차', 'contents', 'tableofcontents', '도서목차', '목차차례', '차례contents', '목차contents', '차례목차', '목차차례'].includes(normalized) ||
+            /^(차\s*례|목\s*차|table\s*of\s*contents|contents)[\s:：\(\[\{]*$/i.test(s)) {
+          continue;
+        }
+
+        // 2. Strip leading bullets/dashes/stars/numbers like "• ", "- ", "* "
+        s = s.replace(/^[\s•\-*·]+\s*/, '');
+
+        // 3. Remove leader dots, dashes, tildes, and page numbers at the end
+        // E.g. " . . . . . . . . . . . . . . . . . . . . . . . . . 12", " … 12", " · · · 12", " 12"
+        s = s.replace(/[\s.·…\-_~]+(\d+|[ivxlcdm]+)\s*p?\s*$/i, '');
+
+        // 4. Remove any remaining trailing dots, dashes, tildes or spaces
+        s = s.replace(/[\s.·…\-_~]+$/, '');
+
+        s = s.trim();
+        if (s) {
+          cleaned.push(s);
+        }
+      }
+      return cleaned;
+    }
+
+    // Clean Description: Fix awkward line breaks while preserving true paragraphs
+    function formatCleanDescriptionParagraphs(desc) {
+      if (!desc) return [];
+      const text = String(desc).replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+      const rawParas = text.split(/\n\s*\n/);
+      const cleanedParas = [];
+
+      for (let rawPara of rawParas) {
+        const rawLines = rawPara.split('\n').map(l => l.trim()).filter(Boolean);
+        if (rawLines.length === 0) continue;
+
+        let merged = rawLines[0];
+        for (let i = 1; i < rawLines.length; i++) {
+          merged += ' ' + rawLines[i];
+        }
+
+        // Fix accidental space before Korean particles and verb/adjective endings
+        merged = merged.replace(/([가-힣])\s+(은|는|이|가|을|를|의|에|에게|에서|과|와|로|으로|도|만|서|지|고|며|나|이나|처럼|마저|조차)(?=[\s,.\?!\"'”』\)]|$)/g, '$1$2');
+
+        // Fix common PDF/Word OCR mid-word split artifacts
+        const wordFixes = [
+          [/히\s+브리서/g, '히브리서'],
+          [/때\s+문입니다/g, '때문입니다'],
+          [/도\s+덕적/g, '도덕적'],
+          [/성\s+육신/g, '성육신'],
+          [/따\s+라서/g, '따라서'],
+          [/신\s+학과/g, '신학과'],
+          [/성\s+도의/g, '성도의'],
+          [/있\s+습니다/g, '있습니다'],
+          [/분리하\s+지/g, '분리하지']
+        ];
+        for (let [re, target] of wordFixes) {
+          merged = merged.replace(re, target);
+        }
+
+        merged = merged.replace(/[ \t]+/g, ' ').trim();
+        if (merged) {
+          cleanedParas.push(merged);
+        }
+      }
+
+      return cleanedParas;
+    }
+
+    function cleanBookDescription(desc) {
+      return formatCleanDescriptionParagraphs(desc).join('\n\n');
+    }
+
+    window.cleanBookToc = cleanBookToc;
+    window.cleanBookDescription = cleanBookDescription;
+    window.formatCleanDescriptionParagraphs = formatCleanDescriptionParagraphs;
 
     document.addEventListener('DOMContentLoaded', () => {
       updateAdminUI();
