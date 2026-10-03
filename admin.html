@@ -1507,16 +1507,42 @@
 
       const reader = new FileReader();
       reader.onload = function(evt) {
-        currentCoverDataUrl = evt.target.result;
-        const previewImg = document.getElementById('form-cover-preview-img');
-        const urlInput = document.getElementById('form-cover-url');
-        if (previewImg) {
-          previewImg.src = currentCoverDataUrl;
-          previewImg.classList.remove('hidden');
-        }
-        if (urlInput) {
-          urlInput.value = '';
-        }
+        const img = new Image();
+        img.onload = function() {
+          // Resize image to max 400x600 to prevent exceeding localStorage quota
+          const canvas = document.createElement('canvas');
+          const maxW = 400;
+          const maxH = 600;
+          let w = img.width;
+          let h = img.height;
+
+          if (w > maxW || h > maxH) {
+            if (w / maxW > h / maxH) {
+              h = Math.round((h * maxW) / w);
+              w = maxW;
+            } else {
+              w = Math.round((w * maxH) / h);
+              h = maxH;
+            }
+          }
+
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          currentCoverDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+
+          const previewImg = document.getElementById('form-cover-preview-img');
+          const urlInput = document.getElementById('form-cover-url');
+          if (previewImg) {
+            previewImg.src = currentCoverDataUrl;
+            previewImg.classList.remove('hidden');
+          }
+          if (urlInput) {
+            urlInput.value = '';
+          }
+        };
+        img.src = evt.target.result;
       };
       reader.readAsDataURL(file);
     }
@@ -1832,9 +1858,22 @@
           allBooks.unshift(bookData);
         }
 
-        localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
-        localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
-        localStorage.setItem('phb_books', JSON.stringify(allBooks));
+        try {
+          localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+          localStorage.removeItem('phb_custom_books');
+          localStorage.removeItem('phb_books');
+        } catch (storageErr) {
+          console.warn('LocalStorage quota warning:', storageErr);
+          try {
+            // If quota exceeded, save minimal list to localStorage without heavy base64
+            const lightList = allBooks.map(b => ({
+              ...b,
+              coverUrl: b.coverUrl && b.coverUrl.length > 5000 ? '' : b.coverUrl,
+              coverImage: b.coverImage && b.coverImage.length > 5000 ? '' : b.coverImage
+            }));
+            localStorage.setItem('phb_books_list', JSON.stringify(lightList));
+          } catch (e) {}
+        }
 
         closeBookModal();
         renderAdminBooks();
