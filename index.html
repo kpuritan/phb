@@ -2017,13 +2017,13 @@
       }
     ];
 
-    // Load custom books from localStorage if available, or initialize from default
+    // Load custom books from localStorage (respecting empty list when user deleted all/some books)
     let BOOKS_DATA = (() => {
       try {
-        const saved = localStorage.getItem('phb_books');
-        if (saved) {
+        const saved = localStorage.getItem('phb_books_list') || localStorage.getItem('phb_books') || localStorage.getItem('phb_custom_books');
+        if (saved !== null) {
           const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          if (Array.isArray(parsed)) return parsed;
         }
       } catch (e) {
         console.error('Failed to load saved books from localStorage:', e);
@@ -3482,8 +3482,8 @@
     // Load Books Data with accurate delete/sync state
     async function syncDynamicBooks() {
       // 1. Check if custom/deleted list exists in localStorage
-      const localList = localStorage.getItem('phb_books_list') || localStorage.getItem('phb_custom_books');
-      if (localList) {
+      const localList = localStorage.getItem('phb_books_list') || localStorage.getItem('phb_books') || localStorage.getItem('phb_custom_books');
+      if (localList !== null) {
         try {
           const parsed = JSON.parse(localList);
           if (Array.isArray(parsed)) {
@@ -3505,7 +3505,7 @@
             });
             if (firestoreBooks.length > 0) {
               BOOKS_DATA = firestoreBooks;
-              localStorage.setItem('phb_books_list', JSON.stringify(BOOKS_DATA));
+              saveBooksData();
             }
           }
         } catch (err) {
@@ -3513,6 +3513,7 @@
         }
       }
 
+      renderCategoryTabs();
       renderBooksGrid();
     }
 

@@ -1281,18 +1281,24 @@
       const refreshIcon = document.getElementById('refresh-icon');
       if (refreshIcon) refreshIcon.classList.add('fa-spin');
 
-      // 1. Check if user already initialized or modified books list in localStorage
-      const localCustom = localStorage.getItem('phb_books_list');
-      if (localCustom) {
+      // 1. Check unified localStorage keys
+      const localCustom = localStorage.getItem('phb_books_list') || localStorage.getItem('phb_books') || localStorage.getItem('phb_custom_books');
+      if (localCustom !== null) {
         try {
-          allBooks = JSON.parse(localCustom);
+          const parsed = JSON.parse(localCustom);
+          if (Array.isArray(parsed)) {
+            allBooks = parsed;
+          } else {
+            allBooks = [];
+          }
         } catch (e) {
-          allBooks = DEFAULT_BOOKS_DATA.slice();
+          allBooks = [];
         }
       } else {
-        // First time: initialize with default books
         allBooks = DEFAULT_BOOKS_DATA.slice();
+        localStorage.setItem('phb_books', JSON.stringify(allBooks));
         localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+        localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
       }
 
       // 2. Try Firestore sync in background if available
