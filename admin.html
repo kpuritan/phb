@@ -441,45 +441,6 @@
             </div>
           </div>
 
-          <!-- 표지 실물 이미지 등록 (파일 업로드 및 웹 URL 지원) -->
-          <div class="bg-[#FAF8F5] p-4 rounded-xl border border-[#E4DFD7] space-y-3">
-            <div class="flex items-center justify-between">
-              <label class="font-bold text-[#6E1B2A] flex items-center gap-1.5 text-xs">
-                <i class="fas fa-image text-[#C39738]"></i> 표지 이미지 직접 등록 (파일 업로드 또는 이미지 URL)
-              </label>
-              <span class="text-[11px] text-[#7E8694]">* 미등록 시 위 색상 테마의 양장 표지가 자동 적용됩니다.</span>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-              <div>
-                <label class="block text-[11px] text-[#5E6470] mb-1">내 컴퓨터에서 이미지 파일 선택 (JPG, PNG, WebP)</label>
-                <input type="file" id="form-cover-file" accept="image/*" onchange="handleCoverFileSelect(this)"
-                  class="w-full px-2 py-1.5 bg-white border border-[#E4DFD7] rounded-lg text-xs file:mr-2 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[#6E1B2A] file:text-white hover:file:bg-[#8C2538] cursor-pointer" />
-              </div>
-
-              <div>
-                <label class="block text-[11px] text-[#5E6470] mb-1">또는 이미지 URL 직접 입력</label>
-                <input type="url" id="form-cover-url" placeholder="https://example.com/cover.jpg" oninput="handleCoverUrlInput(this.value)"
-                  class="w-full px-3 py-2 bg-white border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:bg-white" />
-              </div>
-            </div>
-
-            <!-- Image Preview Box -->
-            <div id="cover-preview-wrapper" class="hidden items-center gap-4 pt-2 border-t border-[#E4DFD7]">
-              <div class="w-16 h-22 rounded border border-[#C39738] overflow-hidden shadow-md bg-white shrink-0 flex items-center justify-center">
-                <img id="form-cover-preview-img" src="" alt="표지 미리보기" class="w-full h-full object-cover" />
-              </div>
-              <div class="space-y-1">
-                <span class="text-xs font-bold text-[#17191C] flex items-center gap-1">
-                  <i class="fas fa-check-circle text-green-600"></i> 표지 이미지 준비 완료
-                </span>
-                <button type="button" onclick="removeCoverImage()" class="text-[11px] text-red-600 hover:underline flex items-center gap-1">
-                  <i class="fas fa-trash-alt"></i> 이미지 제거하고 기본 테마 사용
-                </button>
-              </div>
-            </div>
-          </div>
-
           <!-- Book Format & Badges -->
           <div class="space-y-3 pt-2 border-t border-[#F1ECE4]">
             <div>
@@ -661,17 +622,23 @@
   <!-- JAVASCRIPT LOGIC -->
   <!-- ========================================== -->
   <script>
-    // Firebase Config
+    // Firebase Config for Realtime Sync
     const firebaseConfig = {
-      apiKey: "AIzaSyCJbOaiElCypwgtPgbwdnudn3VC737fMrs",
-      authDomain: "kpuritan-home.firebaseapp.com",
-      projectId: "kpuritan-home",
-      storageBucket: "kpuritan-home.firebasestorage.app",
-      messagingSenderId: "1071220455502",
-      appId: "1:1071220455502:web:7f6f59b48c48a73437f8f0"
+      apiKey: "AIzaSyC0Nz7gw6Y1BiRb4ICd6deL1DOBUQ77J6M",
+      authDomain: "phbooks-bbea9.firebaseapp.com",
+      databaseURL: "https://phbooks-bbea9-default-rtdb.firebaseio.com",
+      projectId: "phbooks-bbea9",
+      storageBucket: "phbooks-bbea9.firebasestorage.app",
+      messagingSenderId: "790301308914",
+      appId: "1:790301308914:web:16fc61e64bcf42cad45d6b",
+      measurementId: "G-Z69QD7S6HF"
     };
     if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
+      try {
+        firebase.initializeApp(firebaseConfig);
+      } catch (e) {
+        console.warn("Firebase init error:", e);
+      }
     }
     const db = (typeof firebase !== 'undefined') ? firebase.firestore() : null;
     const auth = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth() : null;
@@ -1606,57 +1573,6 @@
       if (pSeries) pSeries.textContent = s;
     }
 
-    // 4. Modal Open & Form Handler
-    
-    // Cover Image Handling Functions
-    let uploadedCoverDataUrl = '';
-
-    function handleCoverFileSelect(input) {
-      if (input.files && input.files[0]) {
-        const file = input.files[0];
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          uploadedCoverDataUrl = e.target.result;
-          document.getElementById('form-cover-url').value = '';
-          updateCoverPreview(uploadedCoverDataUrl);
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function handleCoverUrlInput(val) {
-      val = val.trim();
-      if (val) {
-        uploadedCoverDataUrl = val;
-        updateCoverPreview(val);
-      } else {
-        removeCoverImage();
-      }
-    }
-
-    function updateCoverPreview(src) {
-      const wrapper = document.getElementById('cover-preview-wrapper');
-      const img = document.getElementById('form-cover-preview-img');
-      if (wrapper && img && src) {
-        img.src = src;
-        wrapper.classList.remove('hidden');
-        wrapper.classList.add('flex');
-      }
-    }
-
-    function removeCoverImage() {
-      uploadedCoverDataUrl = '';
-      const fileInput = document.getElementById('form-cover-file');
-      const urlInput = document.getElementById('form-cover-url');
-      const wrapper = document.getElementById('cover-preview-wrapper');
-      if (fileInput) fileInput.value = '';
-      if (urlInput) urlInput.value = '';
-      if (wrapper) {
-        wrapper.classList.add('hidden');
-        wrapper.classList.remove('flex');
-      }
-    }
-
     function openBookModal(book = null) {
       const modal = document.getElementById('book-edit-modal');
       const form = document.getElementById('book-form');
@@ -1826,112 +1742,122 @@
     async function handleBookFormSubmit(e) {
       e.preventDefault();
       const saveBtn = document.getElementById('btn-save-book');
-      saveBtn.disabled = true;
-      saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 저장 중...';
-
-      const existingId = document.getElementById('form-book-id').value;
-      const id = existingId || `phb-${Date.now()}`;
-
-      const tocVal = document.getElementById('form-toc').value.trim();
-      const tocArray = tocVal ? tocVal.split('\n').map(s => s.trim()).filter(Boolean) : [];
-      let finalCoverUrl = document.getElementById('form-cover-url') ? document.getElementById('form-cover-url').value.trim() : '';
-      const coverFileInput = document.getElementById('form-cover-file');
-      if (coverFileInput && coverFileInput.files && coverFileInput.files[0]) {
-        const file = coverFileInput.files[0];
-        if (typeof storage !== 'undefined' && storage) {
-          try {
-            const ref = storage.ref(`covers/${id}_${Date.now()}_${file.name}`);
-            await ref.put(file);
-            finalCoverUrl = await ref.getDownloadURL();
-          } catch (e) {
-            console.warn('Storage upload failed, using Data URL fallback:', e);
-            finalCoverUrl = currentCoverDataUrl || (typeof uploadedCoverDataUrl !== 'undefined' ? uploadedCoverDataUrl : '') || '';
-          }
-        } else if (currentCoverDataUrl || (typeof uploadedCoverDataUrl !== 'undefined' && uploadedCoverDataUrl)) {
-          finalCoverUrl = currentCoverDataUrl || uploadedCoverDataUrl;
-        }
-      } else if (!finalCoverUrl && (currentCoverDataUrl || (typeof uploadedCoverDataUrl !== 'undefined' && uploadedCoverDataUrl))) {
-        finalCoverUrl = currentCoverDataUrl || uploadedCoverDataUrl;
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 저장 중...';
       }
-
-      const paperEnabled = document.getElementById('form-enable-paper')?.checked ?? true;
-      const ebookEnabled = document.getElementById('form-enable-ebook')?.checked ?? false;
-
-      const selectedFormat = document.querySelector('input[name="form-book-format"]:checked')?.value || (paperEnabled ? 'paper' : 'ebook');
-      const isHardcover = (selectedFormat === 'hardcover');
-      const isEbook = ebookEnabled || (selectedFormat === 'ebook' || selectedFormat === 'both');
-      const isPaper = paperEnabled || (selectedFormat === 'paper' || selectedFormat === 'hardcover' || selectedFormat === 'both');
-
-      const bookData = {
-        id,
-        title: document.getElementById('form-title').value.trim(),
-        originalTitle: document.getElementById('form-original-title').value.trim(),
-        author: document.getElementById('form-author').value.trim(),
-        translator: document.getElementById('form-translator').value.trim(),
-        category: document.getElementById('form-category').value,
-        subCategory: document.getElementById('form-subcategory').value,
-        series: document.getElementById('form-series').value.trim() || 'PHB 클래식',
-
-        price: Number(document.getElementById('form-price').value) || 0,
-        originalPrice: Number(document.getElementById('form-original-price').value) || 0,
-        pages: document.getElementById('form-pages').value.trim(),
-        pubDate: document.getElementById('form-pub-date').value.trim(),
-        isbn: document.getElementById('form-isbn').value.trim(),
-        confessionTag: document.getElementById('form-confession-tag').value.trim() || '개혁주의 표준문서',
-        coverGradient: document.getElementById('form-cover-gradient').value,
-        coverUrl: finalCoverUrl || (typeof uploadedCoverDataUrl !== 'undefined' ? uploadedCoverDataUrl : '') || '',
-        coverImage: finalCoverUrl || (typeof uploadedCoverDataUrl !== 'undefined' ? uploadedCoverDataUrl : '') || '',
-
-        isNew: document.getElementById('form-is-new').checked,
-        isPreorder: document.getElementById('form-is-preorder').checked,
-        isHardcover: isHardcover,
-        isEbook: isEbook,
-        isPaper: isPaper,
-        format: selectedFormat,
-
-        storeLinks: {
-          naver: document.getElementById('form-link-naver').value.trim(),
-          aladin: document.getElementById('form-link-aladin').value.trim(),
-          kyobo: document.getElementById('form-link-kyobo').value.trim(),
-          yes24: document.getElementById('form-link-yes24').value.trim(),
-          ebookAladin: document.getElementById('form-link-ebook-aladin').value.trim(),
-          ebookYes24: document.getElementById('form-link-ebook-yes24').value.trim(),
-          ebookKyobo: document.getElementById('form-link-ebook-kyobo').value.trim(),
-        },
-
-        tagline: document.getElementById('form-tagline').value.trim(),
-        description: document.getElementById('form-description').value.trim(),
-        toc: tocArray,
-        excerpt: document.getElementById('form-excerpt').value.trim(),
-        updatedAt: new Date().toISOString()
-      };
 
       try {
-        // Save to Firestore
-        if (db) {
-          await db.collection("phb_books").doc(id).set(bookData, { merge: true });
+        const existingId = document.getElementById('form-book-id').value;
+        const id = existingId || `phb-${Date.now()}`;
+
+        const tocVal = document.getElementById('form-toc').value.trim();
+        const tocArray = tocVal ? tocVal.split('\n').map(s => s.trim()).filter(Boolean) : [];
+        let finalCoverUrl = document.getElementById('form-cover-url') ? document.getElementById('form-cover-url').value.trim() : '';
+        const coverFileInput = document.getElementById('form-cover-file');
+        if (coverFileInput && coverFileInput.files && coverFileInput.files[0]) {
+          const file = coverFileInput.files[0];
+          if (typeof storage !== 'undefined' && storage) {
+            try {
+              const ref = storage.ref(`covers/${id}_${Date.now()}_${file.name}`);
+              await ref.put(file);
+              finalCoverUrl = await ref.getDownloadURL();
+            } catch (e) {
+              console.warn('Storage upload failed, using Data URL fallback:', e);
+              finalCoverUrl = currentCoverDataUrl || '';
+            }
+          } else if (currentCoverDataUrl) {
+            finalCoverUrl = currentCoverDataUrl;
+          }
+        } else if (!finalCoverUrl && currentCoverDataUrl) {
+          finalCoverUrl = currentCoverDataUrl;
         }
-      } catch (err) {
-        console.warn("Firestore save warning:", err);
+
+        const paperEnabled = document.getElementById('form-enable-paper')?.checked ?? true;
+        const ebookEnabled = document.getElementById('form-enable-ebook')?.checked ?? false;
+
+        const selectedFormat = document.querySelector('input[name="form-book-format"]:checked')?.value || (paperEnabled ? 'paper' : 'ebook');
+        const isHardcover = (selectedFormat === 'hardcover');
+        const isEbook = ebookEnabled || (selectedFormat === 'ebook' || selectedFormat === 'both');
+        const isPaper = paperEnabled || (selectedFormat === 'paper' || selectedFormat === 'hardcover' || selectedFormat === 'both');
+
+        const bookData = {
+          id,
+          title: document.getElementById('form-title').value.trim(),
+          originalTitle: document.getElementById('form-original-title').value.trim(),
+          author: document.getElementById('form-author').value.trim(),
+          translator: document.getElementById('form-translator').value.trim(),
+          category: document.getElementById('form-category').value,
+          subCategory: document.getElementById('form-subcategory').value,
+          series: document.getElementById('form-series').value.trim() || 'PHB 클래식',
+
+          price: Number(document.getElementById('form-price').value) || 0,
+          originalPrice: Number(document.getElementById('form-original-price').value) || 0,
+          pages: document.getElementById('form-pages').value.trim(),
+          pubDate: document.getElementById('form-pub-date').value.trim(),
+          isbn: document.getElementById('form-isbn').value.trim(),
+          confessionTag: document.getElementById('form-confession-tag').value.trim() || '개혁주의 표준문서',
+          coverGradient: document.getElementById('form-cover-gradient').value,
+          coverUrl: finalCoverUrl || '',
+          coverImage: finalCoverUrl || '',
+
+          isNew: document.getElementById('form-is-new').checked,
+          isPreorder: document.getElementById('form-is-preorder').checked,
+          isHardcover: isHardcover,
+          isEbook: isEbook,
+          isPaper: isPaper,
+          format: selectedFormat,
+
+          storeLinks: {
+            naver: document.getElementById('form-link-naver').value.trim(),
+            aladin: document.getElementById('form-link-aladin').value.trim(),
+            kyobo: document.getElementById('form-link-kyobo').value.trim(),
+            yes24: document.getElementById('form-link-yes24').value.trim(),
+            ebookAladin: document.getElementById('form-link-ebook-aladin').value.trim(),
+            ebookYes24: document.getElementById('form-link-ebook-yes24').value.trim(),
+            ebookKyobo: document.getElementById('form-link-ebook-kyobo').value.trim(),
+          },
+
+          tagline: document.getElementById('form-tagline').value.trim(),
+          description: document.getElementById('form-description').value.trim(),
+          toc: tocArray,
+          excerpt: document.getElementById('form-excerpt').value.trim(),
+          updatedAt: new Date().toISOString()
+        };
+
+        try {
+          // Save to Firestore
+          if (db) {
+            await db.collection("phb_books").doc(id).set(bookData, { merge: true });
+          }
+        } catch (err) {
+          console.warn("Firestore save warning:", err);
+        }
+
+        // Update local state
+        const idx = allBooks.findIndex(b => b.id === id);
+        if (idx > -1) {
+          allBooks[idx] = bookData;
+        } else {
+          allBooks.unshift(bookData);
+        }
+
+        localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+        localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
+        localStorage.setItem('phb_books', JSON.stringify(allBooks));
+
+        closeBookModal();
+        renderAdminBooks();
+        showToast('도서 정보가 성공적으로 저장되었습니다!');
+      } catch (error) {
+        console.error('Save error:', error);
+        alert('도서 정보 저장 중 문제가 발생했습니다: ' + (error.message || error));
+      } finally {
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = '<i class="fas fa-check"></i> <span>도서 정보 저장 완료</span>';
+        }
       }
-
-      // Update local state
-      const idx = allBooks.findIndex(b => b.id === id);
-      if (idx > -1) {
-        allBooks[idx] = bookData;
-      } else {
-        allBooks.unshift(bookData);
-      }
-
-      localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
-      localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
-      localStorage.setItem('phb_books', JSON.stringify(allBooks));
-
-      saveBtn.disabled = false;
-      saveBtn.innerHTML = '<i class="fas fa-check"></i> <span>도서 정보 저장 완료</span>';
-      closeBookModal();
-      renderAdminBooks();
-      showToast('도서 정보가 성공적으로 저장되었습니다!');
     }
 
     function handleFormCategoryChange(cat) {

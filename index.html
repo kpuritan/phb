@@ -128,12 +128,12 @@
         <span class="hidden md:inline text-[#A6ADB8] text-[11px]">| 실시간 도서 등록 · 수정 · 순서 관리 지원</span>
       </div>
       <div class="flex items-center gap-2">
-        <button type="button" onclick="openBookFormModal()" class="bg-[#6E1B2A] hover:bg-[#8C2538] text-white px-3 py-1.5 rounded font-semibold flex items-center gap-1 shadow transition-colors cursor-pointer text-xs">
-          <span>＋</span> 신규 도서 등록
-        </button>
-        <button type="button" onclick="openBookManagerModal()" class="bg-[#2D333B] hover:bg-[#3D444D] text-[#DFC075] border border-[#C39738]/50 px-3 py-1.5 rounded font-medium flex items-center gap-1 transition-colors cursor-pointer text-xs">
-          <span>📑</span> 도서 목록 관리
-        </button>
+        <a href="admin.html" target="_blank" rel="noopener noreferrer" class="bg-[#6E1B2A] hover:bg-[#8C2538] text-white px-3.5 py-1.5 rounded font-semibold flex items-center gap-1.5 shadow transition-colors cursor-pointer text-xs">
+          <span>＋</span> 관리자 도서 등록 센터 (새 창)
+        </a>
+        <a href="admin.html" target="_blank" rel="noopener noreferrer" class="bg-[#2D333B] hover:bg-[#3D444D] text-[#DFC075] border border-[#C39738]/50 px-3 py-1.5 rounded font-medium flex items-center gap-1 transition-colors cursor-pointer text-xs">
+          <span>📑</span> 도서 종합 관리 포털
+        </a>
         <button type="button" onclick="logoutAdmin()" class="bg-[#DC2626] hover:bg-[#B91C1C] text-white px-3 py-1.5 rounded font-semibold flex items-center gap-1 shadow transition-colors cursor-pointer text-xs">
           🚪 로그아웃
         </button>
@@ -702,9 +702,9 @@
       <div class="pt-8 flex flex-col sm:flex-row justify-between items-center text-[11px] text-[#5E6470] gap-3">
         <p>© 2026 Puritan Heritage Books. All rights reserved. Soli Deo Gloria.</p>
         <div class="flex space-x-4 items-center">
-          <a href="admin.html" id="footer-admin-link" class="text-[#DFC075] hover:text-white font-semibold transition-colors flex items-center gap-1 cursor-pointer">
+          <a href="admin.html" target="_blank" rel="noopener noreferrer" id="footer-admin-link" class="text-[#DFC075] hover:text-white font-semibold transition-colors flex items-center gap-1 cursor-pointer">
             <svg class="w-3.5 h-3.5 text-[#DFC075]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-            <span id="footer-admin-link-text">관리자 로그인</span>
+            <span id="footer-admin-link-text">관리자 센터 (새 창)</span>
           </a>
         </div>
       </div>
