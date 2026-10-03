@@ -1890,13 +1890,6 @@ export default function PuritanHeritageBooksApp() {
                       <BookOpen className="w-3.5 h-3.5" />
                       <span>목차 & 서점 바로가기</span>
                     </button>
-                    <button
-                      onClick={() => addToCart(book)}
-                      className="w-full bg-[#6E1B2A] hover:bg-[#8C2538] text-white text-xs font-semibold py-2 px-3 rounded shadow flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-                    >
-                      <ShoppingBag className="w-3.5 h-3.5" />
-                      <span>장바구니 담기</span>
-                    </button>
                   </div>
                 </div>
 
