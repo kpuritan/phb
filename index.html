@@ -178,14 +178,14 @@
 
           <!-- 2. PHB 도서 Dropdown -->
           <div class="relative group">
-            <button
-              onclick="setFilter('all', 'all')"
+            <a
+              href="index.html"
               data-cat="books"
               class="gnb-nav-btn flex items-center space-x-1.5 px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-semibold text-xs sm:text-sm whitespace-nowrap cursor-pointer"
             >
               <span>PHB 도서</span>
               <svg class="w-3.5 h-3.5 text-[#C39738] group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-            </button>
+            </a>
 
             <div class="absolute left-0 top-full pt-1.5 hidden group-hover:block z-50 min-w-[260px] animate-fadeIn">
               <div class="bg-[#17191C] border border-[#C39738]/50 rounded-b-xl shadow-2xl py-2 px-1 text-xs divide-y divide-[#2B2F36]">
@@ -195,70 +195,70 @@
                 </div>
                 <div class="py-1">
                   <!-- 성경주석 -->
-                  <button
-                    onclick="setFilter('commentary', 'all')"
-                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer"
+                  <a
+                    href="commentary.html"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer block"
                   >
                     <span class="font-medium text-xs sm:text-sm">성경주석</span>
                     <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Commentaries</span>
-                  </button>
+                  </a>
 
                   <!-- 성경 강해 -->
-                  <button
-                    onclick="setFilter('exposition', 'all')"
-                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer"
+                  <a
+                    href="exposition.html"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer block"
                   >
                     <span class="font-medium text-xs sm:text-sm">성경 강해</span>
                     <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Exposition</span>
-                  </button>
+                  </a>
 
                   <!-- 조직 신학 -->
-                  <button
-                    onclick="setFilter('dogmatics', 'all')"
-                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer"
+                  <a
+                    href="dogmatics.html"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer block"
                   >
                     <span class="font-medium text-xs sm:text-sm">조직 신학</span>
                     <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Dogmatics</span>
-                  </button>
+                  </a>
 
                   <!-- 역사 신학 -->
-                  <button
-                    onclick="setFilter('historical', 'all')"
-                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer"
+                  <a
+                    href="historical.html"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer block"
                   >
                     <span class="font-medium text-xs sm:text-sm">역사 신학</span>
                     <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Historical</span>
-                  </button>
+                  </a>
 
                   <!-- 그리스도인의 삶 -->
-                  <button
-                    onclick="setFilter('christian-life', 'all')"
-                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer"
+                  <a
+                    href="christian-life.html"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer block"
                   >
                     <span class="font-medium text-xs sm:text-sm">그리스도인의 삶</span>
                     <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Christian Life</span>
-                  </button>
+                  </a>
 
                   <!-- 청교도 저작 전집 -->
-                  <button
-                    onclick="setFilter('puritan-works', 'all')"
-                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer"
+                  <a
+                    href="puritan-works.html"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer block"
                   >
                     <div class="flex items-center gap-1.5">
                       <span class="font-medium text-xs sm:text-sm">청교도 저작 전집</span>
                       <span class="text-[9px] bg-[#C39738] text-[#17191C] px-1 py-0.2 rounded font-bold">정본</span>
                     </div>
                     <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Puritan Works</span>
-                  </button>
+                  </a>
                 </div>
                 <div class="pt-1 px-1">
-                  <button
-                    onclick="setFilter('all', 'all')"
-                    class="w-full text-left px-3 py-1.5 text-[11px] text-[#DFC075] hover:bg-[#23272D] rounded transition-colors flex items-center justify-between cursor-pointer"
+                  <a
+                    href="index.html"
+                    class="w-full text-left px-3 py-1.5 text-[11px] text-[#DFC075] hover:bg-[#23272D] rounded transition-colors flex items-center justify-between cursor-pointer block"
                   >
                     <span>• 전체 도서 목록 보기 (All)</span>
                     <span>&rarr;</span>
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
@@ -275,16 +275,19 @@
 
           <!-- 4. 그리고 그 옆에 검색란 놓는걸로 -->
           <div class="relative w-48 lg:w-60 flex-shrink-0">
-            <input
-              id="header-search-input"
-              type="text"
-              placeholder="도서 검색..."
-              oninput="handleSearch(this.value)"
-              class="w-full bg-[#23272D] border border-[#3A3F4A] text-xs rounded-full pl-8 pr-3 py-1.5 text-white placeholder-[#7E8694] focus:outline-none focus:border-[#C39738] transition-all"
-            />
-            <div class="absolute left-2.5 top-2 text-[#7E8694]">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            </div>
+            <form action="index.html" method="GET" class="relative w-full" onsubmit="return handleHeaderSearch(event, this)">
+              <input
+                id="header-search-input"
+                name="search"
+                type="text"
+                placeholder="도서 검색..."
+                oninput="if(typeof handleSearch === 'function') handleSearch(this.value);"
+                class="w-full bg-[#23272D] border border-[#3A3F4A] text-xs rounded-full pl-8 pr-3 py-1.5 text-white placeholder-[#7E8694] focus:outline-none focus:border-[#C39738] transition-all"
+              />
+              <button type="submit" class="absolute left-2.5 top-2 text-[#7E8694] hover:text-[#DFC075] cursor-pointer" aria-label="검색">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              </button>
+            </form>
           </div>
 
         </div>
@@ -364,13 +367,13 @@
               <svg id="mobile-arrow-books" class="w-4 h-4 text-[#C39738] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
             <div id="mobile-sub-books" class="hidden px-4 pb-2.5 pt-1 space-y-1 text-xs border-t border-[#2B2F36] bg-[#17191C]">
-              <button onclick="setFilter('commentary', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 성경주석 (Commentaries)</button>
-              <button onclick="setFilter('exposition', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 성경 강해 (Exposition)</button>
-              <button onclick="setFilter('dogmatics', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 조직 신학 (Dogmatics)</button>
-              <button onclick="setFilter('historical', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 역사 신학 (Historical)</button>
-              <button onclick="setFilter('christian-life', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 그리스도인의 삶 (Christian Life)</button>
-              <button onclick="setFilter('puritan-works', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075] cursor-pointer">• 청교도 저작 전집 (Puritan Works)</button>
-              <button onclick="setFilter('all', 'all'); toggleMobileMenu(false);" class="w-full text-left block py-2 text-[#DFC075] font-semibold border-t border-[#2B2F36] mt-1 cursor-pointer">• 전체 도서 둘러보기 (All)</button>
+              <a href="commentary.html" onclick="toggleMobileMenu(false)" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 성경주석 (Commentaries)</a>
+              <a href="exposition.html" onclick="toggleMobileMenu(false)" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 성경 강해 (Exposition)</a>
+              <a href="dogmatics.html" onclick="toggleMobileMenu(false)" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 조직 신학 (Dogmatics)</a>
+              <a href="historical.html" onclick="toggleMobileMenu(false)" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 역사 신학 (Historical)</a>
+              <a href="christian-life.html" onclick="toggleMobileMenu(false)" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 그리스도인의 삶 (Christian Life)</a>
+              <a href="puritan-works.html" onclick="toggleMobileMenu(false)" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 청교도 저작 전집 (Puritan Works)</a>
+              <a href="index.html" onclick="toggleMobileMenu(false)" class="w-full text-left block py-2 text-[#DFC075] font-semibold border-t border-[#2B2F36] mt-1">• 전체 도서 둘러보기 (All)</a>
             </div>
           </div>
 
@@ -389,17 +392,18 @@
 
           <!-- 4. 모바일 검색창 -->
           <div class="pt-2 px-1">
-            <div class="relative w-full">
+            <form action="index.html" method="GET" class="relative w-full" onsubmit="return handleHeaderSearch(event, this)">
               <input
                 type="text"
+                name="search"
                 placeholder="도서 검색..."
-                oninput="handleSearch(this.value)"
+                oninput="if(typeof handleSearch === 'function') handleSearch(this.value);"
                 class="w-full bg-[#23272D] border border-[#3A3F4A] text-xs rounded-full pl-8 pr-3 py-2 text-white placeholder-[#7E8694] focus:outline-none focus:border-[#C39738]"
               />
-              <div class="absolute left-3 top-2.5 text-[#7E8694]">
+              <button type="submit" class="absolute left-3 top-2.5 text-[#7E8694]">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-              </div>
-            </div>
+              </button>
+            </form>
           </div>
 
         </div>
@@ -3284,6 +3288,22 @@
       renderBooksGrid();
       renderHeroSlider();
       updateCartUI();
+
+      // Read URL parameters (?search=... or ?cat=...)
+      const urlParams = new URLSearchParams(window.location.search);
+      const searchParam = urlParams.get('search') || urlParams.get('q');
+      const catParam = urlParams.get('cat');
+      const subParam = urlParams.get('sub') || 'all';
+
+      if (searchParam) {
+        const input = document.getElementById('header-search-input');
+        if (input) input.value = searchParam;
+        handleSearch(searchParam);
+        const el = document.getElementById('catalog-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      } else if (catParam) {
+        setFilter(catParam, subParam, true);
+      }
     });
   </script>
 </body>

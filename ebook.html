@@ -58,13 +58,36 @@
 </head>
 <body class="min-h-screen flex flex-col selection:bg-[#6E1B2A] selection:text-white">
 
-    <!-- ========================================== -->
+      <!-- ========================================== -->
+  <!-- 1. TOP ANNOUNCEMENT BAR -->
+  <!-- ========================================== -->
+  <div class="bg-[#52131F] text-white py-1.5 px-4 text-xs font-serifKr border-b border-[#3D0E17]">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+      <div class="flex items-center space-x-2 text-[11px] tracking-wide">
+        <span class="bg-[#C39738] text-[#17191C] px-1.5 py-0.5 rounded text-[10px] font-bold">공식 출판사</span>
+        <span>역사적 개혁주의 신학 & 청교도 정본 출판사 (Puritan Heritage Books)</span>
+      </div>
+      <div class="flex items-center space-x-4 text-[11px] text-[#E0D5CF]">
+        <a href="shipping.html" class="hover:text-[#DFC075] transition-colors">주문/배송조회</a>
+        <span class="text-[#80313E]">|</span>
+        <a href="about.html" class="hover:text-[#DFC075] transition-colors font-serifKr font-semibold text-white">출판 사명선언문</a>
+        <span class="text-[#80313E]">|</span>
+        <a href="javascript:void(0)" onclick="handleAdminTriggerClick()" class="hover:text-[#DFC075] text-[#DFC075] transition-colors font-medium flex items-center gap-1 cursor-pointer">
+          <span>👑</span> <span id="top-admin-trigger-text">관리자 모드</span>
+        </a>
+        <span class="text-[#80313E]">|</span>
+        <span class="text-[#DFC075] font-cinzel font-semibold tracking-wider">KR / EN</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 2. MAIN HEADER -->
+  <!-- ========================================== -->
+  <!-- ========================================== -->
   <!-- 2. MAIN HEADER & GLOBAL NAVIGATION BAR (SINGLE ROW) -->
   <!-- ========================================== -->
-    <!-- ========================================== -->
-  <!-- 2. MAIN HEADER & GLOBAL NAVIGATION BAR (SINGLE ROW) -->
-  <!-- ========================================== -->
-  <header class="sticky top-0 z-40 bg-[#17191C]/98 backdrop-blur-md border-b border-[#2B2F36] shadow-md text-[#E4DFD7]">
+  <header class="sticky top-0 z-40 bg-[#17191C] backdrop-blur-md border-b border-[#2B2F36] shadow-md text-[#E4DFD7]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
       <div class="flex items-center justify-between h-16 gap-3 lg:gap-6">
         
@@ -83,37 +106,150 @@
           </div>
         </a>
 
-        <!-- Center: Desktop Category Menus (GNB) -->
-        <nav class="hidden lg:flex items-center space-x-1 text-xs font-medium flex-1 justify-center">
-          <a href="index.html" class="px-2.5 py-2 rounded text-[#A6ADB8] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors">전체도서</a>
-          <a href="commentary.html" class="px-2.5 py-2 rounded text-[#A6ADB8] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors">성경주석</a>
-          <a href="dogmatics.html" class="px-2.5 py-2 rounded text-[#A6ADB8] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors">조직신학</a>
-          <a href="historical.html" class="px-2.5 py-2 rounded text-[#A6ADB8] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors">역사신학</a>
-          <a href="christian-life.html" class="px-2.5 py-2 rounded text-[#A6ADB8] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors">그리스도인의 삶</a>
-          <a href="puritan-works.html" class="px-2.5 py-2 rounded text-[#A6ADB8] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors flex items-center gap-1">
-            <span>청교도저작 전집</span>
-            <span class="text-[9px] bg-[#C39738] text-[#17191C] px-1 py-0.2 rounded font-bold">정본</span>
+        <!-- Center: Desktop Main Menu & Search -->
+        <div class="hidden md:flex items-center space-x-3 lg:space-x-5 flex-1 justify-center">
+          
+          <!-- 1. 소개 -->
+          <a
+            href="about.html"
+            class="px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-medium text-xs sm:text-sm whitespace-nowrap"
+          >
+            소개
           </a>
-        </nav>
 
-        <!-- Right Controls -->
+          <!-- 2. PHB 도서 Dropdown -->
+          <div class="relative group">
+            <a
+              href="index.html"
+              data-cat="books"
+              class="gnb-nav-btn flex items-center space-x-1.5 px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-semibold text-xs sm:text-sm whitespace-nowrap cursor-pointer"
+            >
+              <span>PHB 도서</span>
+              <svg class="w-3.5 h-3.5 text-[#C39738] group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </a>
+
+            <div class="absolute left-0 top-full pt-1.5 hidden group-hover:block z-50 min-w-[260px] animate-fadeIn">
+              <div class="bg-[#17191C] border border-[#C39738]/50 rounded-b-xl shadow-2xl py-2 px-1 text-xs divide-y divide-[#2B2F36]">
+                <div class="px-3.5 py-1.5 flex items-center justify-between text-[10px] font-cinzel text-[#DFC075] tracking-wider uppercase">
+                  <span>PHB Books Collection</span>
+                  <span class="text-[#7E8694]">출판 카테고리</span>
+                </div>
+                <div class="py-1">
+                  <!-- 성경주석 -->
+                  <a
+                    href="commentary.html"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer block"
+                  >
+                    <span class="font-medium text-xs sm:text-sm">성경주석</span>
+                    <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Commentaries</span>
+                  </a>
+
+                  <!-- 성경 강해 -->
+                  <a
+                    href="exposition.html"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer block"
+                  >
+                    <span class="font-medium text-xs sm:text-sm">성경 강해</span>
+                    <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Exposition</span>
+                  </a>
+
+                  <!-- 조직 신학 -->
+                  <a
+                    href="dogmatics.html"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer block"
+                  >
+                    <span class="font-medium text-xs sm:text-sm">조직 신학</span>
+                    <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Dogmatics</span>
+                  </a>
+
+                  <!-- 역사 신학 -->
+                  <a
+                    href="historical.html"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer block"
+                  >
+                    <span class="font-medium text-xs sm:text-sm">역사 신학</span>
+                    <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Historical</span>
+                  </a>
+
+                  <!-- 그리스도인의 삶 -->
+                  <a
+                    href="christian-life.html"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer block"
+                  >
+                    <span class="font-medium text-xs sm:text-sm">그리스도인의 삶</span>
+                    <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Christian Life</span>
+                  </a>
+
+                  <!-- 청교도 저작 전집 -->
+                  <a
+                    href="puritan-works.html"
+                    class="w-full text-left px-3.5 py-2 hover:bg-[#23272D] hover:text-[#DFC075] rounded transition-colors flex items-center justify-between text-[#F8F7F4] group/item cursor-pointer block"
+                  >
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-medium text-xs sm:text-sm">청교도 저작 전집</span>
+                      <span class="text-[9px] bg-[#C39738] text-[#17191C] px-1 py-0.2 rounded font-bold">정본</span>
+                    </div>
+                    <span class="text-[10px] text-[#A6ADB8] group-hover/item:text-[#DFC075]">Puritan Works</span>
+                  </a>
+                </div>
+                <div class="pt-1 px-1">
+                  <a
+                    href="index.html"
+                    class="w-full text-left px-3 py-1.5 text-[11px] text-[#DFC075] hover:bg-[#23272D] rounded transition-colors flex items-center justify-between cursor-pointer block"
+                  >
+                    <span>• 전체 도서 목록 보기 (All)</span>
+                    <span>&rarr;</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. 전자책 -->
+          <a
+            href="ebook.html"
+            class="flex items-center space-x-1.5 px-3 py-2 rounded text-[#DFC075] bg-[#23272D] border-b-2 border-[#C39738] transition-colors font-semibold text-xs sm:text-sm whitespace-nowrap"
+          >
+            <span>전자책</span>
+            <span class="text-[9px] bg-[#6E1B2A] text-white px-1.5 py-0.5 rounded font-sans">PDF</span>
+          </a>
+
+          <!-- 4. 검색란 -->
+          <div class="relative w-48 lg:w-60 flex-shrink-0">
+            <form action="index.html" method="GET" class="relative w-full" onsubmit="return handleHeaderSearch(event, this)">
+              <input
+                id="header-search-input"
+                name="search"
+                type="text"
+                placeholder="도서 검색..."
+                oninput="if(typeof handleSearch === 'function') handleSearch(this.value);"
+                class="w-full bg-[#23272D] border border-[#3A3F4A] text-xs rounded-full pl-8 pr-3 py-1.5 text-white placeholder-[#7E8694] focus:outline-none focus:border-[#C39738] transition-all"
+              />
+              <button type="submit" class="absolute left-2.5 top-2 text-[#7E8694] hover:text-[#DFC075] cursor-pointer" aria-label="검색">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- Right Controls: Login, Sign Up & Mobile Hamburger -->
         <div class="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-          <div class="hidden md:flex items-center space-x-2 text-xs text-[#A6ADB8]">
-            <a href="ebook.html" class="hover:text-[#DFC075] flex items-center gap-1 transition-colors px-1.5 py-1">
-              <span>전자책</span>
-              <span class="text-[9px] bg-[#6E1B2A] text-white px-1 py-0.2 rounded">PDF</span>
-            </a>
-            <span class="text-[#3A3F4A]">|</span>
-            <a href="about.html" class="hover:text-[#DFC075] transition-colors px-1.5 py-1">소개</a>
-          </div>
-
           <div class="hidden sm:flex items-center space-x-1.5 text-xs font-medium">
-            <a href="index.html" class="bg-[#6E1B2A] hover:bg-[#8C2538] text-white px-2.5 py-1 rounded text-xs font-semibold transition-all shadow-xs whitespace-nowrap border border-[#8C2538]">
-              홈으로
-            </a>
+            <button onclick="openAuthModal('login')" class="text-[#E4DFD7] hover:text-[#DFC075] px-2.5 py-1.5 rounded transition-colors whitespace-nowrap cursor-pointer">
+              로그인
+            </button>
+            <button onclick="openAuthModal('signup')" class="bg-[#6E1B2A] hover:bg-[#8C2538] text-white px-3 py-1.5 rounded text-xs font-semibold transition-all shadow-xs whitespace-nowrap border border-[#8C2538] cursor-pointer">
+              회원가입
+            </button>
           </div>
 
-          <button onclick="toggleMobileMenu(true)" class="lg:hidden p-2 rounded-lg bg-[#23272D] hover:bg-[#2C313A] border border-[#3A3F4A] text-white transition-all" aria-label="전체 메뉴 열기">
+          <!-- Mobile Hamburger Menu Button -->
+          <button
+            onclick="toggleMobileMenu(true)"
+            class="md:hidden p-2 rounded-lg bg-[#23272D] hover:bg-[#2C313A] border border-[#3A3F4A] text-white transition-all cursor-pointer"
+            aria-label="전체 메뉴 열기"
+          >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
           </button>
         </div>
@@ -237,27 +373,114 @@
     </div>
   </div>
 
-  <!-- Mobile Drawer -->
+    <!-- ========================================== -->
+  <!-- MOBILE SLIDE-OVER NAVIGATION DRAWER -->
+  <!-- ========================================== -->
   <div id="mobile-menu-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
-    <div onclick="toggleMobileMenu(false)" class="absolute inset-0 bg-black/60 backdrop-blur-xs"></div>
+    <!-- Backdrop Overlay -->
+    <div onclick="toggleMobileMenu(false)" class="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"></div>
+    
     <div class="fixed inset-y-0 left-0 max-w-full flex pr-10">
-      <div class="w-80 bg-[#17191C] text-[#F8F7F4] shadow-2xl flex flex-col justify-between border-r border-[#C39738]/40 p-5 space-y-4 font-serifKr text-xs">
-        <div class="flex justify-between items-center pb-3 border-b border-[#2B2F36]">
-          <span class="font-cinzel text-white font-bold text-sm">PURITAN HERITAGE</span>
-          <button onclick="toggleMobileMenu(false)" class="text-[#A6ADB8] hover:text-white">&times;</button>
+      <div class="w-80 bg-[#17191C] text-[#F8F7F4] shadow-2xl flex flex-col justify-between border-r border-[#C39738]/40">
+        
+        <!-- Drawer Header -->
+        <div class="p-5 border-b border-[#2B2F36] flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <img src="images/phb-logo-gold.png" alt="PHB" class="h-8 w-auto object-contain flex-shrink-0" />
+            <div>
+              <span class="font-cinzel text-sm font-bold block text-white">PURITAN HERITAGE</span>
+              <span class="text-[10px] text-[#A6ADB8]">도서 카테고리 전체 메뉴</span>
+            </div>
+          </div>
+          <button onclick="toggleMobileMenu(false)" class="p-1 text-[#A6ADB8] hover:text-white" aria-label="메뉴 닫기">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
         </div>
-        <div class="space-y-2 flex-1 overflow-y-auto">
-          <a href="index.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 전체도서</a>
-          <a href="commentary.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 성경주석</a>
-          <a href="dogmatics.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 조직신학</a>
-          <a href="historical.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 역사신학</a>
-          <a href="christian-life.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 그리스도인의 삶</a>
-          <a href="puritan-works.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 청교도저작 전집</a>
-          <a href="ebook.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 전자책 (eBook)</a>
-          <a href="shipping.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 주문/배송조회</a>
-          <a href="about.html" class="block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 출판 사명선언문</a>
-          <a href="admin.html" class="block py-2 text-[#C39738] font-bold">• 관리자 대시보드</a>
+
+        <!-- Drawer Accordion Navigation -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-2 text-sm font-serifKr">
+          
+          <!-- 1. 소개 -->
+          <a
+            href="about.html"
+            onclick="toggleMobileMenu(false)"
+            class="w-full text-left px-3.5 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-medium block"
+          >
+            <span>소개 (About PHB)</span>
+            <span class="text-xs text-[#DFC075]">&rarr;</span>
+          </a>
+
+          <!-- 2. PHB 도서 Accordion -->
+          <div class="border border-[#2B2F36] rounded-lg overflow-hidden bg-[#1F2228]">
+            <button
+              onclick="toggleMobileAccordion('books')"
+              class="w-full text-left px-3.5 py-2.5 flex items-center justify-between text-white font-semibold hover:text-[#DFC075]"
+            >
+              <span class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#C39738]"></span>
+                <span>PHB 도서</span>
+              </span>
+              <svg id="mobile-arrow-books" class="w-4 h-4 text-[#C39738] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div id="mobile-sub-books" class="hidden px-4 pb-2.5 pt-1 space-y-1 text-xs border-t border-[#2B2F36] bg-[#17191C]">
+              <a href="commentary.html" onclick="toggleMobileMenu(false)" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 성경주석 (Commentaries)</a>
+              <a href="exposition.html" onclick="toggleMobileMenu(false)" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 성경 강해 (Exposition)</a>
+              <a href="dogmatics.html" onclick="toggleMobileMenu(false)" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 조직 신학 (Dogmatics)</a>
+              <a href="historical.html" onclick="toggleMobileMenu(false)" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 역사 신학 (Historical)</a>
+              <a href="christian-life.html" onclick="toggleMobileMenu(false)" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 그리스도인의 삶 (Christian Life)</a>
+              <a href="puritan-works.html" onclick="toggleMobileMenu(false)" class="w-full text-left block py-2 text-[#E4DFD7] hover:text-[#DFC075]">• 청교도 저작 전집 (Puritan Works)</a>
+              <a href="index.html" onclick="toggleMobileMenu(false)" class="w-full text-left block py-2 text-[#DFC075] font-semibold border-t border-[#2B2F36] mt-1">• 전체 도서 둘러보기 (All)</a>
+            </div>
+          </div>
+
+          <!-- 3. 전자책 -->
+          <a
+            href="ebook.html"
+            onclick="toggleMobileMenu(false)"
+            class="w-full text-left px-3.5 py-2.5 rounded-lg hover:bg-[#23272D] hover:text-[#DFC075] flex items-center justify-between text-white font-medium block"
+          >
+            <div class="flex items-center gap-2">
+              <span>전자책 (eBook / PDF)</span>
+              <span class="text-[9px] bg-[#6E1B2A] text-white px-1.5 py-0.5 rounded font-sans">PDF</span>
+            </div>
+            <span class="text-xs text-[#7E8694]">&rarr;</span>
+          </a>
+
+          <!-- 4. 모바일 검색창 -->
+          <div class="pt-2 px-1">
+            <form action="index.html" method="GET" class="relative w-full" onsubmit="return handleHeaderSearch(event, this)">
+              <input
+                type="text"
+                name="search"
+                placeholder="도서 검색..."
+                class="w-full bg-[#23272D] border border-[#3A3F4A] text-xs rounded-full pl-8 pr-3 py-2 text-white placeholder-[#7E8694] focus:outline-none focus:border-[#C39738]"
+              />
+              <button type="submit" class="absolute left-3 top-2.5 text-[#7E8694]">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              </button>
+            </form>
+          </div>
+
         </div>
+
+        <!-- Drawer Footer -->
+        <div class="p-4 border-t border-[#2B2F36] space-y-2 text-xs">
+          <div class="flex items-center gap-2">
+            <button onclick="openAuthModal('login'); toggleMobileMenu(false);" class="flex-1 py-2 text-center bg-[#23272D] hover:bg-[#2E333B] rounded text-white font-medium">
+              로그인
+            </button>
+            <button onclick="openAuthModal('signup'); toggleMobileMenu(false);" class="flex-1 py-2 text-center bg-[#6E1B2A] hover:bg-[#8C2538] rounded text-white font-semibold">
+              회원가입
+            </button>
+          </div>
+          <a href="shipping.html" onclick="toggleMobileMenu(false)" class="block text-center text-[#A6ADB8] hover:text-[#DFC075] py-1 text-[11px]">
+            주문/배송조회
+          </a>
+          <a href="about.html" onclick="toggleMobileMenu(false)" class="block text-center text-[#DFC075] hover:underline py-1 text-[11px] font-semibold">
+            출판 사명선언문 (Mission Statement)
+          </a>
+        </div>
+
       </div>
     </div>
   </div>

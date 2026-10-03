@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>주문 및 배송조회 | 퓨리탄 헤리티지 북스 (PHB)</title>
-  <meta name="description" content="퓨리탄 헤리티지 북스(PHB) 도서 주문 내역 및 실시간 배송 상태 조회, 교환/반품 안내" />
+  <title>성경 강해 총서 | 퓨리탄 헤리티지 북스 (PHB)</title>
+  <meta name="description" content="구속사적 맥락과 성경적 적용이 살아있는 역사적 개혁주의 성경 강해 설교 및 주해서 총서" />
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Fonts -->
+  <!-- Fonts: Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
@@ -34,6 +34,9 @@
             serifEn: ['"Inter"', '"Pretendard"', '-apple-system', 'sans-serif'],
             cinzel: ['"Inter"', '"Pretendard"', '-apple-system', 'sans-serif'],
             sans: ['"Pretendard"', '"Noto Sans KR"', '-apple-system', 'sans-serif'],
+          },
+          boxShadow: {
+            'book': '-6px 6px 18px rgba(0, 0, 0, 0.22), -2px 2px 6px rgba(0, 0, 0, 0.12)',
           }
         }
       }
@@ -45,6 +48,9 @@
       font-family: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
     }
     body { background-color: #FAF8F5; color: #17191C; font-family: 'Noto Sans KR', -apple-system, sans-serif; }
+    .book-spine-effect {
+      box-shadow: inset 4px 0 8px rgba(0, 0, 0, 0.4), inset -2px 0 5px rgba(255, 255, 255, 0.1), -8px 10px 22px rgba(0, 0, 0, 0.35);
+    }
   </style>
 
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -52,7 +58,7 @@
 </head>
 <body class="min-h-screen flex flex-col selection:bg-[#6E1B2A] selection:text-white">
 
-      <!-- ========================================== -->
+    <!-- ========================================== -->
   <!-- 1. TOP ANNOUNCEMENT BAR -->
   <!-- ========================================== -->
   <div class="bg-[#52131F] text-white py-1.5 px-4 text-xs font-serifKr border-b border-[#3D0E17]">
@@ -116,7 +122,7 @@
             <a
               href="index.html"
               data-cat="books"
-              class="gnb-nav-btn flex items-center space-x-1.5 px-3 py-2 rounded text-[#F8F7F4] hover:text-[#DFC075] hover:bg-[#23272D] transition-colors font-semibold text-xs sm:text-sm whitespace-nowrap cursor-pointer"
+              class="gnb-nav-btn flex items-center space-x-1.5 px-3 py-2 rounded text-[#DFC075] bg-[#23272D] border-b-2 border-[#C39738] transition-colors font-semibold text-xs sm:text-sm whitespace-nowrap cursor-pointer"
             >
               <span>PHB 도서</span>
               <svg class="w-3.5 h-3.5 text-[#C39738] group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -253,158 +259,52 @@
   </header>
 
   <!-- Banner -->
-  <section class="bg-gradient-to-r from-[#17191C] via-[#23272D] to-[#17191C] text-white py-12 px-4 border-b-2 border-[#C39738] text-center">
-    <div class="max-w-4xl mx-auto space-y-3">
-      <span class="text-xs font-cinzel font-bold text-[#DFC075] uppercase tracking-widest block">Customer Support & Logistics</span>
-      <h1 class="text-2xl sm:text-4xl font-serifKr font-bold text-white">
-        주문 내역 및 실시간 배송조회
-      </h1>
-      <p class="text-xs sm:text-sm text-[#E4DFD7] font-serifKr opacity-90 max-w-xl mx-auto">
-        주문번호 또는 주문자 연락처를 입력하시면 실시간 배송 진행 상황을 확인하실 수 있습니다.
-      </p>
+  <section class="bg-gradient-to-r from-[#17191C] via-[#20272F] to-[#17191C] text-white py-12 px-4 border-b-2 border-[#C39738]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl space-y-3">
+        <span class="text-xs font-cinzel font-bold text-[#DFC075] uppercase tracking-widest block">Biblical Exposition • 성경 강해 총서</span>
+        <h1 class="text-2xl sm:text-4xl font-serifKr font-bold text-white leading-tight">
+          말씀의 깊이를 드러내는 성경 강해 정본
+        </h1>
+        <p class="text-xs sm:text-sm text-[#E4DFD7] font-serifKr leading-relaxed opacity-90">
+          구속사적 맥락과 청교도적 적용이 살아있는 성경 66권 강해 설교 및 주해서를 정본으로 출간합니다.
+        </p>
+      </div>
     </div>
   </section>
 
-  <!-- Main Content -->
-  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-12 w-full space-y-10">
-
-    <!-- Search Box Card -->
-    <div class="bg-white rounded-2xl border border-[#EAE5DC] shadow-sm p-6 sm:p-10 space-y-6">
-      <div class="flex items-center space-x-3 pb-4 border-b border-[#EAE5DC]">
-        <div class="w-10 h-10 rounded-full bg-[#FAF8F5] border border-[#C39738] flex items-center justify-center text-[#6E1B2A]">
-          <i class="fas fa-truck-fast"></i>
-        </div>
-        <div>
-          <h2 class="text-base sm:text-lg font-serifKr font-bold text-[#17191C]">배송 상태 원클릭 조회</h2>
-          <p class="text-xs text-[#7E8694]">출판사 직배송 및 제휴 서점 주문 건의 배송 상태를 확인합니다.</p>
-        </div>
-      </div>
-
-      <form onsubmit="handleOrderSearch(event)" class="space-y-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-          <div>
-            <label class="block font-semibold text-[#17191C] mb-1.5">주문자 성명 / 상호</label>
-            <input type="text" id="order-user-name" placeholder="예: 김성도" required class="w-full bg-[#FAF8F5] border border-[#E4DFD7] rounded-lg p-3 text-xs text-[#17191C] focus:bg-white focus:border-[#C39738] focus:outline-none" />
-          </div>
-          <div>
-            <label class="block font-semibold text-[#17191C] mb-1.5">주문번호 또는 휴대폰 번호</label>
-            <input type="text" id="order-search-query" placeholder="예: PHB-20261001-01 또는 010-1234-5678" required class="w-full bg-[#FAF8F5] border border-[#E4DFD7] rounded-lg p-3 text-xs text-[#17191C] focus:bg-white focus:border-[#C39738] focus:outline-none" />
-          </div>
-        </div>
-
-        <button type="submit" class="w-full py-3.5 bg-[#6E1B2A] hover:bg-[#8C2538] text-white rounded-xl text-xs sm:text-sm font-bold shadow transition-all flex items-center justify-center space-x-2">
-          <i class="fas fa-search"></i>
-          <span>배송 현황 조회하기</span>
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full space-y-8">
+    
+    <!-- Subcategory Tabs -->
+    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-[#EAE5DC] pb-4">
+      <div class="flex flex-wrap gap-2 text-xs font-medium font-serifKr" id="sub-filter-tabs">
+        <button onclick="setPageSubFilter('all')" data-sub="all" class="sub-tab px-4 py-2 rounded-lg bg-[#17191C] text-[#DFC075] font-bold shadow-xs">
+          성경 강해 전체보기
         </button>
-      </form>
-
-      <!-- Search Result Display Area -->
-      <div id="order-search-result" class="hidden pt-6 border-t border-[#EAE5DC] space-y-6">
-        <div class="bg-[#FAF8F5] rounded-xl p-5 sm:p-6 border border-[#E4DFD7] space-y-4 text-xs">
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-[#E4DFD7]">
-            <div>
-              <span class="text-[10px] font-cinzel text-[#8C2538] font-bold block">ORDER NO.</span>
-              <strong id="res-order-no" class="text-sm font-bold text-[#17191C]">PHB-20261003-8841</strong>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="px-2.5 py-1 rounded bg-[#E4DFD7] text-[#17191C] font-semibold text-[11px]" id="res-order-date">2026. 10. 02 주문</span>
-              <span class="px-2.5 py-1 rounded bg-[#6E1B2A] text-white font-bold text-[11px]" id="res-order-status">배송중 (출고완료)</span>
-            </div>
-          </div>
-
-          <!-- Tracking Stepper -->
-          <div class="py-4">
-            <div class="grid grid-cols-4 text-center text-[11px] font-serifKr font-semibold gap-2 relative">
-              <div class="space-y-2">
-                <div class="w-8 h-8 mx-auto rounded-full bg-[#6E1B2A] text-white flex items-center justify-center text-xs shadow"><i class="fas fa-check"></i></div>
-                <span class="text-[#17191C]">결제완료</span>
-              </div>
-              <div class="space-y-2">
-                <div class="w-8 h-8 mx-auto rounded-full bg-[#6E1B2A] text-white flex items-center justify-center text-xs shadow"><i class="fas fa-box"></i></div>
-                <span class="text-[#17191C]">상품준비중</span>
-              </div>
-              <div class="space-y-2">
-                <div class="w-8 h-8 mx-auto rounded-full bg-[#C39738] text-[#17191C] flex items-center justify-center text-xs shadow font-bold animate-pulse"><i class="fas fa-truck"></i></div>
-                <span class="text-[#6E1B2A] font-bold">배송중</span>
-              </div>
-              <div class="space-y-2">
-                <div class="w-8 h-8 mx-auto rounded-full bg-[#FAF8F5] border-2 border-[#E4DFD7] text-[#A6ADB8] flex items-center justify-center text-xs"><i class="fas fa-home"></i></div>
-                <span class="text-[#7E8694]">배송완료</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Order Info Summary -->
-          <div class="bg-white p-4 rounded-lg border border-[#EAE5DC] space-y-2 text-[11px] text-[#5E6470]">
-            <p><strong>주문 도서:</strong> <span id="res-book-title" class="text-[#17191C] font-semibold">『개혁주의 조직신학 전집 (전4권 세트)』 외 1권</span></p>
-            <p><strong>택배사:</strong> 우체국택배 (등기소포) | <strong>운송장번호:</strong> <span class="font-mono text-[#6E1B2A] font-bold">6092-8812-4019</span></p>
-            <p><strong>배송지:</strong> <span id="res-address">서울특별시 서초구 반포대로 14길 (상세주소 안전마스킹 처리)</span></p>
-          </div>
-        </div>
+        <button onclick="setPageSubFilter('set')" data-sub="set" class="sub-tab px-4 py-2 rounded-lg bg-white border border-[#E4DFD7] text-[#5E6470] hover:bg-[#FAF8F5]">
+          Set (완간 전집/세트)
+        </button>
+        <button onclick="setPageSubFilter('ot')" data-sub="ot" class="sub-tab px-4 py-2 rounded-lg bg-white border border-[#E4DFD7] text-[#5E6470] hover:bg-[#FAF8F5]">
+          구약 강해 (Old Testament)
+        </button>
+        <button onclick="setPageSubFilter('nt')" data-sub="nt" class="sub-tab px-4 py-2 rounded-lg bg-white border border-[#E4DFD7] text-[#5E6470] hover:bg-[#FAF8F5]">
+          신약 강해 (New Testament)
+        </button>
+      </div>
+      <div class="text-xs text-[#7E8694]">
+        총 <strong id="catalog-count" class="text-[#6E1B2A] font-bold">0</strong>권의 강해 도서
       </div>
     </div>
 
-    <!-- Delivery Policy FAQ Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs font-sans">
-      <div class="bg-white p-6 rounded-2xl border border-[#EAE5DC] space-y-3 shadow-xs">
-        <div class="w-9 h-9 rounded-lg bg-[#FAF8F5] border border-[#C39738] text-[#6E1B2A] flex items-center justify-center font-bold text-sm">
-          <i class="fas fa-clock"></i>
-        </div>
-        <h3 class="font-bold text-sm text-[#17191C] font-serifKr">당일 출고 마감시간</h3>
-        <p class="text-[#5E6470] leading-relaxed">
-          평일 <strong>오후 3시(15:00)</strong> 이전 결제 완료 건은 당일 안전 에어캡 포장 후 우체국택배로 즉시 발송됩니다. (보통 익일 수령)
-        </p>
-      </div>
-
-      <div class="bg-white p-6 rounded-2xl border border-[#EAE5DC] space-y-3 shadow-xs">
-        <div class="w-9 h-9 rounded-lg bg-[#FAF8F5] border border-[#C39738] text-[#6E1B2A] flex items-center justify-center font-bold text-sm">
-          <i class="fas fa-box-open"></i>
-        </div>
-        <h3 class="font-bold text-sm text-[#17191C] font-serifKr">무료 배송 기준</h3>
-        <p class="text-[#5E6470] leading-relaxed">
-          주문 금액 <strong>30,000원 이상 결제 시 무료배송</strong>이 적용됩니다. (3만원 미만 주문 시 기본 배송비 3,000원, 제주/도서산간 추가금 없음)
-        </p>
-      </div>
-
-      <div class="bg-white p-6 rounded-2xl border border-[#EAE5DC] space-y-3 shadow-xs">
-        <div class="w-9 h-9 rounded-lg bg-[#FAF8F5] border border-[#C39738] text-[#6E1B2A] flex items-center justify-center font-bold text-sm">
-          <i class="fas fa-rotate-left"></i>
-        </div>
-        <h3 class="font-bold text-sm text-[#17191C] font-serifKr">교환 및 반품 안내</h3>
-        <p class="text-[#5E6470] leading-relaxed">
-          배송 중 파손, 오탈자 및 제본 파본의 경우 <strong>100% 무상 맞교환</strong>을 즉시 진행해 드립니다. (수령 후 7일 이내 고객센터 문의)
-        </p>
-      </div>
+    <!-- Books Grid -->
+    <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+      <!-- Dynamic cards rendered here -->
     </div>
-
-    <!-- Partner Bookstores Direct Links -->
-    <div class="bg-white p-6 sm:p-8 rounded-2xl border border-[#EAE5DC] space-y-4">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-        <div>
-          <h3 class="font-serifKr font-bold text-sm text-[#17191C]">온라인 서점별 1:1 배송조회 바로가기</h3>
-          <p class="text-xs text-[#7E8694]">교보문고, 알라딘, YES24, 네이버 스마트스토어에서 결제하신 경우 아래 서점별 페이지에서 배송 조회가 가능합니다.</p>
-        </div>
-      </div>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-bold text-center">
-        <a href="https://smartstore.naver.com" target="_blank" rel="noopener noreferrer" class="p-3 bg-[#FAF8F5] hover:bg-[#03C75A] hover:text-white rounded-xl border border-[#E4DFD7] transition-all flex items-center justify-center gap-1.5">
-          <span>스마트스토어 주문조회</span>
-        </a>
-        <a href="https://order.kyobobook.co.kr" target="_blank" rel="noopener noreferrer" class="p-3 bg-[#FAF8F5] hover:bg-[#2653AF] hover:text-white rounded-xl border border-[#E4DFD7] transition-all flex items-center justify-center gap-1.5">
-          <span>교보문고 배송조회</span>
-        </a>
-        <a href="https://www.aladin.co.kr/shop/myaladin/myaladin.aspx" target="_blank" rel="noopener noreferrer" class="p-3 bg-[#FAF8F5] hover:bg-[#EE4B2B] hover:text-white rounded-xl border border-[#E4DFD7] transition-all flex items-center justify-center gap-1.5">
-          <span>알라딘 배송조회</span>
-        </a>
-        <a href="https://www.yes24.com/Mall/Order/OrderList" target="_blank" rel="noopener noreferrer" class="p-3 bg-[#FAF8F5] hover:bg-[#0080FF] hover:text-white rounded-xl border border-[#E4DFD7] transition-all flex items-center justify-center gap-1.5">
-          <span>YES24 배송조회</span>
-        </a>
-      </div>
-    </div>
-
   </main>
 
   <!-- Footer -->
-  <footer class="bg-[#17191C] text-[#A6ADB8] pt-12 pb-8 text-xs border-t-2 border-[#C39738]">
+  <footer class="bg-[#17191C] text-[#A6ADB8] pt-12 pb-8 text-xs border-t-2 border-[#C39738] mt-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-4">
       <div class="flex items-center space-x-2.5">
         <img src="images/phb-logo-gold.png" alt="PHB" class="h-6 w-auto object-contain flex-shrink-0" />
@@ -412,11 +312,75 @@
       </div>
       <div class="flex gap-4">
         <a href="about.html" class="hover:text-white">PHB 사명선언문</a>
-        <a href="shipping.html" class="text-[#DFC075] font-bold">주문/배송조회</a>
+        <a href="shipping.html" class="hover:text-white">주문/배송조회</a>
         <a href="privacy.html" class="hover:text-white">개인정보처리방침</a>
       </div>
     </div>
   </footer>
+
+  <!-- Book Preview Modal & Cart Drawer injected by phb-core.js -->
+  <div id="book-preview-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white text-[#17191C] w-full max-w-4xl rounded-2xl border border-[#C39738] shadow-2xl overflow-hidden relative max-h-[90vh] flex flex-col">
+      <div class="bg-[#17191C] text-white p-4 px-6 flex justify-between items-center border-b border-[#C39738]">
+        <span class="font-cinzel text-xs font-bold text-[#DFC075] uppercase">Book Detail Preview</span>
+        <button onclick="closeBookPreview()" class="text-[#A6ADB8] hover:text-white text-lg">&times;</button>
+      </div>
+      <div class="p-6 sm:p-8 overflow-y-auto space-y-6 flex-1 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 items-start pb-6 border-b border-[#E4DFD7]">
+          <div class="sm:col-span-4 flex justify-center">
+            <div id="preview-cover-box" class="w-36 h-52 rounded shadow-book p-3 flex flex-col justify-between text-center relative overflow-hidden"></div>
+          </div>
+          <div class="sm:col-span-8 space-y-2">
+            <span id="preview-series" class="text-xs font-semibold text-[#8C2538] block"></span>
+            <h3 id="preview-title" class="text-xl font-serifKr font-bold text-[#17191C]"></h3>
+            <p id="preview-orig-title" class="text-xs text-[#5E6470] italic"></p>
+            <div class="grid grid-cols-2 gap-y-1 text-xs text-[#5E6470] pt-2">
+              <p><strong>저자:</strong> <span id="preview-author"></span></p>
+              <p><strong>역자:</strong> <span id="preview-translator"></span></p>
+              <p><strong>정가:</strong> <span id="preview-orig-price" class="line-through text-[#7E8694]"></span> &rarr; <strong id="preview-price" class="text-[#6E1B2A] text-sm"></strong></p>
+              <p><strong>분량:</strong> <span id="preview-pages"></span></p>
+            </div>
+            <div class="pt-4 flex gap-2">
+              <button id="preview-add-cart-btn" class="px-5 py-2.5 bg-[#6E1B2A] hover:bg-[#8C2538] text-white rounded font-bold">장바구니 담기</button>
+            </div>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <h4 class="font-bold text-[#17191C] font-serifKr text-sm">도서 소개</h4>
+          <p id="preview-description" class="text-[#4A5568] leading-relaxed"></p>
+        </div>
+        <div class="space-y-2">
+          <h4 class="font-bold text-[#17191C] font-serifKr text-sm">목차</h4>
+          <ul id="preview-toc" class="list-disc list-inside space-y-1 text-[#5E6470]"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Drawer -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <div onclick="toggleCart(false)" class="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"></div>
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-white text-[#17191C] shadow-2xl flex flex-col justify-between border-l border-[#E4DFD7]">
+        <div class="p-6 bg-[#17191C] text-white flex items-center justify-between border-b border-[#C39738]">
+          <span class="font-cinzel text-sm font-bold text-[#DFC075] uppercase">Cart</span>
+          <button onclick="toggleCart(false)" class="text-[#A6ADB8] hover:text-white text-lg">&times;</button>
+        </div>
+        <div id="cart-items-container" class="p-6 overflow-y-auto flex-1 divide-y divide-[#E4DFD7]"></div>
+        <div class="p-6 bg-[#FAF8F5] border-t border-[#E4DFD7] space-y-4">
+          <div class="flex justify-between text-base font-bold text-[#17191C]"><span>최종 결제 금액</span><span id="cart-total" class="text-[#6E1B2A]">0원</span></div>
+          <button onclick="openStoreCheckout()" class="w-full py-3 bg-[#6E1B2A] text-white text-xs font-bold rounded-lg shadow">온라인 서점 바로 주문하기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="store-checkout-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#F8F7F4] text-[#17191C] w-full max-w-2xl rounded-xl border border-[#C39738] shadow-2xl overflow-hidden p-6 space-y-4">
+      <div class="flex justify-between items-center border-b pb-3"><span class="font-bold text-sm">온라인 서점 구매</span><button onclick="closeStoreCheckoutModal()">&times;</button></div>
+      <div id="store-checkout-items-list" class="space-y-3 text-xs"></div>
+    </div>
+  </div>
 
     <!-- ========================================== -->
   <!-- MOBILE SLIDE-OVER NAVIGATION DRAWER -->
@@ -528,22 +492,73 @@
 
       </div>
     </div>
+  </div>
 
   <script src="phb-core.js"></script>
   <script>
-    function handleOrderSearch(e) {
-      if (e) e.preventDefault();
-      const name = document.getElementById('order-user-name')?.value.trim();
-      const q = document.getElementById('order-search-query')?.value.trim();
-      if (!name || !q) return;
+    let pageSubFilter = 'all';
+    let pageSearch = '';
 
-      const resBox = document.getElementById('order-search-result');
-      const orderNoEl = document.getElementById('res-order-no');
-      if (orderNoEl) orderNoEl.innerText = q.startsWith('PHB') ? q : `PHB-20261003-${Math.floor(1000 + Math.random() * 9000)}`;
-      if (resBox) resBox.classList.remove('hidden');
-      showToast(`${name} 님의 배송 정보를 불러왔습니다.`);
-      resBox.scrollIntoView({ behavior: 'smooth' });
+    function getPageBooks() {
+      return CURRENT_BOOKS.filter(b => {
+        const isExposition = b.category === 'exposition';
+        if (!isExposition) return false;
+        if (pageSubFilter !== 'all' && b.subCategory !== pageSubFilter) return false;
+        if (pageSearch) {
+          const q = pageSearch.toLowerCase();
+          const match = b.title.toLowerCase().includes(q) || (b.author && b.author.toLowerCase().includes(q));
+          if (!match) return false;
+        }
+        return true;
+      });
     }
+
+    function renderPageBooks() {
+      const container = document.getElementById('books-grid');
+      const countEl = document.getElementById('catalog-count');
+      const books = getPageBooks();
+      if (countEl) countEl.innerText = books.length;
+      if (!container) return;
+
+      if (books.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center space-y-3 bg-white rounded-xl border border-[#EAE5DC]">
+            <p class="text-sm text-[#5E6470]">해당 분류의 성경 강해 도서가 아직 등록되지 않았거나 검색 결과가 없습니다.</p>
+            <button onclick="setPageSubFilter('all')" class="text-xs text-[#6E1B2A] font-bold hover:underline">성경 강해 전체보기 &rarr;</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = books.map(b => generateBookCardHtml(b)).join('');
+    }
+
+    function setPageSubFilter(sub) {
+      pageSubFilter = sub;
+      document.querySelectorAll('#sub-filter-tabs .sub-tab').forEach(btn => {
+        if (btn.getAttribute('data-sub') === sub) {
+          btn.className = 'sub-tab px-4 py-2 rounded-lg bg-[#17191C] text-[#DFC075] font-bold shadow-xs';
+        } else {
+          btn.className = 'sub-tab px-4 py-2 rounded-lg bg-white border border-[#E4DFD7] text-[#5E6470] hover:bg-[#FAF8F5]';
+        }
+      });
+      renderPageBooks();
+    }
+
+    function handlePageSearch(val) {
+      pageSearch = val.trim();
+      renderPageBooks();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const sub = urlParams.get('sub');
+      if (sub && ['set', 'ot', 'nt'].includes(sub)) {
+        pageSubFilter = sub;
+      }
+      setPageSubFilter(pageSubFilter);
+      syncDynamicBooks(() => renderPageBooks());
+    });
   </script>
 </body>
 </html>

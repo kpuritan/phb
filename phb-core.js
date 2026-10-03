@@ -1187,6 +1187,24 @@ window.closeStoreCheckoutModal = closeStoreCheckoutModal;
 window.handleAdminTriggerClick = handleAdminTriggerClick;
 window.openAdminLoginModal = openAdminLoginModal;
 window.closeAdminLoginModal = closeAdminLoginModal;
+// Global Header Search handler
+function handleHeaderSearch(e, form) {
+  const input = form ? form.querySelector('input[name="search"]') : document.getElementById('header-search-input');
+  const val = input ? input.value.trim() : '';
+  const pathname = window.location.pathname;
+  const isHome = pathname.endsWith('index.html') || pathname === '/' || pathname.endsWith('/');
+  if (isHome && typeof handleSearch === 'function') {
+    if (e) e.preventDefault();
+    handleSearch(val);
+    const el = document.getElementById('catalog-section');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    return false;
+  }
+  // If we are on other pages and form is submitting, let it navigate to index.html?search=...
+  return true;
+}
+
+window.handleHeaderSearch = handleHeaderSearch;
 window.handleAdminLogin = handleAdminLogin;
 window.updateAdminUI = updateAdminUI;
 window.openAuthModal = openAuthModal;
