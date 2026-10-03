@@ -160,8 +160,6 @@
             </div>
 
             <div class="pt-3 flex flex-wrap gap-2">
-              <span id="book-confession-tag" class="bg-[#EDE9E1] text-[#6E1B2A] text-xs font-semibold px-3 py-1.5 rounded-md border border-[#E4DFD7] inline-block">
-              </span>
               <span id="book-type-tag" class="bg-[#17191C] text-[#DFC075] text-xs font-semibold px-3 py-1.5 rounded-md inline-block">
                 종이책 & PDF
               </span>
@@ -511,7 +509,8 @@
       document.getElementById('book-pages').innerText = book.pages || '-';
       document.getElementById('book-pubdate').innerText = book.pubDate || '-';
       document.getElementById('book-isbn').innerText = book.isbn || '-';
-      document.getElementById('book-confession-tag').innerText = book.confessionTag || '개혁주의 표준문서';
+
+
 
       // Cover render
       const coverBox = document.getElementById('book-cover-container');

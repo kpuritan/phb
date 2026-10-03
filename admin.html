@@ -47,6 +47,9 @@
     }
   </script>
 
+  <!-- SortableJS for drag-and-drop reorder -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
   <!-- Firebase App & Firestore -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
@@ -164,9 +167,33 @@
         <button onclick="refreshData()" class="px-3.5 py-2.5 bg-[#FAF8F5] hover:bg-[#EDE9E1] text-[#5E6470] border border-[#E4DFD7] rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer">
           <i class="fas fa-sync-alt" id="refresh-icon"></i> 새로고침
         </button>
+        <button id="btn-reorder-toggle" onclick="toggleReorderMode()" class="px-4 py-2.5 bg-[#FAF8F5] hover:bg-[#C39738]/10 text-[#C39738] border border-[#C39738]/50 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer">
+          <i class="fas fa-sort"></i> 순서 변경
+        </button>
         <button onclick="openBookModal()" class="px-5 py-2.5 bg-[#6E1B2A] hover:bg-[#8C2538] text-white rounded-xl text-xs font-semibold shadow-md transition-all flex items-center gap-2 cursor-pointer">
           <i class="fas fa-plus-circle text-[#DFC075]"></i>
           <span>새 도서 등록하기</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Reorder Mode Banner -->
+    <div id="reorder-banner" class="hidden bg-[#C39738]/10 border border-[#C39738]/40 rounded-2xl p-4 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-full bg-[#C39738] flex items-center justify-center shrink-0">
+          <i class="fas fa-grip-vertical text-white text-xs"></i>
+        </span>
+        <div>
+          <p class="text-xs font-bold text-[#17191C]">📋 순서 변경 모드 활성화됨</p>
+          <p class="text-[11px] text-[#5E6470]">행의 <strong>☰ 핸들</strong>을 드래그해서 순서를 바꾸세요. 완료 후 <strong>순서 저장</strong>을 누르세요.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button onclick="saveReorderedBooks()" class="px-4 py-2 bg-[#C39738] hover:bg-[#9A7424] text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer">
+          <i class="fas fa-check"></i> 순서 저장
+        </button>
+        <button onclick="cancelReorderMode()" class="px-4 py-2 bg-white hover:bg-[#EDE9E1] text-[#5E6470] border border-[#E4DFD7] rounded-xl text-xs font-semibold transition-colors cursor-pointer">
+          취소
         </button>
       </div>
     </div>
@@ -217,6 +244,7 @@
         <table class="w-full text-left text-xs">
           <thead class="bg-[#F8F7F4] text-[#5E6470] border-b border-[#E4DFD7] uppercase tracking-wider font-semibold">
             <tr>
+              <th id="th-drag-handle" class="py-3.5 px-3 text-center hidden w-10" title="드래그하여 순서 변경">☰</th>
               <th class="py-3.5 px-4">표지 및 서명</th>
               <th class="py-3.5 px-4">분류 / 시리즈</th>
               <th class="py-3.5 px-4">저자 / 역자</th>
@@ -373,11 +401,8 @@
                 class="w-full px-3 py-2 bg-[#FAF8F5] border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:outline-none focus:border-[#6E1B2A] focus:bg-white" />
             </div>
 
-            <div>
-              <label class="block font-semibold text-[#17191C] mb-1">신앙고백서 연계 태그</label>
-              <input type="text" id="form-confession-tag" placeholder="예: 웨스트민스터 신앙고백서 제13장"
-                class="w-full px-3 py-2 bg-[#FAF8F5] border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:outline-none focus:border-[#6E1B2A] focus:bg-white" />
-            </div>
+
+
           </div>
 
           <!-- 도서 표지 등록 (파일 업로드 및 웹 URL, 실시간 미리보기) -->
@@ -1394,6 +1419,12 @@
                 firestoreBooks.push(Object.assign({ id: doc.id }, doc.data()));
               });
               if (firestoreBooks.length > 0) {
+                // displayOrder 기준 정렬 (없으면 뒤로)
+                firestoreBooks.sort((a, b) => {
+                  const oa = (typeof a.displayOrder === 'number') ? a.displayOrder : 9999;
+                  const ob = (typeof b.displayOrder === 'number') ? b.displayOrder : 9999;
+                  return oa - ob;
+                });
                 allBooks = firestoreBooks;
                 try {
                   localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
@@ -1465,8 +1496,13 @@
         const hasYes24 = book.storeLinks && book.storeLinks.yes24;
 
         return `
-          <tr class="hover:bg-[#FAF8F5] transition-colors group">
+          <tr class="hover:bg-[#FAF8F5] transition-colors group" data-id="${book.id}">
             
+            <!-- 드래그 핸들 -->
+            <td class="drag-handle-cell py-4 px-3 text-center hidden cursor-grab active:cursor-grabbing text-[#C39738] text-base select-none" title="드래그하여 순서 변경">
+              <i class="fas fa-grip-vertical"></i>
+            </td>
+
             <!-- 표지 및 서명 -->
             <td class="py-4 px-4">
               <div class="flex items-center space-x-3">
@@ -1551,6 +1587,119 @@
           </tr>
         `;
       }).join('');
+    }
+
+
+
+    // =============================================
+    // 순서 변경 (REORDER) 기능
+    // =============================================
+    let isReorderMode = false;
+    let sortableInstance = null;
+    let booksBeforeReorder = [];
+
+    function toggleReorderMode() {
+      if (isReorderMode) {
+        cancelReorderMode();
+      } else {
+        enterReorderMode();
+      }
+    }
+
+    function enterReorderMode() {
+      // 필터/검색 중이면 전체 보기로 초기화
+      currentAdminCategory = 'all';
+      currentAdminSearch = '';
+      document.getElementById('admin-search').value = '';
+      document.querySelectorAll('.admin-cat-tab').forEach(tab => {
+        tab.classList.remove('bg-[#17191C]', 'text-[#DFC075]', 'shadow');
+        tab.classList.add('bg-white', 'text-[#5E6470]', 'border', 'border-[#E4DFD7]');
+      });
+      document.querySelector('.admin-cat-tab').classList.add('bg-[#17191C]', 'text-[#DFC075]', 'shadow');
+      document.querySelector('.admin-cat-tab').classList.remove('bg-white', 'text-[#5E6470]', 'border', 'border-[#E4DFD7]');
+
+      booksBeforeReorder = [...allBooks];
+      isReorderMode = true;
+      renderAdminBooks();
+
+      // 핸들 셀 보이기
+      document.getElementById('th-drag-handle').classList.remove('hidden');
+      document.querySelectorAll('.drag-handle-cell').forEach(el => el.classList.remove('hidden'));
+
+      // 배너 및 버튼 상태 변경
+      document.getElementById('reorder-banner').classList.remove('hidden');
+      const btn = document.getElementById('btn-reorder-toggle');
+      btn.classList.add('bg-[#C39738]/10', 'text-[#9A7424]', 'border-[#C39738]');
+      btn.innerHTML = '<i class="fas fa-times"></i> 변경 취소';
+
+      // SortableJS 초기화
+      const tbody = document.getElementById('admin-books-table-body');
+      sortableInstance = Sortable.create(tbody, {
+        animation: 150,
+        handle: '.drag-handle-cell',
+        ghostClass: 'bg-[#C39738]/5',
+        dragClass: 'shadow-xl',
+        onEnd: () => {
+          // DOM 순서를 allBooks에 반영
+          const rows = tbody.querySelectorAll('tr[data-id]');
+          const newOrder = [];
+          rows.forEach(row => {
+            const found = allBooks.find(b => b.id === row.dataset.id);
+            if (found) newOrder.push(found);
+          });
+          allBooks = newOrder;
+        }
+      });
+    }
+
+    function cancelReorderMode() {
+      allBooks = [...booksBeforeReorder];
+      exitReorderMode();
+      renderAdminBooks();
+      showToast('순서 변경이 취소되었습니다.');
+    }
+
+    function exitReorderMode() {
+      isReorderMode = false;
+      if (sortableInstance) { sortableInstance.destroy(); sortableInstance = null; }
+      document.getElementById('th-drag-handle').classList.add('hidden');
+      document.querySelectorAll('.drag-handle-cell').forEach(el => el.classList.add('hidden'));
+      document.getElementById('reorder-banner').classList.add('hidden');
+      const btn = document.getElementById('btn-reorder-toggle');
+      btn.classList.remove('bg-[#C39738]/10', 'text-[#9A7424]', 'border-[#C39738]');
+      btn.innerHTML = '<i class="fas fa-sort"></i> 순서 변경';
+    }
+
+    async function saveReorderedBooks() {
+      const saveBtn = document.querySelector('#reorder-banner button:first-child');
+      if (saveBtn) { saveBtn.disabled = true; saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 저장 중...'; }
+
+      try {
+        // displayOrder 필드 업데이트
+        allBooks = allBooks.map((book, idx) => ({ ...book, displayOrder: idx }));
+
+        if (db) {
+          const batch = db.batch();
+          allBooks.forEach((book, idx) => {
+            const ref = db.collection('phb_books').doc(book.id);
+            batch.update(ref, { displayOrder: idx });
+          });
+          await batch.commit();
+        }
+
+        try {
+          localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+        } catch(e) {}
+
+        exitReorderMode();
+        renderAdminBooks();
+        showToast('✅ 도서 순서가 저장되었습니다!');
+      } catch(err) {
+        console.error('Reorder save error:', err);
+        showToast('⚠️ 저장 중 오류가 발생했습니다. 다시 시도해주세요.');
+      } finally {
+        if (saveBtn) { saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-check"></i> 순서 저장'; }
+      }
     }
 
     function filterAdminCategory(cat) {
