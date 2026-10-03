@@ -176,7 +176,7 @@
         <div id="book-stores-section" class="bg-gradient-to-br from-[#FAF8F5] to-[#F2EFE9] p-6 sm:p-8 rounded-2xl border-2 border-[#DFC075]/70 shadow-sm space-y-6">
           
           <!-- 1. 종이책 구매 서점 로고 배너 -->
-          <div>
+          <div id="section-paper-stores">
             <div class="text-[#1e6e28] text-sm sm:text-base font-bold flex items-center justify-between mb-3">
               <span>📖 종이책 구매 — 서점 로고를 클릭하시면 해당 도서 페이지로 바로 이동합니다</span>
               <span class="text-xs font-semibold text-[#8C2538] bg-[#6E1B2A]/10 px-2.5 py-1 rounded border border-[#6E1B2A]/20">
@@ -204,7 +204,7 @@
           </div>
 
           <!-- 2. 전자책 (e-Book) 서점 로고 배너 -->
-          <div class="pt-4 border-t border-[#E4DFD7]">
+          <div id="section-ebook-stores" class="pt-4 border-t border-[#E4DFD7]">
             <div class="text-[#1e6e28] text-sm sm:text-base font-bold flex items-center justify-between mb-3">
               <span>📱 전자책 (eBook / PDF) 구매 — 서점 로고를 클릭하시면 전자책으로 바로 이동합니다</span>
               <span id="ebook-status-badge" class="text-xs font-semibold text-[#0057B3] bg-[#0070E0]/10 px-2.5 py-1 rounded border border-[#0070E0]/20">
@@ -442,7 +442,14 @@
       document.getElementById('book-main-title').innerText = book.title;
       document.getElementById('book-sub-title').innerText = book.title;
       document.getElementById('book-orig-title').innerText = book.originalTitle || '';
-      document.getElementById('book-tagline').innerText = book.tagline || '역사적 개혁주의와 청교도 신학의 정수를 담은 정본 서적입니다.';
+      const taglineEl = document.getElementById('book-tagline');
+      if (book.tagline && book.tagline.trim() !== '') {
+        taglineEl.innerText = book.tagline;
+        taglineEl.style.display = 'block';
+      } else {
+        taglineEl.innerText = '';
+        taglineEl.style.display = 'none';
+      }
 
       document.getElementById('book-main-price').innerText = `${Number(book.price || 0).toLocaleString()}원`;
       document.getElementById('book-price-info').innerText = `${Number(book.price || 0).toLocaleString()}원 (정가 ${Number(book.originalPrice || book.price || 0).toLocaleString()}원 / 10% 할인가)`;
@@ -497,6 +504,43 @@
       eYes24.innerHTML = STORE_LOGOS.yes24;
       eKyobo.href = storeLinks.ebook.kyobo;
       eKyobo.innerHTML = STORE_LOGOS.kyoboEbook;
+
+      // Check if ebook-only
+      const isEbookCategory = book.category === 'ebook';
+      const isOnlyEbook = isEbookCategory || (book.isEbook && book.isEbookOnly);
+      const paperStoreSection = document.getElementById('section-paper-stores');
+      const ebookStoreSection = document.getElementById('section-ebook-stores');
+      const bookTypeTag = document.getElementById('book-type-tag');
+
+      if (isEbookCategory) {
+        if (paperStoreSection) paperStoreSection.style.display = 'none';
+        if (ebookStoreSection) {
+          ebookStoreSection.style.display = 'block';
+          ebookStoreSection.classList.remove('pt-4', 'border-t', 'border-[#E4DFD7]');
+        }
+        if (bookTypeTag) {
+          bookTypeTag.innerText = '전자책 전용 (PDF)';
+          bookTypeTag.className = 'bg-[#6E1B2A] text-[#DFC075] text-xs font-semibold px-3 py-1.5 rounded-md inline-block';
+        }
+      } else {
+        if (paperStoreSection) paperStoreSection.style.display = 'block';
+        if (ebookStoreSection) {
+          if (book.isEbook) {
+            ebookStoreSection.style.display = 'block';
+            ebookStoreSection.classList.add('pt-4', 'border-t', 'border-[#E4DFD7]');
+          } else {
+            ebookStoreSection.style.display = 'none';
+          }
+        }
+        if (bookTypeTag) {
+          if (book.isEbook) {
+            bookTypeTag.innerText = book.isHardcover ? '양장본 & PDF' : '종이책 & PDF';
+          } else {
+            bookTypeTag.innerText = book.isHardcover ? '양장본 (Hardcover)' : '종이책 (Paperback)';
+          }
+          bookTypeTag.className = 'bg-[#17191C] text-[#DFC075] text-xs font-semibold px-3 py-1.5 rounded-md inline-block';
+        }
+      }
 
       // Description
       document.getElementById('book-description').innerText = book.description || '상세 소개가 등록되어 있지 않습니다.';
