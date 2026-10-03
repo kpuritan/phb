@@ -449,6 +449,45 @@
             </div>
           </div>
 
+          <!-- 표지 실물 이미지 등록 (파일 업로드 및 웹 URL 지원) -->
+          <div class="bg-[#FAF8F5] p-4 rounded-xl border border-[#E4DFD7] space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="font-bold text-[#6E1B2A] flex items-center gap-1.5 text-xs">
+                <i class="fas fa-image text-[#C39738]"></i> 표지 이미지 직접 등록 (파일 업로드 또는 이미지 URL)
+              </label>
+              <span class="text-[11px] text-[#7E8694]">* 미등록 시 위 색상 테마의 양장 표지가 자동 적용됩니다.</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+              <div>
+                <label class="block text-[11px] text-[#5E6470] mb-1">내 컴퓨터에서 이미지 파일 선택 (JPG, PNG, WebP)</label>
+                <input type="file" id="form-cover-file" accept="image/*" onchange="handleCoverFileSelect(this)"
+                  class="w-full px-2 py-1.5 bg-white border border-[#E4DFD7] rounded-lg text-xs file:mr-2 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[#6E1B2A] file:text-white hover:file:bg-[#8C2538] cursor-pointer" />
+              </div>
+
+              <div>
+                <label class="block text-[11px] text-[#5E6470] mb-1">또는 이미지 URL 직접 입력</label>
+                <input type="url" id="form-cover-url" placeholder="https://example.com/cover.jpg" oninput="handleCoverUrlInput(this.value)"
+                  class="w-full px-3 py-2 bg-white border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:bg-white" />
+              </div>
+            </div>
+
+            <!-- Image Preview Box -->
+            <div id="cover-preview-wrapper" class="hidden items-center gap-4 pt-2 border-t border-[#E4DFD7]">
+              <div class="w-16 h-22 rounded border border-[#C39738] overflow-hidden shadow-md bg-white shrink-0 flex items-center justify-center">
+                <img id="form-cover-preview-img" src="" alt="표지 미리보기" class="w-full h-full object-cover" />
+              </div>
+              <div class="space-y-1">
+                <span class="text-xs font-bold text-[#17191C] flex items-center gap-1">
+                  <i class="fas fa-check-circle text-green-600"></i> 표지 이미지 준비 완료
+                </span>
+                <button type="button" onclick="removeCoverImage()" class="text-[11px] text-red-600 hover:underline flex items-center gap-1">
+                  <i class="fas fa-trash-alt"></i> 이미지 제거하고 기본 테마 사용
+                </button>
+              </div>
+            </div>
+          </div>
+
           <!-- Boolean Checkboxes -->
           <div class="flex flex-wrap items-center gap-6 pt-2 border-t border-[#F1ECE4]">
             <label class="flex items-center gap-2 cursor-pointer">
@@ -1237,36 +1276,45 @@
       }
     }
 
-    // Load Books Data with seed fallback
+    // Load Books Data cleanly from LocalStorage / Firestore / Initial Seed
     async function loadBooksData() {
       const refreshIcon = document.getElementById('refresh-icon');
       if (refreshIcon) refreshIcon.classList.add('fa-spin');
 
-      const mergedMap = new Map();
-      DEFAULT_BOOKS_DATA.forEach(function(b) { mergedMap.set(b.id, b); });
-
-      try {
-        const localCustom = localStorage.getItem('phb_custom_books');
-        if (localCustom) {
-          const parsed = JSON.parse(localCustom);
-          parsed.forEach(function(b) { mergedMap.set(b.id, b); });
+      // 1. Check if user already initialized or modified books list in localStorage
+      const localCustom = localStorage.getItem('phb_books_list');
+      if (localCustom) {
+        try {
+          allBooks = JSON.parse(localCustom);
+        } catch (e) {
+          allBooks = DEFAULT_BOOKS_DATA.slice();
         }
-      } catch (e) {}
-
-      try {
-        if (db) {
-          const snapshot = await db.collection("phb_books").get();
-          if (!snapshot.empty) {
-            snapshot.forEach(function(doc) {
-              mergedMap.set(doc.id, Object.assign({ id: doc.id }, doc.data()));
-            });
-          }
-        }
-      } catch (err) {
-        console.warn("Firestore offline fallback:", err);
+      } else {
+        // First time: initialize with default books
+        allBooks = DEFAULT_BOOKS_DATA.slice();
+        localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
       }
 
-      allBooks = Array.from(mergedMap.values());
+      // 2. Try Firestore sync in background if available
+      if (db) {
+        try {
+          const snapshot = await db.collection("phb_books").get();
+          if (!snapshot.empty) {
+            const firestoreBooks = [];
+            snapshot.forEach(function(doc) {
+              firestoreBooks.push(Object.assign({ id: doc.id }, doc.data()));
+            });
+            // If firestore has items and local is unchanged, take firestore
+            if (firestoreBooks.length > 0) {
+              allBooks = firestoreBooks;
+              localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+            }
+          }
+        } catch (err) {
+          console.warn("Firestore offline mode:", err);
+        }
+      }
+
       if (refreshIcon) refreshIcon.classList.remove('fa-spin');
       renderAdminBooks();
     }
@@ -1325,15 +1373,17 @@
             <!-- 표지 및 서명 -->
             <td class="py-4 px-4">
               <div class="flex items-center space-x-3">
-                <div class="w-12 h-16 bg-gradient-to-br ${book.coverGradient || 'from-[#1a1c20] to-[#121417]'} rounded shadow-sm flex flex-col justify-between p-1 text-center shrink-0 border border-[#C39738]/30 overflow-hidden relative">
-                  ${(book.coverUrl || book.coverImage) ? `
-                    <img src="${book.coverUrl || book.coverImage}" alt="${book.title}" class="absolute inset-0 w-full h-full object-cover">
-                  ` : `
+                ${(book.coverUrl || book.coverImage) ? `
+                  <div class="w-12 h-16 rounded shadow-sm shrink-0 border border-[#C39738]/40 overflow-hidden relative bg-white">
+                    <img src="${book.coverUrl || book.coverImage}" alt="${book.title}" class="w-full h-full object-cover">
+                  </div>
+                ` : `
+                  <div class="w-12 h-16 bg-gradient-to-br ${book.coverGradient || 'from-[#1a1c20] to-[#121417]'} rounded shadow-sm flex flex-col justify-between p-1 text-center shrink-0 border border-[#C39738]/30 overflow-hidden relative">
                     <span class="text-[5px] font-cinzel text-[#DFC075] uppercase truncate block">${(book.series || 'PHB').split('(')[0]}</span>
                     <span class="text-[7px] font-serifKr font-bold text-white leading-tight line-clamp-2">${(book.title || '').split('(')[0]}</span>
                     <span class="text-[5px] text-[#A6ADB8] truncate block">${book.author || ''}</span>
-                  `}
-                </div>
+                  </div>
+                `}
                 <div class="space-y-0.5 max-w-xs sm:max-w-sm">
                   <div class="font-bold text-sm text-[#17191C] group-hover:text-[#6E1B2A] transition-colors leading-snug">
                     ${book.title}
@@ -1497,6 +1547,56 @@
     }
 
     // 4. Modal Open & Form Handler
+    
+    // Cover Image Handling Functions
+    let uploadedCoverDataUrl = '';
+
+    function handleCoverFileSelect(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedCoverDataUrl = e.target.result;
+          document.getElementById('form-cover-url').value = '';
+          updateCoverPreview(uploadedCoverDataUrl);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function handleCoverUrlInput(val) {
+      val = val.trim();
+      if (val) {
+        uploadedCoverDataUrl = val;
+        updateCoverPreview(val);
+      } else {
+        removeCoverImage();
+      }
+    }
+
+    function updateCoverPreview(src) {
+      const wrapper = document.getElementById('cover-preview-wrapper');
+      const img = document.getElementById('form-cover-preview-img');
+      if (wrapper && img && src) {
+        img.src = src;
+        wrapper.classList.remove('hidden');
+        wrapper.classList.add('flex');
+      }
+    }
+
+    function removeCoverImage() {
+      uploadedCoverDataUrl = '';
+      const fileInput = document.getElementById('form-cover-file');
+      const urlInput = document.getElementById('form-cover-url');
+      const wrapper = document.getElementById('cover-preview-wrapper');
+      if (fileInput) fileInput.value = '';
+      if (urlInput) urlInput.value = '';
+      if (wrapper) {
+        wrapper.classList.add('hidden');
+        wrapper.classList.remove('flex');
+      }
+    }
+
     function openBookModal(book = null) {
       const modal = document.getElementById('book-edit-modal');
       const form = document.getElementById('book-form');
@@ -1520,6 +1620,15 @@
         document.getElementById('form-isbn').value = book.isbn || '';
         document.getElementById('form-confession-tag').value = book.confessionTag || '';
         document.getElementById('form-cover-gradient').value = book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]';
+        
+        // Populate Cover
+        if (book.coverUrl || book.coverImage) {
+          uploadedCoverDataUrl = book.coverUrl || book.coverImage;
+          document.getElementById('form-cover-url').value = uploadedCoverDataUrl.startsWith('data:') ? '' : uploadedCoverDataUrl;
+          updateCoverPreview(uploadedCoverDataUrl);
+        } else {
+          removeCoverImage();
+        }
 
         // Cover image setup
         currentCoverDataUrl = book.coverUrl || book.coverImage || '';
@@ -1565,6 +1674,7 @@
         document.getElementById('form-book-id').value = '';
         document.getElementById('form-cover-gradient').value = 'from-[#1a1c20] via-[#2d1b24] to-[#121417]';
         clearCoverImage();
+        if (typeof removeCoverImage === 'function') removeCoverImage();
         handleCoverGradientChange('from-[#1a1c20] via-[#2d1b24] to-[#121417]');
         updateCoverPreviewText();
       }
@@ -1588,14 +1698,25 @@
       const book = allBooks.find(b => b.id === id);
       if (!book) return;
 
-      if (confirm(`정말 도서 『${book.title}』을(를) 삭제하시겠습니까?`)) {
-        try {
-          await db.collection("phb_books").doc(id).delete();
-        } catch (e) {
-          console.warn("Firestore delete failed:", e);
+      if (confirm(`정말 도서 『${book.title}』을(를) 영구 삭제하시겠습니까?`)) {
+        // Remove from memory
+        allBooks = allBooks.filter(b => b.id !== id);
+        // Persist to unified localStorage key
+        localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+        localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+      localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
+
+        // Delete from Firestore
+        if (db) {
+          try {
+            await db.collection("phb_books").doc(id).delete();
+          } catch (e) {
+            console.warn("Firestore delete failed:", e);
+          }
         }
 
         allBooks = allBooks.filter(b => b.id !== id);
+        localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
         localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
         localStorage.setItem('phb_books', JSON.stringify(allBooks));
         renderAdminBooks();
@@ -1614,7 +1735,6 @@
 
       const tocVal = document.getElementById('form-toc').value.trim();
       const tocArray = tocVal ? tocVal.split('\n').map(s => s.trim()).filter(Boolean) : [];
-
       let finalCoverUrl = document.getElementById('form-cover-url') ? document.getElementById('form-cover-url').value.trim() : '';
       const coverFileInput = document.getElementById('form-cover-file');
       if (coverFileInput && coverFileInput.files && coverFileInput.files[0]) {
@@ -1624,15 +1744,15 @@
             const ref = storage.ref(`covers/${id}_${Date.now()}_${file.name}`);
             await ref.put(file);
             finalCoverUrl = await ref.getDownloadURL();
-          } catch(err) {
-            console.warn('Storage upload error, using local data URL:', err);
-            finalCoverUrl = currentCoverDataUrl;
+          } catch (e) {
+            console.warn('Storage upload failed, using Data URL fallback:', e);
+            finalCoverUrl = currentCoverDataUrl || (typeof uploadedCoverDataUrl !== 'undefined' ? uploadedCoverDataUrl : '') || '';
           }
-        } else {
-          finalCoverUrl = currentCoverDataUrl;
+        } else if (currentCoverDataUrl || (typeof uploadedCoverDataUrl !== 'undefined' && uploadedCoverDataUrl)) {
+          finalCoverUrl = currentCoverDataUrl || uploadedCoverDataUrl;
         }
-      } else if (!finalCoverUrl && currentCoverDataUrl) {
-        finalCoverUrl = currentCoverDataUrl;
+      } else if (!finalCoverUrl && (currentCoverDataUrl || (typeof uploadedCoverDataUrl !== 'undefined' && uploadedCoverDataUrl))) {
+        finalCoverUrl = currentCoverDataUrl || uploadedCoverDataUrl;
       }
 
       const bookData = {
@@ -1652,8 +1772,8 @@
         isbn: document.getElementById('form-isbn').value.trim(),
         confessionTag: document.getElementById('form-confession-tag').value.trim() || '개혁주의 표준문서',
         coverGradient: document.getElementById('form-cover-gradient').value,
-        coverUrl: finalCoverUrl,
-        coverImage: finalCoverUrl,
+        coverUrl: finalCoverUrl || (typeof uploadedCoverDataUrl !== 'undefined' ? uploadedCoverDataUrl : '') || '',
+        coverImage: finalCoverUrl || (typeof uploadedCoverDataUrl !== 'undefined' ? uploadedCoverDataUrl : '') || '',
 
         isNew: document.getElementById('form-is-new').checked,
         isPreorder: document.getElementById('form-is-preorder').checked,
@@ -1694,6 +1814,7 @@
         allBooks.unshift(bookData);
       }
 
+      localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
       localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
       localStorage.setItem('phb_books', JSON.stringify(allBooks));
 
