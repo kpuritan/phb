@@ -1167,16 +1167,6 @@ export default function PuritanHeritageBooksApp() {
               >
                 <Settings className="w-3.5 h-3.5" />
                 <span>도서 목록 관리</span>
-              </button>
-              <button
-                type="button"
-                onClick={handleResetBooks}
-                className="bg-[#23272D] hover:bg-[#2C313A] text-[#A6ADB8] hover:text-white px-2.5 py-1.5 rounded text-[11px] transition-colors cursor-pointer"
-                title="도서 목록을 기본 8권 데이터로 초기화"
-              >
-                <RotateCcw className="w-3 h-3 inline mr-1" />
-                기본 복원
-              </button>
               <button
                 type="button"
                 onClick={logoutAdmin}
