@@ -95,6 +95,7 @@
   <!-- Firebase SDK for Real-time Books Sync -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
 </head>
 <body class="bg-[#FAF8F5] selection:bg-[#6E1B2A] selection:text-white">
 
@@ -1167,18 +1168,18 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block font-semibold text-[#17191C] mb-1">도서명 (한글) *</label>
-            <input type="text" id="form-book-title" required placeholder="예: 구속사적 성경신학" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+            <input type="text" id="form-book-title" required placeholder="예: 구속사적 성경신학" oninput="updateBookFormCoverPreviewText()" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
           </div>
           <div>
             <label class="block font-semibold text-[#17191C] mb-1">원제 (영문)</label>
-            <input type="text" id="form-book-original-title" placeholder="예: Biblical Theology" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+            <input type="text" id="form-book-original-title" placeholder="예: Biblical Theology" oninput="updateBookFormCoverPreviewText()" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label class="block font-semibold text-[#17191C] mb-1">저자 *</label>
-            <input type="text" id="form-book-author" required placeholder="예: 게할더스 보스" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+            <input type="text" id="form-book-author" required placeholder="예: 게할더스 보스" oninput="updateBookFormCoverPreviewText()" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
           </div>
           <div>
             <label class="block font-semibold text-[#17191C] mb-1">역자</label>
@@ -1197,7 +1198,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label class="block font-semibold text-[#17191C] mb-1">시리즈명</label>
-            <input type="text" id="form-book-series" placeholder="예: 개혁교의학 대계" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+            <input type="text" id="form-book-series" placeholder="예: 개혁교의학 대계" oninput="updateBookFormCoverPreviewText()" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
           </div>
           <div>
             <label class="block font-semibold text-[#17191C] mb-1">정가 (원) *</label>
@@ -1209,17 +1210,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div>
-            <label class="block font-semibold text-[#17191C] mb-1">표지 컬러 테마</label>
-            <select id="form-book-gradient" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
-              <option value="from-[#1a1c20] via-[#2d1b24] to-[#121417]">차콜 버건디 (다크 프리미엄)</option>
-              <option value="from-[#4a121c] via-[#2a0b11] to-[#170508]">버건디 와인 (클래식)</option>
-              <option value="from-[#0f231c] via-[#091511] to-[#040806]">포레스트 딥그린 (경건)</option>
-              <option value="from-[#162032] via-[#0d1420] to-[#060a10]">미드나잇 네이비 (교의학)</option>
-              <option value="from-[#2e1d13] via-[#1a100b] to-[#0d0805]">앤틱 브라운 (양장 바인더)</option>
-            </select>
-          </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block font-semibold text-[#17191C] mb-1">페이지 수</label>
             <input type="text" id="form-book-pages" placeholder="예: 480쪽" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
@@ -1227,6 +1218,68 @@
           <div>
             <label class="block font-semibold text-[#17191C] mb-1">출간일 / 출간상태</label>
             <input type="text" id="form-book-pubdate" placeholder="예: 2026. 10. 15" class="w-full bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+          </div>
+        </div>
+
+        <!-- 도서 표지 등록 (파일 업로드 및 웹 URL, 실시간 미리보기) -->
+        <div class="p-4 bg-[#FAF8F5] rounded-xl border border-[#E4DFD7] space-y-3">
+          <label class="block font-serifKr font-bold text-xs text-[#6E1B2A] flex items-center gap-1.5">
+            <span class="text-sm">🖼️</span> 도서 표지 등록 (이미지 파일 업로드 / URL 입력 / 테마 선택)
+          </label>
+
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+            <!-- 왼쪽: 실시간 표지 렌더링 미리보기 -->
+            <div class="sm:col-span-4 flex flex-col items-center gap-1.5">
+              <div id="form-book-cover-preview-box" class="w-28 h-40 bg-gradient-to-br from-[#1a1c20] via-[#2d1b24] to-[#121417] rounded shadow-book relative overflow-hidden flex flex-col justify-between p-2 text-center border border-[#C39738]/40 transition-all duration-300">
+                <img id="form-book-cover-preview-img" src="" alt="표지 미리보기" class="hidden absolute inset-0 w-full h-full object-cover z-20" />
+                <div id="form-book-cover-preview-grad" class="w-full h-full flex flex-col justify-between relative z-10">
+                  <span id="form-book-preview-series" class="text-[5px] font-cinzel text-[#DFC075] uppercase truncate block">PHB CLASSICS</span>
+                  <div class="my-auto space-y-0.5 px-0.5">
+                    <span id="form-book-preview-title" class="text-[8px] font-serifKr font-bold text-white line-clamp-3 leading-tight block">도서명 미리보기</span>
+                  </div>
+                  <span id="form-book-preview-author" class="text-[6px] font-serifKr text-[#E4DFD7] border-t border-[#C39738]/20 pt-0.5 block truncate">저자명</span>
+                </div>
+              </div>
+              <span class="text-[9px] text-[#5E6470] font-medium">표지 실시간 미리보기</span>
+            </div>
+
+            <!-- 오른쪽: 파일 업로드 및 웹 URL 입력 -->
+            <div class="sm:col-span-8 space-y-2.5">
+              <div>
+                <label class="block font-semibold text-[#17191C] text-[11px] mb-1">
+                  📂 표지 이미지 파일 업로드 (PC / 스마트폰)
+                </label>
+                <div class="flex items-center gap-1.5">
+                  <input type="file" id="form-book-cover-file" accept="image/*" onchange="handleBookFormCoverFileSelect(event)"
+                    class="w-full text-xs text-[#5E6470] file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[11px] file:font-semibold file:bg-[#6E1B2A] file:text-white hover:file:bg-[#8C2538] file:cursor-pointer bg-white border border-[#E4DFD7] rounded p-1" />
+                  <button type="button" onclick="clearBookFormCoverImage()" class="px-2 py-1 bg-white hover:bg-red-50 text-red-600 border border-red-200 rounded text-[11px] font-semibold whitespace-nowrap transition-colors cursor-pointer" title="표지 이미지 초기화">
+                    지우기
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label class="block font-semibold text-[#17191C] text-[11px] mb-1">
+                  🔗 또는 표지 웹 이미지 URL 직접 입력
+                </label>
+                <input type="url" id="form-book-cover-url" placeholder="https://example.com/cover.jpg" oninput="handleBookFormCoverUrlInput(this.value)"
+                  class="w-full px-2.5 py-1.5 bg-white border border-[#E4DFD7] rounded text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]" />
+              </div>
+
+              <div>
+                <label class="block font-semibold text-[#17191C] text-[11px] mb-1">
+                  🎨 표지 컬러 테마 (이미지 미등록 시 기본 표지로 적용)
+                </label>
+                <select id="form-book-gradient" onchange="handleBookFormCoverGradientChange(this.value)"
+                  class="w-full px-2.5 py-1.5 bg-white border border-[#E4DFD7] rounded text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]">
+                  <option value="from-[#1a1c20] via-[#2d1b24] to-[#121417]">차콜 버건디 (다크 프리미엄)</option>
+                  <option value="from-[#4a121c] via-[#2a0b11] to-[#170508]">버건디 와인 (클래식)</option>
+                  <option value="from-[#0f231c] via-[#091511] to-[#040806]">포레스트 딥그린 (경건)</option>
+                  <option value="from-[#162032] via-[#0d1420] to-[#060a10]">미드나잇 네이비 (교의학)</option>
+                  <option value="from-[#2e1d13] via-[#1a100b] to-[#0d0805]">앤틱 브라운 (양장 바인더)</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1412,6 +1465,7 @@
       firebase.initializeApp(firebaseConfig);
     }
     const db = (typeof firebase !== 'undefined') ? firebase.firestore() : null;
+    const storage = (typeof firebase !== 'undefined' && firebase.storage) ? firebase.storage() : null;
 
     const DEFAULT_BOOKS_DATA = [
       {
@@ -2300,23 +2354,29 @@
         <div class="bg-white rounded-lg border border-[#E4DFD7] overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
           <div class="p-6 bg-[#F8F7F4] flex justify-center items-center relative border-b border-[#E4DFD7] overflow-hidden">
             
-            <div onclick="openBookPreview('${book.id}')" class="cursor-pointer w-44 h-64 bg-gradient-to-br ${book.coverGradient} rounded-r-md rounded-l-xs shadow-book book-spine-effect p-4 flex flex-col justify-between transform transition-all duration-300 group-hover:scale-105 group-hover:-rotate-1 relative">
-              <div class="absolute inset-2 border border-[#C39738]/30 pointer-events-none"></div>
-              <div class="relative z-10 text-center">
-                <span class="font-cinzel text-[8px] tracking-wider text-[#DFC075] uppercase block truncate">
-                  ${book.series.split('(')[0]}
-                </span>
-              </div>
-              <div class="relative z-10 text-center my-auto space-y-1">
-                <h3 class="font-serifKr text-base font-bold text-white leading-snug">
-                  ${book.title.split('(')[0]}
-                </h3>
-                <p class="font-serifEn italic text-[9px] text-[#DFC075]/70 truncate">${book.originalTitle}</p>
-              </div>
-              <div class="relative z-10 text-center border-t border-[#C39738]/20 pt-2">
-                <p class="text-[10px] font-serifKr text-[#E4DFD7] font-medium">${book.author}</p>
-                <span class="font-cinzel text-[7px] text-[#A6ADB8] tracking-widest">PHB CLASSICS</span>
-              </div>
+            <div onclick="openBookPreview('${book.id}')" class="cursor-pointer w-44 h-64 bg-gradient-to-br ${book.coverGradient} rounded-r-md rounded-l-xs shadow-book book-spine-effect p-4 flex flex-col justify-between transform transition-all duration-300 group-hover:scale-105 group-hover:-rotate-1 relative overflow-hidden">
+              ${(book.coverUrl || book.coverImage) ? `
+                <img src="${book.coverUrl || book.coverImage}" alt="${book.title}" class="absolute inset-0 w-full h-full object-cover z-0" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 pointer-events-none z-10"></div>
+                <div class="absolute inset-2 border border-[#C39738]/30 pointer-events-none z-20"></div>
+              ` : `
+                <div class="absolute inset-2 border border-[#C39738]/30 pointer-events-none"></div>
+                <div class="relative z-10 text-center">
+                  <span class="font-cinzel text-[8px] tracking-wider text-[#DFC075] uppercase block truncate">
+                    ${book.series.split('(')[0]}
+                  </span>
+                </div>
+                <div class="relative z-10 text-center my-auto space-y-1">
+                  <h3 class="font-serifKr text-base font-bold text-white leading-snug">
+                    ${book.title.split('(')[0]}
+                  </h3>
+                  <p class="font-serifEn italic text-[9px] text-[#DFC075]/70 truncate">${book.originalTitle}</p>
+                </div>
+                <div class="relative z-10 text-center border-t border-[#C39738]/20 pt-2">
+                  <p class="text-[10px] font-serifKr text-[#E4DFD7] font-medium">${book.author}</p>
+                  <span class="font-cinzel text-[7px] text-[#A6ADB8] tracking-widest">PHB CLASSICS</span>
+                </div>
+              `}
             </div>
 
             <div class="absolute top-3 left-3 flex flex-col gap-1 z-20">
@@ -2715,10 +2775,14 @@
       body.innerHTML = `
         <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 items-start pb-6 border-b border-[#E4DFD7]">
           <div class="sm:col-span-4 flex justify-center">
-            <div class="w-36 h-52 bg-gradient-to-br ${book.coverGradient} rounded shadow-book p-3 flex flex-col justify-between text-center relative">
-              <span class="text-[7px] font-cinzel text-[#DFC075] tracking-wider uppercase block">${book.series.split('(')[0]}</span>
-              <h4 class="text-xs font-serifKr font-bold text-white leading-snug">${book.title.split('(')[0]}</h4>
-              <span class="text-[8px] font-serifKr text-[#E4DFD7]">${book.author}</span>
+            <div class="w-36 h-52 bg-gradient-to-br ${book.coverGradient} rounded shadow-book p-3 flex flex-col justify-between text-center relative overflow-hidden">
+              ${(book.coverUrl || book.coverImage) ? `
+                <img src="${book.coverUrl || book.coverImage}" alt="${book.title}" class="absolute inset-0 w-full h-full object-cover">
+              ` : `
+                <span class="text-[7px] font-cinzel text-[#DFC075] tracking-wider uppercase block">${book.series.split('(')[0]}</span>
+                <h4 class="text-xs font-serifKr font-bold text-white leading-snug">${book.title.split('(')[0]}</h4>
+                <span class="text-[8px] font-serifKr text-[#E4DFD7]">${book.author}</span>
+              `}
             </div>
           </div>
           <div class="sm:col-span-8 space-y-2">
@@ -2948,10 +3012,10 @@
     // ==========================================
     // ADMIN MODE LOGIC
     // ==========================================
-    window.isAdmin = localStorage.getItem('isAdmin') === 'true';
+    window.isAdmin = localStorage.getItem('isAdmin') === 'true' || localStorage.getItem('phb_is_admin') === 'true' || localStorage.getItem('phb_admin_auth') === 'true';
 
     function updateAdminUI() {
-      window.isAdmin = localStorage.getItem('isAdmin') === 'true';
+      window.isAdmin = localStorage.getItem('isAdmin') === 'true' || localStorage.getItem('phb_is_admin') === 'true' || localStorage.getItem('phb_admin_auth') === 'true';
       const adminBar = document.getElementById('global-admin-bar');
       const topTriggerText = document.getElementById('top-admin-trigger-text');
       const footerAdminLinkText = document.getElementById('footer-admin-link-text');
@@ -3002,6 +3066,8 @@
 
       if (id === 'admin' && pw === '1234') {
         localStorage.setItem('isAdmin', 'true');
+        localStorage.setItem('phb_is_admin', 'true');
+        localStorage.setItem('phb_admin_auth', 'true');
         window.isAdmin = true;
         closeAdminLoginModal();
         updateAdminUI();
@@ -3014,6 +3080,8 @@
     function logoutAdmin() {
       if (confirm('관리자 모드를 로그아웃하시겠습니까?')) {
         localStorage.removeItem('isAdmin');
+        localStorage.removeItem('phb_is_admin');
+        localStorage.removeItem('phb_admin_auth');
         window.isAdmin = false;
         updateAdminUI();
         showToast('관리자 모드에서 로그아웃되었습니다.');
@@ -3022,6 +3090,77 @@
 
     function calculateDiscountPreview() {
       // realtime feedback placeholder
+    }
+
+    let currentBookFormCoverDataUrl = '';
+
+    function handleBookFormCoverFileSelect(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        currentBookFormCoverDataUrl = evt.target.result;
+        const previewImg = document.getElementById('form-book-cover-preview-img');
+        const urlInput = document.getElementById('form-book-cover-url');
+        if (previewImg) {
+          previewImg.src = currentBookFormCoverDataUrl;
+          previewImg.classList.remove('hidden');
+        }
+        if (urlInput) {
+          urlInput.value = '';
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleBookFormCoverUrlInput(url) {
+      currentBookFormCoverDataUrl = url.trim();
+      const previewImg = document.getElementById('form-book-cover-preview-img');
+      if (previewImg) {
+        if (currentBookFormCoverDataUrl) {
+          previewImg.src = currentBookFormCoverDataUrl;
+          previewImg.classList.remove('hidden');
+        } else {
+          previewImg.src = '';
+          previewImg.classList.add('hidden');
+        }
+      }
+    }
+
+    function handleBookFormCoverGradientChange(grad) {
+      const box = document.getElementById('form-book-cover-preview-box');
+      if (box) {
+        box.className = box.className.replace(/from-\S+|via-\S+|to-\S+/g, '').trim();
+        box.className += ' bg-gradient-to-br ' + grad;
+      }
+    }
+
+    function clearBookFormCoverImage() {
+      currentBookFormCoverDataUrl = '';
+      const fileInput = document.getElementById('form-book-cover-file');
+      const urlInput = document.getElementById('form-book-cover-url');
+      const previewImg = document.getElementById('form-book-cover-preview-img');
+      if (fileInput) fileInput.value = '';
+      if (urlInput) urlInput.value = '';
+      if (previewImg) {
+        previewImg.src = '';
+        previewImg.classList.add('hidden');
+      }
+    }
+
+    function updateBookFormCoverPreviewText() {
+      const t = document.getElementById('form-book-title')?.value.trim() || '도서명 미리보기';
+      const a = document.getElementById('form-book-author')?.value.trim() || '저자명';
+      const s = (document.getElementById('form-book-series')?.value.trim() || 'PHB CLASSICS').split('(')[0];
+
+      const pTitle = document.getElementById('form-book-preview-title');
+      const pAuthor = document.getElementById('form-book-preview-author');
+      const pSeries = document.getElementById('form-book-preview-series');
+
+      if (pTitle) pTitle.textContent = t;
+      if (pAuthor) pAuthor.textContent = a;
+      if (pSeries) pSeries.textContent = s;
     }
 
     function openBookFormModal(bookId) {
@@ -3044,6 +3183,26 @@
         document.getElementById('form-book-original-price').value = book.originalPrice || '';
         document.getElementById('form-book-price').value = book.price || '';
         document.getElementById('form-book-gradient').value = book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]';
+
+        // Cover setup
+        currentBookFormCoverDataUrl = book.coverUrl || book.coverImage || '';
+        const urlInput = document.getElementById('form-book-cover-url');
+        const previewImg = document.getElementById('form-book-cover-preview-img');
+        const fileInput = document.getElementById('form-book-cover-file');
+        if (fileInput) fileInput.value = '';
+        if (urlInput) urlInput.value = (book.coverUrl && !book.coverUrl.startsWith('data:')) ? book.coverUrl : '';
+        if (previewImg) {
+          if (currentBookFormCoverDataUrl) {
+            previewImg.src = currentBookFormCoverDataUrl;
+            previewImg.classList.remove('hidden');
+          } else {
+            previewImg.src = '';
+            previewImg.classList.add('hidden');
+          }
+        }
+        handleBookFormCoverGradientChange(book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]');
+        updateBookFormCoverPreviewText();
+
         document.getElementById('form-book-pages').value = book.pages || '';
         document.getElementById('form-book-pubdate').value = book.pubDate || '';
         document.getElementById('form-book-isnew').checked = !!book.isNew;
@@ -3059,6 +3218,9 @@
         form.reset();
         document.getElementById('form-book-id').value = '';
         document.getElementById('form-book-ishardcover').checked = true;
+        clearBookFormCoverImage();
+        handleBookFormCoverGradientChange('from-[#1a1c20] via-[#2d1b24] to-[#121417]');
+        updateBookFormCoverPreviewText();
       }
 
       modal.classList.remove('hidden');
@@ -3073,7 +3235,7 @@
       }
     }
 
-    function handleBookFormSubmit(e) {
+    async function handleBookFormSubmit(e) {
       e.preventDefault();
       const bookId = document.getElementById('form-book-id').value;
       const title = document.getElementById('form-book-title').value.trim();
@@ -3097,6 +3259,27 @@
       const toc = document.getElementById('form-book-toc').value.split('\n').map(s => s.trim()).filter(Boolean);
       const excerpt = document.getElementById('form-book-excerpt').value.trim();
 
+      // Cover image upload / URL handling
+      let finalCoverUrl = document.getElementById('form-book-cover-url') ? document.getElementById('form-book-cover-url').value.trim() : '';
+      const coverFileInput = document.getElementById('form-book-cover-file');
+      if (coverFileInput && coverFileInput.files && coverFileInput.files[0]) {
+        const file = coverFileInput.files[0];
+        if (typeof storage !== 'undefined' && storage) {
+          try {
+            const ref = storage.ref(`covers/${bookId || Date.now()}_${Date.now()}_${file.name}`);
+            await ref.put(file);
+            finalCoverUrl = await ref.getDownloadURL();
+          } catch(err) {
+            console.warn('Storage upload error, using local data URL:', err);
+            finalCoverUrl = currentBookFormCoverDataUrl;
+          }
+        } else {
+          finalCoverUrl = currentBookFormCoverDataUrl;
+        }
+      } else if (!finalCoverUrl && currentBookFormCoverDataUrl) {
+        finalCoverUrl = currentBookFormCoverDataUrl;
+      }
+
       if (bookId) {
         // Edit existing book
         const idx = BOOKS_DATA.findIndex(b => b.id === bookId);
@@ -3113,6 +3296,8 @@
             price,
             discountRate: Math.max(0, discountRate),
             coverGradient,
+            coverUrl: finalCoverUrl,
+            coverImage: finalCoverUrl,
             pages,
             pubDate,
             isNew,
@@ -3148,6 +3333,8 @@
           pubDate,
           tagline: tagline || `${author}의 대표작 정본 출간`,
           coverGradient,
+          coverUrl: finalCoverUrl,
+          coverImage: finalCoverUrl,
           confessionTag: '개혁주의 표준문서 연계',
           description: description || '퓨리탄 헤리티지 북스에서 정본으로 출간한 개혁주의 고전 문헌입니다.',
           toc: toc.length > 0 ? toc : ['제1장 서론', '제2장 본론', '제3장 결론 및 실천적 적용'],
@@ -3241,8 +3428,10 @@
       tbody.innerHTML = filtered.map(b => `
         <tr class="hover:bg-[#FAF8F5] transition-colors">
           <td class="p-3">
-            <div class="w-8 h-11 rounded bg-gradient-to-br ${b.coverGradient} shadow-xs border border-[#C39738]/30 flex items-center justify-center text-[7px] text-white font-cinzel font-bold">
-              PHB
+            <div class="w-8 h-11 rounded bg-gradient-to-br ${b.coverGradient} shadow-xs border border-[#C39738]/30 flex items-center justify-center text-[7px] text-white font-cinzel font-bold overflow-hidden relative">
+              ${(b.coverUrl || b.coverImage) ? `
+                <img src="${b.coverUrl || b.coverImage}" alt="${b.title}" class="absolute inset-0 w-full h-full object-cover">
+              ` : 'PHB'}
             </div>
           </td>
           <td class="p-3">

@@ -868,6 +868,8 @@ export default function PuritanHeritageBooksApp() {
     category: 'dogmatics',
     price: 31500,
     originalPrice: 35000,
+    coverUrl: '',
+    coverImage: '',
     coverGradient: 'from-[#1a1c20] via-[#2d1b24] to-[#121417]',
     pages: '480쪽',
     pubDate: '2026. 10.',
@@ -927,6 +929,8 @@ export default function PuritanHeritageBooksApp() {
         category: book.category || 'dogmatics',
         price: book.price || 0,
         originalPrice: book.originalPrice || 0,
+        coverUrl: book.coverUrl || book.coverImage || '',
+        coverImage: book.coverImage || book.coverUrl || '',
         coverGradient: book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]',
         pages: book.pages || '',
         pubDate: book.pubDate || '',
@@ -951,6 +955,8 @@ export default function PuritanHeritageBooksApp() {
         category: 'dogmatics',
         price: 31500,
         originalPrice: 35000,
+        coverUrl: '',
+        coverImage: '',
         coverGradient: 'from-[#1a1c20] via-[#2d1b24] to-[#121417]',
         pages: '480쪽',
         pubDate: '2026. 10.',
@@ -1990,31 +1996,41 @@ export default function PuritanHeritageBooksApp() {
                 <div className="p-6 bg-[#F8F7F4] flex justify-center items-center relative border-b border-[#E4DFD7] overflow-hidden">
                   <div 
                     onClick={() => setPreviewBook(book)}
-                    className={`cursor-pointer w-44 h-64 bg-gradient-to-br ${book.coverGradient} rounded-r-md rounded-l-xs shadow-lg p-4 flex flex-col justify-between transform transition-all duration-300 group-hover:scale-105 group-hover:-rotate-1 relative`}
+                    className={`cursor-pointer w-44 h-64 bg-gradient-to-br ${book.coverGradient} rounded-r-md rounded-l-xs shadow-lg p-4 flex flex-col justify-between transform transition-all duration-300 group-hover:scale-105 group-hover:-rotate-1 relative overflow-hidden`}
                   >
-                    <div className="relative z-10 text-center">
-                      <span className="font-serif text-[8px] tracking-wider text-[#DFC075] uppercase block truncate">
-                        {book.series.split('(')[0]}
-                      </span>
-                    </div>
+                    {(book.coverUrl || book.coverImage) ? (
+                      <img
+                        src={book.coverUrl || book.coverImage}
+                        alt={book.title}
+                        className="absolute inset-0 w-full h-full object-cover z-10 rounded-r-md"
+                      />
+                    ) : (
+                      <>
+                        <div className="relative z-10 text-center">
+                          <span className="font-serif text-[8px] tracking-wider text-[#DFC075] uppercase block truncate">
+                            {book.series.split('(')[0]}
+                          </span>
+                        </div>
 
-                    <div className="relative z-10 text-center my-auto space-y-1">
-                      <h3 className="font-serif text-base font-bold text-white leading-snug">
-                        {book.title.split('(')[0]}
-                      </h3>
-                      <p className="italic text-[9px] text-[#DFC075]/70 truncate">
-                        {book.originalTitle}
-                      </p>
-                    </div>
+                        <div className="relative z-10 text-center my-auto space-y-1">
+                          <h3 className="font-serif text-base font-bold text-white leading-snug">
+                            {book.title.split('(')[0]}
+                          </h3>
+                          <p className="italic text-[9px] text-[#DFC075]/70 truncate">
+                            {book.originalTitle}
+                          </p>
+                        </div>
 
-                    <div className="relative z-10 text-center border-t border-[#C39738]/20 pt-2">
-                      <p className="text-[10px] text-[#E4DFD7] font-medium">
-                        {book.author}
-                      </p>
-                      <span className="font-serif text-[7px] text-[#A6ADB8] tracking-widest">
-                        PHB CLASSICS
-                      </span>
-                    </div>
+                        <div className="relative z-10 text-center border-t border-[#C39738]/20 pt-2">
+                          <p className="text-[10px] text-[#E4DFD7] font-medium">
+                            {book.author}
+                          </p>
+                          <span className="font-serif text-[7px] text-[#A6ADB8] tracking-widest">
+                            PHB CLASSICS
+                          </span>
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   <div className="absolute top-3 left-3 flex flex-col gap-1 z-20">
@@ -2436,16 +2452,26 @@ export default function PuritanHeritageBooksApp() {
             <div className="p-6 sm:p-8 overflow-y-auto space-y-6 flex-1 text-sm font-sans">
               <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-start pb-6 border-b border-[#E4DFD7]">
                 <div className="sm:col-span-4 flex justify-center">
-                  <div className={`w-36 h-52 bg-gradient-to-br ${previewBook.coverGradient} rounded-r rounded-l-xs shadow-lg p-3 flex flex-col justify-between text-center relative`}>
-                    <span className="text-[7px] font-serif text-[#DFC075] tracking-wider uppercase block">
-                      {previewBook.series.split('(')[0]}
-                    </span>
-                    <h4 className="text-xs font-serif font-bold text-white leading-snug">
-                      {previewBook.title.split('(')[0]}
-                    </h4>
-                    <span className="text-[8px] text-[#E4DFD7]">
-                      {previewBook.author}
-                    </span>
+                  <div className={`w-36 h-52 bg-gradient-to-br ${previewBook.coverGradient} rounded-r rounded-l-xs shadow-lg p-3 flex flex-col justify-between text-center relative overflow-hidden`}>
+                    {(previewBook.coverUrl || previewBook.coverImage) ? (
+                      <img
+                        src={previewBook.coverUrl || previewBook.coverImage}
+                        alt={previewBook.title}
+                        className="absolute inset-0 w-full h-full object-cover z-10 rounded-r"
+                      />
+                    ) : (
+                      <>
+                        <span className="text-[7px] font-serif text-[#DFC075] tracking-wider uppercase block">
+                          {previewBook.series.split('(')[0]}
+                        </span>
+                        <h4 className="text-xs font-serif font-bold text-white leading-snug">
+                          {previewBook.title.split('(')[0]}
+                        </h4>
+                        <span className="text-[8px] text-[#E4DFD7]">
+                          {previewBook.author}
+                        </span>
+                      </>
+                    )}
                   </div>
                 </div>
 
@@ -3090,8 +3116,29 @@ export default function PuritanHeritageBooksApp() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="sm:col-span-2">
+                  <label className="block font-semibold text-[#17191C] mb-1">표지 이미지 URL / 파일 링크</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="https://... 또는 이미지 데이터 URL"
+                      value={formBook.coverUrl || formBook.coverImage || ''}
+                      onChange={(e) => setFormBook({ ...formBook, coverUrl: e.target.value, coverImage: e.target.value })}
+                      className="flex-1 bg-white border border-[#E4DFD7] rounded p-2 text-xs text-[#17191C] focus:outline-none focus:border-[#C39738]"
+                    />
+                    {(formBook.coverUrl || formBook.coverImage) && (
+                      <button
+                        type="button"
+                        onClick={() => setFormBook({ ...formBook, coverUrl: '', coverImage: '' })}
+                        className="px-2.5 py-1 text-xs text-red-600 bg-red-50 hover:bg-red-100 rounded border border-red-200"
+                      >
+                        삭제
+                      </button>
+                    )}
+                  </div>
+                </div>
                 <div>
-                  <label className="block font-semibold text-[#17191C] mb-1">표지 컬러 테마</label>
+                  <label className="block font-semibold text-[#17191C] mb-1">표지 컬러 테마 (폴백)</label>
                   <select
                     value={formBook.coverGradient}
                     onChange={(e) => setFormBook({ ...formBook, coverGradient: e.target.value })}
@@ -3293,9 +3340,17 @@ export default function PuritanHeritageBooksApp() {
                     {books.filter(b => !managerSearchQuery || b.title.toLowerCase().includes(managerSearchQuery.toLowerCase()) || b.author.toLowerCase().includes(managerSearchQuery.toLowerCase())).map((b) => (
                       <tr key={b.id} className="hover:bg-[#FAF8F5] transition-colors">
                         <td className="p-3">
-                          <div className={`w-8 h-11 rounded bg-gradient-to-br ${b.coverGradient} shadow-xs border border-[#C39738]/30 flex items-center justify-center text-[7px] text-white font-serif font-bold`}>
-                            PHB
-                          </div>
+                          {(b.coverUrl || b.coverImage) ? (
+                            <img
+                              src={b.coverUrl || b.coverImage}
+                              alt={b.title}
+                              className="w-8 h-11 rounded object-cover shadow-xs border border-[#C39738]/30"
+                            />
+                          ) : (
+                            <div className={`w-8 h-11 rounded bg-gradient-to-br ${b.coverGradient} shadow-xs border border-[#C39738]/30 flex items-center justify-center text-[7px] text-white font-serif font-bold`}>
+                              PHB
+                            </div>
+                          )}
                         </td>
                         <td className="p-3">
                           <div className="font-bold text-[#17191C] text-xs">{b.title}</div>

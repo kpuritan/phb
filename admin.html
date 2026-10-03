@@ -277,19 +277,19 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block font-semibold text-[#17191C] mb-1">도서명 (한글) <span class="text-red-500">*</span></label>
-              <input type="text" id="form-title" required placeholder="예: 개혁주의 조직신학 전집 (전4권 세트)"
+              <input type="text" id="form-title" required placeholder="예: 개혁주의 조직신학 전집 (전4권 세트)" oninput="updateCoverPreviewText()"
                 class="w-full px-3 py-2 bg-[#FAF8F5] border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:outline-none focus:border-[#6E1B2A] focus:bg-white" />
             </div>
 
             <div>
               <label class="block font-semibold text-[#17191C] mb-1">원제 (Original English Title)</label>
-              <input type="text" id="form-original-title" placeholder="예: Reformed Systematic Theology"
+              <input type="text" id="form-original-title" placeholder="예: Reformed Systematic Theology" oninput="updateCoverPreviewText()"
                 class="w-full px-3 py-2 bg-[#FAF8F5] border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:outline-none focus:border-[#6E1B2A] focus:bg-white" />
             </div>
 
             <div>
               <label class="block font-semibold text-[#17191C] mb-1">저자 (Author) <span class="text-red-500">*</span></label>
-              <input type="text" id="form-author" required placeholder="예: 조엘 비키 & 폴 스몰리"
+              <input type="text" id="form-author" required placeholder="예: 조엘 비키 & 폴 스몰리" oninput="updateCoverPreviewText()"
                 class="w-full px-3 py-2 bg-[#FAF8F5] border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:outline-none focus:border-[#6E1B2A] focus:bg-white" />
             </div>
 
@@ -383,17 +383,69 @@
               <input type="text" id="form-confession-tag" placeholder="예: 웨스트민스터 신앙고백서 제13장"
                 class="w-full px-3 py-2 bg-[#FAF8F5] border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:outline-none focus:border-[#6E1B2A] focus:bg-white" />
             </div>
+          </div>
 
-            <div>
-              <label class="block font-semibold text-[#17191C] mb-1">표지 그라디언트 테마</label>
-              <select id="form-cover-gradient"
-                class="w-full px-3 py-2 bg-[#FAF8F5] border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:outline-none focus:border-[#6E1B2A] focus:bg-white">
-                <option value="from-[#1a1c20] via-[#2d1b24] to-[#121417]">다크 버건디 (조직신학)</option>
-                <option value="from-[#4a121c] via-[#2a0b11] to-[#170508]">클래식 딥버건디 (경건/고전)</option>
-                <option value="from-[#12242e] via-[#0c181f] to-[#060c10]">네이비 블루 (주석/해설)</option>
-                <option value="from-[#2e2612] via-[#1a150a] to-[#0d0a05]">골드 브라운 (전집/역사)</option>
-                <option value="from-[#1e2a22] via-[#101712] to-[#080d09]">포레스트 그린 (신앙생활)</option>
-              </select>
+          <!-- 도서 표지 등록 (파일 업로드 및 웹 URL, 실시간 미리보기) -->
+          <div class="mt-4 pt-4 border-t border-[#F1ECE4]">
+            <label class="block font-serifKr font-bold text-xs text-[#6E1B2A] mb-2 flex items-center gap-1.5">
+              <i class="fas fa-image text-[#C39738]"></i> 도서 표지 등록 (이미지 업로드 / URL 입력 / 테마 선택)
+            </label>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center bg-[#FAF8F5] p-4 rounded-xl border border-[#E4DFD7]">
+              <!-- 왼쪽: 실시간 표지 렌더링 미리보기 -->
+              <div class="md:col-span-4 flex flex-col items-center gap-2">
+                <div id="form-cover-preview-box" class="w-32 h-48 bg-gradient-to-br from-[#1a1c20] via-[#2d1b24] to-[#121417] rounded shadow-book relative overflow-hidden flex flex-col justify-between p-2.5 text-center border border-[#C39738]/40 transition-all duration-300">
+                  <img id="form-cover-preview-img" src="" alt="표지 미리보기" class="hidden absolute inset-0 w-full h-full object-cover z-20" />
+                  <div id="form-cover-preview-grad" class="w-full h-full flex flex-col justify-between relative z-10">
+                    <span id="form-preview-series" class="text-[6px] font-cinzel text-[#DFC075] uppercase truncate block">PHB CLASSICS</span>
+                    <div class="my-auto space-y-1 px-1">
+                      <span id="form-preview-title" class="text-[9px] font-serifKr font-bold text-white line-clamp-3 leading-tight block">도서명 미리보기</span>
+                      <span id="form-preview-orig" class="text-[6px] font-serifEn italic text-[#DFC075]/70 block truncate">Original Title</span>
+                    </div>
+                    <span id="form-preview-author" class="text-[7px] font-serifKr text-[#E4DFD7] border-t border-[#C39738]/20 pt-1 block truncate">저자명</span>
+                  </div>
+                </div>
+                <span class="text-[10px] text-[#5E6470] font-medium">표지 실시간 미리보기</span>
+              </div>
+
+              <!-- 오른쪽: 파일 업로드 및 웹 URL 입력 -->
+              <div class="md:col-span-8 space-y-3">
+                <div>
+                  <label class="block font-semibold text-[#17191C] text-[11px] mb-1">
+                    <i class="fas fa-cloud-upload-alt text-[#6E1B2A] mr-1"></i> 표지 이미지 파일 업로드 (PC / 모바일)
+                  </label>
+                  <div class="flex items-center gap-2">
+                    <input type="file" id="form-cover-file" accept="image/*" onchange="handleCoverFileSelect(event)"
+                      class="w-full text-xs text-[#5E6470] file:mr-2.5 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-[#6E1B2A] file:text-white hover:file:bg-[#8C2538] file:cursor-pointer bg-white border border-[#E4DFD7] rounded-lg p-1" />
+                    <button type="button" onclick="clearCoverImage()" class="px-2.5 py-1.5 bg-white hover:bg-red-50 text-red-600 border border-red-200 rounded text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer" title="표지 이미지 초기화">
+                      지우기
+                    </button>
+                  </div>
+                  <p class="text-[10px] text-[#7E8694] mt-0.5">* JPG, PNG, WebP 이미지 지원 (비율 권장 약 1 : 1.45)</p>
+                </div>
+
+                <div>
+                  <label class="block font-semibold text-[#17191C] text-[11px] mb-1">
+                    <i class="fas fa-link text-[#C39738] mr-1"></i> 또는 표지 웹 이미지 URL 직접 입력
+                  </label>
+                  <input type="url" id="form-cover-url" placeholder="https://example.com/cover.jpg" oninput="handleCoverUrlInput(this.value)"
+                    class="w-full px-3 py-2 bg-white border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:outline-none focus:border-[#6E1B2A]" />
+                </div>
+
+                <div>
+                  <label class="block font-semibold text-[#17191C] text-[11px] mb-1">
+                    <i class="fas fa-palette text-[#5E6470] mr-1"></i> 표지 컬러 테마 (이미지 미등록 시 기본 표지로 적용)
+                  </label>
+                  <select id="form-cover-gradient" onchange="handleCoverGradientChange(this.value)"
+                    class="w-full px-3 py-2 bg-white border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:outline-none focus:border-[#6E1B2A]">
+                    <option value="from-[#1a1c20] via-[#2d1b24] to-[#121417]">다크 버건디 (조직신학)</option>
+                    <option value="from-[#4a121c] via-[#2a0b11] to-[#170508]">클래식 딥버건디 (경건/고전)</option>
+                    <option value="from-[#12242e] via-[#0c181f] to-[#060c10]">네이비 블루 (주석/해설)</option>
+                    <option value="from-[#2e2612] via-[#1a150a] to-[#0d0a05]">골드 브라운 (전집/역사)</option>
+                    <option value="from-[#1e2a22] via-[#101712] to-[#080d09]">포레스트 그린 (신앙생활)</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -543,8 +595,11 @@
       messagingSenderId: "1071220455502",
       appId: "1:1071220455502:web:7f6f59b48c48a73437f8f0"
     };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = (typeof firebase !== 'undefined') ? firebase.firestore() : null;
+    const storage = (typeof firebase !== 'undefined' && firebase.storage) ? firebase.storage() : null;
 
     let allBooks = [];
     let currentAdminCategory = 'all';
@@ -1270,10 +1325,14 @@
             <!-- 표지 및 서명 -->
             <td class="py-4 px-4">
               <div class="flex items-center space-x-3">
-                <div class="w-12 h-16 bg-gradient-to-br ${book.coverGradient || 'from-[#1a1c20] to-[#121417]'} rounded shadow-sm flex flex-col justify-between p-1 text-center shrink-0 border border-[#C39738]/30">
-                  <span class="text-[5px] font-cinzel text-[#DFC075] uppercase truncate block">${(book.series || 'PHB').split('(')[0]}</span>
-                  <span class="text-[7px] font-serifKr font-bold text-white leading-tight line-clamp-2">${(book.title || '').split('(')[0]}</span>
-                  <span class="text-[5px] text-[#A6ADB8] truncate block">${book.author || ''}</span>
+                <div class="w-12 h-16 bg-gradient-to-br ${book.coverGradient || 'from-[#1a1c20] to-[#121417]'} rounded shadow-sm flex flex-col justify-between p-1 text-center shrink-0 border border-[#C39738]/30 overflow-hidden relative">
+                  ${(book.coverUrl || book.coverImage) ? `
+                    <img src="${book.coverUrl || book.coverImage}" alt="${book.title}" class="absolute inset-0 w-full h-full object-cover">
+                  ` : `
+                    <span class="text-[5px] font-cinzel text-[#DFC075] uppercase truncate block">${(book.series || 'PHB').split('(')[0]}</span>
+                    <span class="text-[7px] font-serifKr font-bold text-white leading-tight line-clamp-2">${(book.title || '').split('(')[0]}</span>
+                    <span class="text-[5px] text-[#A6ADB8] truncate block">${book.author || ''}</span>
+                  `}
                 </div>
                 <div class="space-y-0.5 max-w-xs sm:max-w-sm">
                   <div class="font-bold text-sm text-[#17191C] group-hover:text-[#6E1B2A] transition-colors leading-snug">
@@ -1363,6 +1422,80 @@
       renderAdminBooks();
     }
 
+    let currentCoverDataUrl = '';
+
+    function handleCoverFileSelect(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        currentCoverDataUrl = evt.target.result;
+        const previewImg = document.getElementById('form-cover-preview-img');
+        const urlInput = document.getElementById('form-cover-url');
+        if (previewImg) {
+          previewImg.src = currentCoverDataUrl;
+          previewImg.classList.remove('hidden');
+        }
+        if (urlInput) {
+          urlInput.value = '';
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleCoverUrlInput(url) {
+      currentCoverDataUrl = url.trim();
+      const previewImg = document.getElementById('form-cover-preview-img');
+      if (previewImg) {
+        if (currentCoverDataUrl) {
+          previewImg.src = currentCoverDataUrl;
+          previewImg.classList.remove('hidden');
+        } else {
+          previewImg.src = '';
+          previewImg.classList.add('hidden');
+        }
+      }
+    }
+
+    function handleCoverGradientChange(grad) {
+      const box = document.getElementById('form-cover-preview-box');
+      if (box) {
+        box.className = box.className.replace(/from-\S+|via-\S+|to-\S+/g, '').trim();
+        box.className += ' bg-gradient-to-br ' + grad;
+      }
+    }
+
+    function clearCoverImage() {
+      currentCoverDataUrl = '';
+      const fileInput = document.getElementById('form-cover-file');
+      const urlInput = document.getElementById('form-cover-url');
+      const previewImg = document.getElementById('form-cover-preview-img');
+      if (fileInput) fileInput.value = '';
+      if (urlInput) urlInput.value = '';
+      if (previewImg) {
+        previewImg.src = '';
+        previewImg.classList.add('hidden');
+      }
+    }
+
+    function updateCoverPreviewText() {
+      const t = document.getElementById('form-title')?.value.trim() || '도서명 미리보기';
+      const a = document.getElementById('form-author')?.value.trim() || '저자명';
+      const o = document.getElementById('form-original-title')?.value.trim() || '';
+      const s = (document.getElementById('form-series')?.value.trim() || 'PHB CLASSICS').split('(')[0];
+
+      const pTitle = document.getElementById('form-preview-title');
+      const pAuthor = document.getElementById('form-preview-author');
+      const pOrig = document.getElementById('form-preview-orig');
+      const pSeries = document.getElementById('form-preview-series');
+
+      if (pTitle) pTitle.textContent = t;
+      if (pAuthor) pAuthor.textContent = a;
+      if (pOrig) pOrig.textContent = o;
+      if (pSeries) pSeries.textContent = s;
+    }
+
     // 4. Modal Open & Form Handler
     function openBookModal(book = null) {
       const modal = document.getElementById('book-edit-modal');
@@ -1388,6 +1521,25 @@
         document.getElementById('form-confession-tag').value = book.confessionTag || '';
         document.getElementById('form-cover-gradient').value = book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]';
 
+        // Cover image setup
+        currentCoverDataUrl = book.coverUrl || book.coverImage || '';
+        const urlInput = document.getElementById('form-cover-url');
+        const previewImg = document.getElementById('form-cover-preview-img');
+        const fileInput = document.getElementById('form-cover-file');
+        if (fileInput) fileInput.value = '';
+        if (urlInput) urlInput.value = (book.coverUrl && !book.coverUrl.startsWith('data:')) ? book.coverUrl : '';
+        if (previewImg) {
+          if (currentCoverDataUrl) {
+            previewImg.src = currentCoverDataUrl;
+            previewImg.classList.remove('hidden');
+          } else {
+            previewImg.src = '';
+            previewImg.classList.add('hidden');
+          }
+        }
+        handleCoverGradientChange(book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]');
+        updateCoverPreviewText();
+
         document.getElementById('form-is-new').checked = !!book.isNew;
         document.getElementById('form-is-preorder').checked = !!book.isPreorder;
         document.getElementById('form-is-hardcover').checked = !!book.isHardcover;
@@ -1406,13 +1558,15 @@
 
         document.getElementById('form-tagline').value = book.tagline || '';
         document.getElementById('form-description').value = book.description || '';
-        document.getElementById('form-toc').value = Array.isArray(book.toc) ? book.toc.join('
-') : (book.toc || '');
+        document.getElementById('form-toc').value = Array.isArray(book.toc) ? book.toc.join('\n') : (book.toc || '');
         document.getElementById('form-excerpt').value = book.excerpt || '';
       } else {
         document.getElementById('book-modal-mode-title').innerText = '새 도서 등록';
         document.getElementById('form-book-id').value = '';
         document.getElementById('form-cover-gradient').value = 'from-[#1a1c20] via-[#2d1b24] to-[#121417]';
+        clearCoverImage();
+        handleCoverGradientChange('from-[#1a1c20] via-[#2d1b24] to-[#121417]');
+        updateCoverPreviewText();
       }
 
       modal.classList.remove('hidden');
@@ -1443,6 +1597,7 @@
 
         allBooks = allBooks.filter(b => b.id !== id);
         localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
+        localStorage.setItem('phb_books', JSON.stringify(allBooks));
         renderAdminBooks();
         showToast('도서가 성공적으로 삭제되었습니다.');
       }
@@ -1458,8 +1613,27 @@
       const id = existingId || `phb-${Date.now()}`;
 
       const tocVal = document.getElementById('form-toc').value.trim();
-      const tocArray = tocVal ? tocVal.split('
-').map(s => s.trim()).filter(Boolean) : [];
+      const tocArray = tocVal ? tocVal.split('\n').map(s => s.trim()).filter(Boolean) : [];
+
+      let finalCoverUrl = document.getElementById('form-cover-url') ? document.getElementById('form-cover-url').value.trim() : '';
+      const coverFileInput = document.getElementById('form-cover-file');
+      if (coverFileInput && coverFileInput.files && coverFileInput.files[0]) {
+        const file = coverFileInput.files[0];
+        if (typeof storage !== 'undefined' && storage) {
+          try {
+            const ref = storage.ref(`covers/${id}_${Date.now()}_${file.name}`);
+            await ref.put(file);
+            finalCoverUrl = await ref.getDownloadURL();
+          } catch(err) {
+            console.warn('Storage upload error, using local data URL:', err);
+            finalCoverUrl = currentCoverDataUrl;
+          }
+        } else {
+          finalCoverUrl = currentCoverDataUrl;
+        }
+      } else if (!finalCoverUrl && currentCoverDataUrl) {
+        finalCoverUrl = currentCoverDataUrl;
+      }
 
       const bookData = {
         id,
@@ -1478,6 +1652,8 @@
         isbn: document.getElementById('form-isbn').value.trim(),
         confessionTag: document.getElementById('form-confession-tag').value.trim() || '개혁주의 표준문서',
         coverGradient: document.getElementById('form-cover-gradient').value,
+        coverUrl: finalCoverUrl,
+        coverImage: finalCoverUrl,
 
         isNew: document.getElementById('form-is-new').checked,
         isPreorder: document.getElementById('form-is-preorder').checked,
@@ -1503,7 +1679,9 @@
 
       try {
         // Save to Firestore
-        await db.collection("phb_books").doc(id).set(bookData, { merge: true });
+        if (db) {
+          await db.collection("phb_books").doc(id).set(bookData, { merge: true });
+        }
       } catch (err) {
         console.warn("Firestore save warning:", err);
       }
@@ -1517,6 +1695,7 @@
       }
 
       localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
+      localStorage.setItem('phb_books', JSON.stringify(allBooks));
 
       saveBtn.disabled = false;
       saveBtn.innerHTML = '<i class="fas fa-check"></i> <span>도서 정보 저장 완료</span>';
