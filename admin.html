@@ -629,7 +629,17 @@
       firebase.initializeApp(firebaseConfig);
     }
     const db = (typeof firebase !== 'undefined') ? firebase.firestore() : null;
+    const auth = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth() : null;
     const storage = (typeof firebase !== 'undefined' && firebase.storage) ? firebase.storage() : null;
+
+    // Ensure Auth
+    if (auth) {
+      auth.onAuthStateChanged(user => {
+        if (!user) {
+          auth.signInAnonymously().catch(e => console.warn("Admin Anonymous Auth error:", e));
+        }
+      });
+    }
 
     let allBooks = [];
     let currentAdminCategory = 'all';

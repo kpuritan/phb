@@ -835,17 +835,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Intercept footer "관리자 로그인" links to open modal without page jump
-    document.addEventListener('click', (e) => {
-        const link = e.target.closest('a[href*="admin.html"]');
-        if (link && !location.pathname.toLowerCase().includes('admin.html')) {
-            const isAdmin = localStorage.getItem('isAdmin') === 'true';
-            if (!isAdmin) {
-                e.preventDefault();
-                window.openAdminLoginModal();
-            }
-        }
-    });
+    // Direct navigation to admin.html without modal interception
+    // (User can directly access admin portal)
 
     // About Modal Logic
     const aboutCloseBtn = document.getElementById('about-close-btn');
