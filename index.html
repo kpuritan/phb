@@ -581,10 +581,10 @@
 
   <!-- ========================================== -->
   <section id="hero-carousel-section" class="relative bg-[#121417] text-white overflow-hidden select-none border-b border-[#2B2F36]">
-    <!-- Classical Puritan Library Background Image & Crisp Visibility -->
-    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-85 transition-opacity duration-700" style="background-image: url('images/hero-no-text.jpg');"></div>
-    <div class="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-black/85 pointer-events-none"></div>
-    <div class="absolute inset-0 bg-gradient-to-b from-[#17191C]/70 via-transparent to-[#17191C]/90 pointer-events-none"></div>
+    <!-- Dynamic Hero Background Image (Changes with current book cover / fallback to classic hero) -->
+    <div id="hero-dynamic-bg" class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 scale-105 opacity-40 blur-xs" style="background-image: url('images/hero-no-text.jpg');"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/90 pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-[#17191C]/80 via-transparent to-[#17191C]/95 pointer-events-none"></div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16 relative z-10">
       
@@ -3173,6 +3173,21 @@
 
       if (currentHeroIndex >= items.length) {
         currentHeroIndex = 0;
+      }
+
+      const activeBook = items[currentHeroIndex];
+      const bgEl = document.getElementById('hero-dynamic-bg');
+      if (bgEl) {
+        const coverImg = activeBook ? (activeBook.coverUrl || activeBook.coverImage) : null;
+        if (coverImg) {
+          bgEl.style.backgroundImage = `url('${coverImg}')`;
+          bgEl.classList.remove('opacity-40');
+          bgEl.classList.add('opacity-35');
+        } else {
+          bgEl.style.backgroundImage = `url('images/hero-no-text.jpg')`;
+          bgEl.classList.remove('opacity-35');
+          bgEl.classList.add('opacity-40');
+        }
       }
 
       track.innerHTML = items.map((book, idx) => {
