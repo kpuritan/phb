@@ -428,44 +428,62 @@
         return;
       }
 
-      // 1. Try Firestore First / In Parallel
+      // 1. Initial lookup from localStorage for instant render
       let book = null;
+      let books = [];
+      try {
+        const saved = localStorage.getItem('phb_books_list') || localStorage.getItem('phb_books') || localStorage.getItem('phb_custom_books');
+        if (saved) {
+          books = JSON.parse(saved);
+          if (Array.isArray(books)) {
+            book = books.find(b => String(b.id) === String(bookId));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+
+      if (book) {
+        renderBook(book);
+      }
+
+      // 2. Real-time Firestore snapshot listener
       if (db) {
         try {
-          const doc = await db.collection("phb_books").doc(bookId).get();
-          if (doc.exists) {
-            book = { id: doc.id, ...doc.data() };
-          }
+          db.collection("phb_books").doc(bookId).onSnapshot((doc) => {
+            if (doc.exists) {
+              const liveBook = { id: doc.id, ...doc.data() };
+              renderBook(liveBook);
+            } else if (!book) {
+              document.getElementById('loading-spinner').innerHTML = `
+                <div class="text-center py-12">
+                  <p class="text-sm text-[#8C2538] font-bold">해당 도서를 찾을 수 없습니다.</p>
+                  <a href="index.html" class="mt-4 inline-block px-4 py-2 bg-[#17191C] text-white text-xs rounded-lg">전체 목록으로</a>
+                </div>
+              `;
+            }
+          }, (err) => {
+            console.warn("Firestore snapshot error:", err);
+            if (!book) {
+              document.getElementById('loading-spinner').innerHTML = `
+                <div class="text-center py-12">
+                  <p class="text-sm text-[#8C2538] font-bold">도서 정보를 불러오지 못했습니다.</p>
+                  <a href="index.html" class="mt-4 inline-block px-4 py-2 bg-[#17191C] text-white text-xs rounded-lg">전체 목록으로</a>
+                </div>
+              `;
+            }
+          });
         } catch (e) {
-          console.warn("Firestore direct lookup error:", e);
+          console.warn("Firestore listener setup error:", e);
         }
-      }
-
-      // 2. If not found in Firestore direct doc, check localStorage
-      if (!book) {
-        let books = [];
-        try {
-          const saved = localStorage.getItem('phb_books_list') || localStorage.getItem('phb_books') || localStorage.getItem('phb_custom_books');
-          if (saved) {
-            books = JSON.parse(saved);
-          }
-        } catch (e) {
-          console.error(e);
-        }
-        book = Array.isArray(books) ? books.find(b => String(b.id) === String(bookId)) : null;
-      }
-
-      if (!book) {
+      } else if (!book) {
         document.getElementById('loading-spinner').innerHTML = `
           <div class="text-center py-12">
             <p class="text-sm text-[#8C2538] font-bold">해당 도서를 찾을 수 없습니다.</p>
             <a href="index.html" class="mt-4 inline-block px-4 py-2 bg-[#17191C] text-white text-xs rounded-lg">전체 목록으로</a>
           </div>
         `;
-        return;
       }
-
-      renderBook(book);
     }
 
     function renderBook(book) {
