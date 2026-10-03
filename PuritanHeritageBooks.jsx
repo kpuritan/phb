@@ -2213,7 +2213,7 @@ export default function PuritanHeritageBooksApp() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-[#2B2F36]">
             
-            <div className="lg:col-span-5 space-y-4">
+            <div className="lg:col-span-7 space-y-4">
               <div className="flex items-center space-x-3">
                 <div className="w-9 h-9 rounded bg-[#23272D] border border-[#C39738] flex items-center justify-center font-serif font-bold text-[#C39738] text-sm">
                   PHB
@@ -2238,20 +2238,7 @@ export default function PuritanHeritageBooksApp() {
               </div>
             </div>
 
-            <div className="lg:col-span-3 space-y-3">
-              <h4 className="font-serif text-xs font-bold text-white uppercase tracking-wider">
-                Publishing Archives
-              </h4>
-              <ul className="space-y-2 text-[11px]">
-                <li><a href="#" className="hover:text-[#DFC075] transition-colors">청교도 보화 시리즈 (Puritan Gems)</a></li>
-                <li><a href="#" className="hover:text-[#DFC075] transition-colors">개혁교의학 대계 (Reformed Dogmatics)</a></li>
-                <li><a href="#" className="hover:text-[#DFC075] transition-colors">가정예배와 거룩한 유산 시리즈</a></li>
-                <li><a href="#" className="hover:text-[#DFC075] transition-colors">존 오웬 전집 (Works of John Owen)</a></li>
-                <li><a href="#" className="hover:text-[#DFC075] transition-colors">학술 논단 및 역자 주해 아카이브</a></li>
-              </ul>
-            </div>
-
-            <div className="lg:col-span-4 space-y-4">
+            <div className="lg:col-span-5 space-y-4">
               <h4 className="font-serif text-xs font-bold text-white uppercase tracking-wider">
                 PHB Theological Letter & New Releases
               </h4>
