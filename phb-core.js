@@ -763,87 +763,9 @@ function renderCartDrawer() {
   if (totalEl) totalEl.innerText = subtotal.toLocaleString() + '원';
 }
 
-// 5. Book Preview Modal Controller
+// 5. Book Preview / Detail Controller
 function openBookPreview(bookId) {
-  const book = CURRENT_BOOKS.find(b => b.id === bookId);
-  if (!book) return;
-  const modal = document.getElementById('book-preview-modal');
-  if (!modal) return;
-
-  const titleEl = document.getElementById('preview-title');
-  const origTitleEl = document.getElementById('preview-orig-title');
-  const seriesEl = document.getElementById('preview-series');
-  const authorEl = document.getElementById('preview-author');
-  const translatorEl = document.getElementById('preview-translator');
-  const priceEl = document.getElementById('preview-price');
-  const origPriceEl = document.getElementById('preview-orig-price');
-  const discountEl = document.getElementById('preview-discount');
-  const pagesEl = document.getElementById('preview-pages');
-  const pubDateEl = document.getElementById('preview-pubdate');
-  const isbnEl = document.getElementById('preview-isbn');
-  const confessionEl = document.getElementById('preview-confession');
-  const descEl = document.getElementById('preview-description');
-  const tocEl = document.getElementById('preview-toc');
-  const excerptEl = document.getElementById('preview-excerpt');
-  const coverBox = document.getElementById('preview-cover-box');
-  const modalAddCartBtn = document.getElementById('preview-add-cart-btn');
-
-  if (titleEl) titleEl.innerText = book.title;
-  if (origTitleEl) origTitleEl.innerText = book.originalTitle || '';
-  if (seriesEl) seriesEl.innerText = book.series || 'PHB 정본 총서';
-  if (authorEl) authorEl.innerText = book.author;
-  if (translatorEl) translatorEl.innerText = book.translator || 'PHB 번역위원회';
-  if (priceEl) priceEl.innerText = book.price.toLocaleString() + '원';
-  if (origPriceEl) origPriceEl.innerText = (book.originalPrice || book.price).toLocaleString() + '원';
-  if (discountEl) discountEl.innerText = (book.discountRate || 10) + '% 할인';
-  if (pagesEl) pagesEl.innerText = book.pages || '480쪽';
-  if (pubDateEl) pubDateEl.innerText = book.pubDate || '2026. 10. 15';
-  if (isbnEl) isbnEl.innerText = book.isbn || '979-11-984501-0-1';
-  if (confessionEl) confessionEl.innerText = book.confessionTag || '개혁주의 표준문서 연계';
-  if (descEl) descEl.innerText = book.description || '';
-  if (excerptEl) excerptEl.innerText = book.excerpt || '';
-
-  if (tocEl && Array.isArray(book.toc)) {
-    tocEl.innerHTML = book.toc.map(item => `<li>${item}</li>`).join('');
-  }
-
-  if (coverBox) {
-    const coverSrc = book.coverUrl || book.coverImage;
-    coverBox.className = `w-36 h-52 bg-gradient-to-br ${book.coverGradient || 'from-[#1a1c20] to-[#121417]'} rounded shadow-book p-3 flex flex-col justify-between text-center relative overflow-hidden`;
-    if (coverSrc) {
-      coverBox.innerHTML = `
-        <img src="${coverSrc}" alt="${book.title}" class="absolute inset-0 w-full h-full object-cover">
-      `;
-    } else {
-      coverBox.innerHTML = `
-        <span class="text-[7px] font-cinzel text-[#DFC075] tracking-wider uppercase block">${(book.series || 'PHB').split('(')[0]}</span>
-        <h4 class="text-xs font-serifKr font-bold text-white leading-snug">${book.title.split('(')[0]}</h4>
-        <span class="text-[8px] font-serifKr text-[#E4DFD7]">${book.author}</span>
-      `;
-    }
-  }
-
-  if (modalAddCartBtn) {
-    modalAddCartBtn.onclick = () => {
-      addToCart(book.id);
-      closeBookPreview();
-    };
-  }
-
-  // Update store direct links
-  const smartstoreLink = document.getElementById('preview-store-smartstore');
-  const kyoboLink = document.getElementById('preview-store-kyobo');
-  const aladinLink = document.getElementById('preview-store-aladin');
-  const yes24Link = document.getElementById('preview-store-yes24');
-  const query = encodeURIComponent(`퓨리탄헤리티지북스 ${book.title.split('(')[0]}`);
-
-  if (smartstoreLink) smartstoreLink.href = `https://smartstore.naver.com`;
-  if (kyoboLink) kyoboLink.href = `https://search.kyobobook.co.kr/search?keyword=${query}`;
-  if (aladinLink) aladinLink.href = `https://www.aladin.co.kr/search/wsearchresult.aspx?SearchWord=${query}`;
-  if (yes24Link) yes24Link.href = `https://www.yes24.com/Product/Search?domain=ALL&query=${query}`;
-
-  modal.classList.remove('hidden');
-  modal.classList.add('flex');
+  window.open(`book-detail.html?id=${encodeURIComponent(bookId)}`, '_blank');
 }
 
 function closeBookPreview() {
