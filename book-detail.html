@@ -540,40 +540,43 @@
       eKyobo.href = storeLinks.ebook.kyobo;
       eKyobo.innerHTML = STORE_LOGOS.kyoboEbook;
 
-      // Check format
-      const isEbookCategory = (book.category === 'ebook') || (String(book.subCategory || '').toLowerCase() === 'ebook');
-      const isEbookFormat = (book.format === 'ebook') || isEbookCategory || (book.isEbook && !book.isHardcover && !book.isPaper && book.isPaper !== undefined);
+      // Check format (종이책 전용 / 전자책 전용 / 둘 다)
+      const hasPaperSales = book.isPaper !== false && (book.category !== 'ebook') && (book.format !== 'ebook');
+      const hasEbookSales = (book.isEbook === true) || (book.category === 'ebook') || (book.format === 'ebook') || (book.format === 'both');
+
       const paperStoreSection = document.getElementById('section-paper-stores');
       const ebookStoreSection = document.getElementById('section-ebook-stores');
       const bookTypeTag = document.getElementById('book-type-tag');
 
-      if (isEbookFormat || (book.format === 'ebook')) {
-        // Electronic book only
-        if (paperStoreSection) paperStoreSection.style.display = 'none';
-        if (ebookStoreSection) {
+      // 1. Paper section visibility
+      if (paperStoreSection) {
+        paperStoreSection.style.display = hasPaperSales ? 'block' : 'none';
+      }
+
+      // 2. Ebook section visibility
+      if (ebookStoreSection) {
+        if (hasEbookSales) {
           ebookStoreSection.style.display = 'block';
-          ebookStoreSection.classList.remove('pt-4', 'border-t', 'border-[#E4DFD7]');
-        }
-        if (bookTypeTag) {
-          bookTypeTag.innerText = '전자책 전용 (PDF)';
-          bookTypeTag.className = 'bg-[#6E1B2A] text-[#DFC075] text-xs font-semibold px-3 py-1.5 rounded-md inline-block';
-        }
-      } else {
-        if (paperStoreSection) paperStoreSection.style.display = 'block';
-        if (ebookStoreSection) {
-          if (book.isEbook || book.format === 'both') {
-            ebookStoreSection.style.display = 'block';
+          if (hasPaperSales) {
             ebookStoreSection.classList.add('pt-4', 'border-t', 'border-[#E4DFD7]');
           } else {
-            ebookStoreSection.style.display = 'none';
+            ebookStoreSection.classList.remove('pt-4', 'border-t', 'border-[#E4DFD7]');
           }
+        } else {
+          ebookStoreSection.style.display = 'none';
         }
-        if (bookTypeTag) {
-          if (book.format === 'both' || (book.isEbook && (book.isHardcover || book.isPaper))) {
-            bookTypeTag.innerText = book.isHardcover ? '양장본 & PDF' : '종이책 & PDF';
-          } else {
-            bookTypeTag.innerText = book.isHardcover ? '양장본 (Hardcover)' : '종이책 (Paperback)';
-          }
+      }
+
+      // 3. Format tag badge
+      if (bookTypeTag) {
+        if (!hasPaperSales && hasEbookSales) {
+          bookTypeTag.innerText = '전자책 전용 (PDF)';
+          bookTypeTag.className = 'bg-[#6E1B2A] text-[#DFC075] text-xs font-semibold px-3 py-1.5 rounded-md inline-block';
+        } else if (hasPaperSales && hasEbookSales) {
+          bookTypeTag.innerText = book.isHardcover ? '양장본 & PDF' : '종이책 & PDF';
+          bookTypeTag.className = 'bg-[#17191C] text-[#DFC075] text-xs font-semibold px-3 py-1.5 rounded-md inline-block';
+        } else {
+          bookTypeTag.innerText = book.isHardcover ? '양장본 (Hardcover)' : '종이책 (Paperback)';
           bookTypeTag.className = 'bg-[#17191C] text-[#DFC075] text-xs font-semibold px-3 py-1.5 rounded-md inline-block';
         }
       }
