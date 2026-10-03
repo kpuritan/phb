@@ -1009,25 +1009,41 @@
           </div>
         </div>
 
-        <div>
-          <label class="block font-semibold text-[#17191C] mb-1.5">도서 속성 및 뱃지</label>
-          <div class="flex flex-wrap gap-4 bg-white p-3 rounded border border-[#E4DFD7]">
-            <label class="flex items-center space-x-1.5 cursor-pointer">
-              <input type="checkbox" id="form-book-isnew" class="rounded text-[#6E1B2A]">
-              <span>신간 (NEW)</span>
-            </label>
-            <label class="flex items-center space-x-1.5 cursor-pointer">
-              <input type="checkbox" id="form-book-ispreorder" class="rounded text-[#6E1B2A]">
-              <span>사전예약 (Pre-order)</span>
-            </label>
-            <label class="flex items-center space-x-1.5 cursor-pointer">
-              <input type="checkbox" id="form-book-ishardcover" checked class="rounded text-[#6E1B2A]">
-              <span>양장본 (Hardcover)</span>
-            </label>
-            <label class="flex items-center space-x-1.5 cursor-pointer">
-              <input type="checkbox" id="form-book-isebook" class="rounded text-[#6E1B2A]">
-              <span>전자책 지원 (PDF)</span>
-            </label>
+        <div class="space-y-3">
+          <div>
+            <label class="block font-semibold text-[#17191C] mb-1.5">도서 출판 형태 (Format) *</label>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-white p-2.5 rounded border border-[#E4DFD7]">
+              <label class="flex items-center space-x-1.5 cursor-pointer">
+                <input type="radio" name="form-book-format-radio" id="form-book-format-paper" value="paper" checked class="text-[#6E1B2A]">
+                <span>종이책</span>
+              </label>
+              <label class="flex items-center space-x-1.5 cursor-pointer">
+                <input type="radio" name="form-book-format-radio" id="form-book-format-hardcover" value="hardcover" class="text-[#6E1B2A]">
+                <span>양장본</span>
+              </label>
+              <label class="flex items-center space-x-1.5 cursor-pointer">
+                <input type="radio" name="form-book-format-radio" id="form-book-format-ebook" value="ebook" class="text-[#6E1B2A]">
+                <span class="font-bold text-[#6E1B2A]">전자책 전용 (PDF)</span>
+              </label>
+              <label class="flex items-center space-x-1.5 cursor-pointer">
+                <input type="radio" name="form-book-format-radio" id="form-book-format-both" value="both" class="text-[#6E1B2A]">
+                <span>종이책+전자책</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-[#17191C] mb-1.5">도서 뱃지 표시</label>
+            <div class="flex flex-wrap gap-4 bg-white p-2.5 rounded border border-[#E4DFD7]">
+              <label class="flex items-center space-x-1.5 cursor-pointer">
+                <input type="checkbox" id="form-book-isnew" class="rounded text-[#6E1B2A]">
+                <span>신간 (NEW)</span>
+              </label>
+              <label class="flex items-center space-x-1.5 cursor-pointer">
+                <input type="checkbox" id="form-book-ispreorder" class="rounded text-[#6E1B2A]">
+                <span>사전예약 (Pre-order)</span>
+              </label>
+            </div>
           </div>
         </div>
 
@@ -2779,8 +2795,22 @@
         document.getElementById('form-book-pubdate').value = book.pubDate || '';
         document.getElementById('form-book-isnew').checked = !!book.isNew;
         document.getElementById('form-book-ispreorder').checked = !!book.isPreorder;
-        document.getElementById('form-book-ishardcover').checked = !!book.isHardcover;
-        document.getElementById('form-book-isebook').checked = !!book.isEbook;
+        // Format radio setup
+        const isEbookCategory = (book.category === 'ebook') || (String(book.subCategory || '').toLowerCase() === 'ebook');
+        const isOnlyEbook = isEbookCategory || (book.isEbook && !book.isHardcover && !book.isPaper);
+        
+        if (isOnlyEbook) {
+          document.getElementById('form-book-format-ebook').checked = true;
+        } else if (book.isHardcover && book.isEbook) {
+          document.getElementById('form-book-format-both').checked = true;
+        } else if (book.isEbook) {
+          document.getElementById('form-book-format-both').checked = true;
+        } else if (book.isHardcover) {
+          document.getElementById('form-book-format-hardcover').checked = true;
+        } else {
+          document.getElementById('form-book-format-paper').checked = true;
+        }
+
         document.getElementById('form-book-tagline').value = book.tagline || '';
         document.getElementById('form-book-description').value = book.description || '';
         document.getElementById('form-book-toc').value = (book.toc || []).join('\n');
@@ -2789,7 +2819,7 @@
         titleEl.textContent = '신규 도서 등록';
         form.reset();
         document.getElementById('form-book-id').value = '';
-        document.getElementById('form-book-ishardcover').checked = true;
+        document.getElementById('form-book-format-paper').checked = true;
         clearBookFormCoverImage();
         handleBookFormCoverGradientChange('from-[#1a1c20] via-[#2d1b24] to-[#121417]');
         updateBookFormCoverPreviewText();
@@ -2824,8 +2854,12 @@
       const pubDate = document.getElementById('form-book-pubdate').value.trim() || '2026. 10.';
       const isNew = document.getElementById('form-book-isnew').checked;
       const isPreorder = document.getElementById('form-book-ispreorder').checked;
-      const isHardcover = document.getElementById('form-book-ishardcover').checked;
-      const isEbook = document.getElementById('form-book-isebook').checked;
+      
+      const selectedFormat = document.querySelector('input[name="form-book-format-radio"]:checked')?.value || 'paper';
+      const isHardcover = (selectedFormat === 'hardcover');
+      const isEbook = (selectedFormat === 'ebook' || selectedFormat === 'both');
+      const isPaper = (selectedFormat === 'paper' || selectedFormat === 'hardcover' || selectedFormat === 'both');
+
       const tagline = document.getElementById('form-book-tagline').value.trim();
       const description = document.getElementById('form-book-description').value.trim();
       const toc = document.getElementById('form-book-toc').value.split('\n').map(s => s.trim()).filter(Boolean);
@@ -2876,6 +2910,8 @@
             isPreorder,
             isHardcover,
             isEbook,
+            isPaper,
+            format: selectedFormat,
             tagline: tagline || BOOKS_DATA[idx].tagline,
             description: description || BOOKS_DATA[idx].description,
             toc: toc.length > 0 ? toc : BOOKS_DATA[idx].toc,
@@ -2897,6 +2933,8 @@
           isPreorder,
           isHardcover,
           isEbook,
+          isPaper,
+          format: selectedFormat,
           price,
           originalPrice,
           discountRate: Math.max(0, discountRate),

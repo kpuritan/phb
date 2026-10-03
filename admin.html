@@ -535,11 +535,24 @@
 
         <!-- 3. 대형 서점 및 구매 링크 (Store Links) -->
         <div class="bg-white p-5 rounded-xl border border-[#E4DFD7] space-y-4">
-          <h3 class="font-serifKr font-bold text-sm text-[#6E1B2A] flex items-center gap-1.5 border-b border-[#F1ECE4] pb-2">
-            <i class="fas fa-store text-[#C39738]"></i> 3. 5대 공식 서점 구매 링크 설정 (미입력 시 도서명 자동 검색)
-          </h3>
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#F1ECE4] pb-2">
+            <h3 class="font-serifKr font-bold text-sm text-[#6E1B2A] flex items-center gap-1.5">
+              <i class="fas fa-store text-[#C39738]"></i> 3. 판매 형태 및 서점 구매 링크 설정
+            </h3>
+            <div class="flex items-center gap-4 text-xs">
+              <label class="flex items-center gap-1.5 cursor-pointer font-semibold text-[#17191C]">
+                <input type="checkbox" id="form-enable-paper" checked onchange="toggleStoreFieldVisibility()" class="rounded border-[#E4DFD7] text-[#6E1B2A] focus:ring-0" />
+                <span>종이책 판매 노출</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer font-semibold text-[#6E1B2A]">
+                <input type="checkbox" id="form-enable-ebook" onchange="toggleStoreFieldVisibility()" class="rounded border-[#E4DFD7] text-[#6E1B2A] focus:ring-0" />
+                <span>전자책(eBook) 판매 노출</span>
+              </label>
+            </div>
+          </div>
 
-          <div class="space-y-3">
+          <!-- 종이책 서점 링크 -->
+          <div id="wrapper-paper-links" class="space-y-3">
             <div class="font-semibold text-[#17191C] flex items-center gap-1">
               <span class="w-2 h-2 rounded-full bg-[#6E1B2A]"></span> 종이책(Paper Book) 구매처 링크
             </div>
@@ -567,7 +580,8 @@
             </div>
           </div>
 
-          <div class="space-y-3 pt-2 border-t border-[#F1ECE4]">
+          <!-- 전자책 서점 링크 -->
+          <div id="wrapper-ebook-links" class="space-y-3 pt-2 border-t border-[#F1ECE4]">
             <div class="font-semibold text-[#17191C] flex items-center gap-1">
               <span class="w-2 h-2 rounded-full bg-[#C39738]"></span> 전자책(eBook) 구매처 링크
             </div>
@@ -589,7 +603,6 @@
               </div>
             </div>
           </div>
-
         </div>
 
         <!-- 4. 소개글, 목차, 본문 발췌 (Description, TOC, Excerpt) -->
@@ -1719,6 +1732,13 @@
         document.getElementById('form-link-ebook-yes24').value = s.ebookYes24 || '';
         document.getElementById('form-link-ebook-kyobo').value = s.ebookKyobo || '';
 
+        // Store sales visibility checkboxes
+        const hasPaperSales = book.isPaper !== undefined ? book.isPaper : (book.category !== 'ebook');
+        const hasEbookSales = book.isEbook !== undefined ? book.isEbook : (book.category === 'ebook');
+        document.getElementById('form-enable-paper').checked = hasPaperSales;
+        document.getElementById('form-enable-ebook').checked = hasEbookSales;
+        toggleStoreFieldVisibility();
+
         document.getElementById('form-tagline').value = book.tagline || '';
         document.getElementById('form-description').value = book.description || '';
         document.getElementById('form-toc').value = Array.isArray(book.toc) ? book.toc.join('\n') : (book.toc || '');
@@ -1727,6 +1747,9 @@
         document.getElementById('book-modal-mode-title').innerText = '새 도서 등록';
         document.getElementById('form-book-id').value = '';
         document.getElementById('form-cover-gradient').value = 'from-[#1a1c20] via-[#2d1b24] to-[#121417]';
+        document.getElementById('form-enable-paper').checked = true;
+        document.getElementById('form-enable-ebook').checked = false;
+        toggleStoreFieldVisibility();
         clearCoverImage();
         if (typeof removeCoverImage === 'function') removeCoverImage();
         handleCoverGradientChange('from-[#1a1c20] via-[#2d1b24] to-[#121417]');
@@ -1735,6 +1758,21 @@
 
       modal.classList.remove('hidden');
       modal.classList.add('flex');
+    }
+
+    function toggleStoreFieldVisibility() {
+      const paperChecked = document.getElementById('form-enable-paper')?.checked ?? true;
+      const ebookChecked = document.getElementById('form-enable-ebook')?.checked ?? false;
+
+      const paperWrap = document.getElementById('wrapper-paper-links');
+      const ebookWrap = document.getElementById('wrapper-ebook-links');
+
+      if (paperWrap) {
+        paperWrap.style.display = paperChecked ? 'block' : 'none';
+      }
+      if (ebookWrap) {
+        ebookWrap.style.display = ebookChecked ? 'block' : 'none';
+      }
     }
 
     function closeBookModal() {
@@ -1809,6 +1847,14 @@
         finalCoverUrl = currentCoverDataUrl || uploadedCoverDataUrl;
       }
 
+      const paperEnabled = document.getElementById('form-enable-paper')?.checked ?? true;
+      const ebookEnabled = document.getElementById('form-enable-ebook')?.checked ?? false;
+
+      const selectedFormat = document.querySelector('input[name="form-book-format"]:checked')?.value || (paperEnabled ? 'paper' : 'ebook');
+      const isHardcover = (selectedFormat === 'hardcover');
+      const isEbook = ebookEnabled || (selectedFormat === 'ebook' || selectedFormat === 'both');
+      const isPaper = paperEnabled || (selectedFormat === 'paper' || selectedFormat === 'hardcover' || selectedFormat === 'both');
+
       const bookData = {
         id,
         title: document.getElementById('form-title').value.trim(),
@@ -1827,10 +1873,7 @@
         confessionTag: document.getElementById('form-confession-tag').value.trim() || '개혁주의 표준문서',
         coverGradient: document.getElementById('form-cover-gradient').value,
         coverUrl: finalCoverUrl || (typeof uploadedCoverDataUrl !== 'undefined' ? uploadedCoverDataUrl : '') || '',
-        const selectedFormat = document.querySelector('input[name="form-book-format"]:checked')?.value || 'paper';
-        const isHardcover = (selectedFormat === 'hardcover');
-        const isEbook = (selectedFormat === 'ebook' || selectedFormat === 'both');
-        const isPaper = (selectedFormat === 'paper' || selectedFormat === 'hardcover' || selectedFormat === 'both');
+        coverImage: finalCoverUrl || (typeof uploadedCoverDataUrl !== 'undefined' ? uploadedCoverDataUrl : '') || '',
 
         isNew: document.getElementById('form-is-new').checked,
         isPreorder: document.getElementById('form-is-preorder').checked,

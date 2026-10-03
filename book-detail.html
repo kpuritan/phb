@@ -60,6 +60,7 @@
   <!-- Firebase SDK for Real-time Sync -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-[#6E1B2A] selection:text-white bg-[#FAF8F5]">
 
@@ -389,12 +390,33 @@
       };
     }
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyCJbOaiElCypwgtPgbwdnudn3VC737fMrs",
+      authDomain: "kpuritan-home.firebaseapp.com",
+      projectId: "kpuritan-home",
+      storageBucket: "kpuritan-home.firebasestorage.app",
+      messagingSenderId: "1071220455502",
+      appId: "1:1071220455502:web:7f6f59b48c48a73437f8f0"
+    };
+
+    if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+      try {
+        firebase.initializeApp(firebaseConfig);
+      } catch (e) {
+        console.warn("Firebase init error:", e);
+      }
+    }
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+      firebase.auth().signInAnonymously().catch(e => console.warn("Firebase auth warning:", e));
+    }
+    const db = (typeof firebase !== 'undefined' && firebase.firestore) ? firebase.firestore() : null;
+
     function getParam(name) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(name);
     }
 
-    function initPage() {
+    async function initPage() {
       const bookId = getParam('id');
       if (!bookId) {
         document.getElementById('loading-spinner').innerHTML = `
@@ -406,18 +428,32 @@
         return;
       }
 
-      // Load books from localStorage
-      let books = [];
-      try {
-        const saved = localStorage.getItem('phb_books_list') || localStorage.getItem('phb_books') || localStorage.getItem('phb_custom_books');
-        if (saved) {
-          books = JSON.parse(saved);
+      // 1. Try Firestore First / In Parallel
+      let book = null;
+      if (db) {
+        try {
+          const doc = await db.collection("phb_books").doc(bookId).get();
+          if (doc.exists) {
+            book = { id: doc.id, ...doc.data() };
+          }
+        } catch (e) {
+          console.warn("Firestore direct lookup error:", e);
         }
-      } catch (e) {
-        console.error(e);
       }
 
-      let book = Array.isArray(books) ? books.find(b => String(b.id) === String(bookId)) : null;
+      // 2. If not found in Firestore direct doc, check localStorage
+      if (!book) {
+        let books = [];
+        try {
+          const saved = localStorage.getItem('phb_books_list') || localStorage.getItem('phb_books') || localStorage.getItem('phb_custom_books');
+          if (saved) {
+            books = JSON.parse(saved);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+        book = Array.isArray(books) ? books.find(b => String(b.id) === String(bookId)) : null;
+      }
 
       if (!book) {
         document.getElementById('loading-spinner').innerHTML = `
@@ -504,14 +540,15 @@
       eKyobo.href = storeLinks.ebook.kyobo;
       eKyobo.innerHTML = STORE_LOGOS.kyoboEbook;
 
-      // Check if ebook-only (카테고리가 ebook이거나 종이책 없이 전자책만 지원하는 경우)
+      // Check format
       const isEbookCategory = (book.category === 'ebook') || (String(book.subCategory || '').toLowerCase() === 'ebook');
-      const isOnlyEbook = isEbookCategory || (book.isEbook && !book.isHardcover && !book.isbn?.startsWith('979-11-984501-0'));
+      const isEbookFormat = (book.format === 'ebook') || isEbookCategory || (book.isEbook && !book.isHardcover && !book.isPaper && book.isPaper !== undefined);
       const paperStoreSection = document.getElementById('section-paper-stores');
       const ebookStoreSection = document.getElementById('section-ebook-stores');
       const bookTypeTag = document.getElementById('book-type-tag');
 
-      if (isEbookCategory) {
+      if (isEbookFormat || (book.format === 'ebook')) {
+        // Electronic book only
         if (paperStoreSection) paperStoreSection.style.display = 'none';
         if (ebookStoreSection) {
           ebookStoreSection.style.display = 'block';
@@ -524,7 +561,7 @@
       } else {
         if (paperStoreSection) paperStoreSection.style.display = 'block';
         if (ebookStoreSection) {
-          if (book.isEbook) {
+          if (book.isEbook || book.format === 'both') {
             ebookStoreSection.style.display = 'block';
             ebookStoreSection.classList.add('pt-4', 'border-t', 'border-[#E4DFD7]');
           } else {
@@ -532,7 +569,7 @@
           }
         }
         if (bookTypeTag) {
-          if (book.isEbook) {
+          if (book.format === 'both' || (book.isEbook && (book.isHardcover || book.isPaper))) {
             bookTypeTag.innerText = book.isHardcover ? '양장본 & PDF' : '종이책 & PDF';
           } else {
             bookTypeTag.innerText = book.isHardcover ? '양장본 (Hardcover)' : '종이책 (Paperback)';

@@ -20,6 +20,9 @@ if (typeof firebase !== 'undefined' && !firebase.apps.length) {
     console.warn("Firebase init warning:", e);
   }
 }
+if (typeof firebase !== 'undefined' && firebase.auth) {
+  firebase.auth().signInAnonymously().catch(e => console.warn("Firebase anon auth warning:", e));
+}
 
 const db = (typeof firebase !== 'undefined' && firebase.firestore) ? firebase.firestore() : null;
 const storage = (typeof firebase !== 'undefined' && firebase.storage) ? firebase.storage() : null;
@@ -600,20 +603,25 @@ async function syncDynamicBooks(onUpdateCallback) {
 
   if (db) {
     try {
-      const snapshot = await db.collection("phb_books").get();
-      if (!snapshot.empty) {
-        const firestoreBooks = [];
-        snapshot.forEach(doc => {
-          firestoreBooks.push({ id: doc.id, ...doc.data() });
-        });
-        if (firestoreBooks.length > 0) {
-          CURRENT_BOOKS = firestoreBooks;
-          localStorage.setItem('phb_books_list', JSON.stringify(CURRENT_BOOKS));
-          localStorage.setItem('phb_custom_books', JSON.stringify(CURRENT_BOOKS));
-          localStorage.setItem('phb_books', JSON.stringify(CURRENT_BOOKS));
-          if (typeof onUpdateCallback === 'function') onUpdateCallback(CURRENT_BOOKS);
+      db.collection("phb_books").onSnapshot((snapshot) => {
+        if (!snapshot.empty) {
+          const firestoreBooks = [];
+          snapshot.forEach(doc => {
+            firestoreBooks.push({ id: doc.id, ...doc.data() });
+          });
+          if (firestoreBooks.length > 0) {
+            CURRENT_BOOKS = firestoreBooks;
+            try {
+              localStorage.setItem('phb_books_list', JSON.stringify(CURRENT_BOOKS));
+              localStorage.setItem('phb_custom_books', JSON.stringify(CURRENT_BOOKS));
+              localStorage.setItem('phb_books', JSON.stringify(CURRENT_BOOKS));
+            } catch (e) {}
+            if (typeof onUpdateCallback === 'function') onUpdateCallback(CURRENT_BOOKS);
+          }
         }
-      }
+      }, (err) => {
+        console.warn("Firestore snapshot listener:", err);
+      });
     } catch (err) {
       console.warn("Firestore sync offline mode:", err);
     }
