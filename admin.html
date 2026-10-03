@@ -115,7 +115,7 @@
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-[#7E8694] text-xs">
               <i class="fas fa-user"></i>
             </span>
-            <input type="text" id="admin-id" required placeholder="admin" value="admin"
+            <input type="text" id="admin-id" required placeholder="아이디를 입력하세요"
               class="w-full pl-9 pr-3 py-2.5 bg-[#FAF8F5] border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:outline-none focus:border-[#6E1B2A] focus:bg-white transition-colors" />
           </div>
         </div>
@@ -126,7 +126,7 @@
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-[#7E8694] text-xs">
               <i class="fas fa-lock"></i>
             </span>
-            <input type="password" id="admin-pw" required placeholder="••••••••" value="1234"
+            <input type="password" id="admin-pw" required placeholder="비밀번호를 입력하세요"
               class="w-full pl-9 pr-3 py-2.5 bg-[#FAF8F5] border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:outline-none focus:border-[#6E1B2A] focus:bg-white transition-colors" />
           </div>
         </div>
@@ -137,9 +137,7 @@
         </button>
       </form>
 
-      <div class="text-center pt-2 border-t border-[#F1ECE4]">
-        <p class="text-[11px] text-[#7E8694]">초기 기본 계정: <span class="font-mono text-[#17191C] font-semibold">admin</span> / <span class="font-mono text-[#17191C] font-semibold">1234</span></p>
-      </div>
+
 
     </div>
   </div>
@@ -1257,7 +1255,7 @@
         showToast('관리자 인증에 성공했습니다.');
         checkAdminState();
       } else {
-        alert('아이디 또는 비밀번호가 올바르지 않습니다.\n(기본 계정: admin / 1234)');
+        alert('아이디 또는 비밀번호가 올바르지 않습니다.');
       }
       return false;
     }

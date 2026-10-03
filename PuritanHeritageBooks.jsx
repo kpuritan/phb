@@ -853,8 +853,8 @@ export default function PuritanHeritageBooksApp() {
   const [bookFormModalOpen, setBookFormModalOpen] = useState(false);
   const [bookManagerModalOpen, setBookManagerModalOpen] = useState(false);
   const [editingBook, setEditingBook] = useState(null);
-  const [adminId, setAdminId] = useState('admin');
-  const [adminPw, setAdminPw] = useState('1234');
+  const [adminId, setAdminId] = useState('');
+  const [adminPw, setAdminPw] = useState('');
   const [managerSearchQuery, setManagerSearchQuery] = useState('');
 
   // Admin Book Form State
@@ -2831,7 +2831,7 @@ export default function PuritanHeritageBooksApp() {
               <button onClick={() => setAdminLoginModalOpen(false)} className="text-[#8E95A5] hover:text-[#17191C] text-xl font-bold p-1 leading-none cursor-pointer">&times;</button>
             </div>
             <p className="text-xs text-[#5E6470] mb-5 font-serif">
-              퓨리탄 헤리티지 북스 플랫폼 도서 관리 및 설정 기능을 사용하려면 로그인해 주십시오. (기본 계정: <span className="font-semibold text-[#17191C]">admin / 1234</span>)
+              퓨리탄 헤리티지 북스 플랫폼 도서 관리 및 설정 기능을 사용하려면 로그인해 주십시오.
             </p>
             <form onSubmit={handleAdminLogin} className="space-y-4">
               <div>
@@ -2839,7 +2839,7 @@ export default function PuritanHeritageBooksApp() {
                 <input
                   type="text"
                   required
-                  placeholder="admin"
+                  placeholder="아이디를 입력하세요"
                   value={adminId}
                   onChange={(e) => setAdminId(e.target.value)}
                   className="w-full text-xs p-2.5 rounded border border-[#D5CEBF] focus:outline-none focus:border-[#C39738] bg-[#FAF8F5]"
@@ -2850,7 +2850,7 @@ export default function PuritanHeritageBooksApp() {
                 <input
                   type="password"
                   required
-                  placeholder="••••"
+                  placeholder="비밀번호를 입력하세요"
                   value={adminPw}
                   onChange={(e) => setAdminPw(e.target.value)}
                   className="w-full text-xs p-2.5 rounded border border-[#D5CEBF] focus:outline-none focus:border-[#C39738] bg-[#FAF8F5]"
