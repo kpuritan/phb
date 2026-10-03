@@ -2437,54 +2437,77 @@
     // ==========================================
     const STORE_LOGOS = {
       aladin: `
-        <svg viewBox="0 0 170 46" class="h-9 sm:h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
-          <text x="6" y="32" font-family="'Noto Sans KR', sans-serif" font-size="24" font-weight="900" fill="#2C337B" letter-spacing="-1.5">알라딘</text>
-          <g transform="translate(74, 4)">
-            <path d="M2 23 C12 22 20 19 30 15 C22 20 14 24 3 26 Z" fill="#F8A51D"/>
-            <circle cx="39" cy="8.5" r="2.8" fill="#F8A51D"/>
-            <path d="M28 13.5 C36 11 44 11 51 13.5 C45 15.5 34 15.5 28 13.5 Z" fill="#F8A51D"/>
-            <path d="M26 16.5 C36 18.5 47 18.5 54 15.5 C48 24 37 27 24 23.5 C24 20.5 25 18 26 16.5 Z" fill="#E6007E"/>
-            <path d="M26 23.5 C34 26.5 43 25.5 49 20.5 C45 28 37 29.5 27 27 Z" fill="#2E3192"/>
-            <path d="M28 27 C34 29 40 28 44 24.5 C40 30 33 31 29 29 Z" fill="#E6007E"/>
-            <path d="M29 30.5 C34 31.5 39 31.5 42 29.5 C40 33.5 32 34 28 32.5 Z" fill="#F8A51D"/>
-            <path d="M52 14.5 C57 12.5 61.5 10 62.5 6 C63.5 1.5 58 -1.5 53.5 -0.5 C49 0.5 48 4.5 50.5 7.5 C53 10.5 56.5 9.5 57 7.5 C57.5 5.5 55 4 53 4 C51.5 4 52 2.5 54 2.5 C57.5 2.5 59 5.5 57.5 7.5 C55.5 10.5 51.5 12.5 48.5 14.5 Z" fill="#5C55A5"/>
+        <svg viewBox="0 0 170 46" class="h-8 sm:h-9 w-auto" xmlns="http://www.w3.org/2000/svg">
+          <!-- 알라딘 한글 텍스트 -->
+          <text x="8" y="32" font-family="'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" font-size="23" font-weight="900" fill="#2B368C" letter-spacing="-1.5">알라딘</text>
+          
+          <!-- 요술램프 그래픽 (공식 심볼) -->
+          <g transform="translate(72, 8)">
+            <!-- 램프 몸통 3색 스트라이프 -->
+            <path d="M12 18 C22 17 38 12 48 6 C38 11 20 16 12 18 Z" fill="#FFA500"/>
+            <path d="M11 20 C24 20 38 14 46 8 C36 14 18 19 11 20 Z" fill="#E6007E"/>
+            <path d="M10 22 C22 23 34 18 42 11 C32 17 18 21 10 22 Z" fill="#2E3192"/>
+            
+            <!-- 램프 주전자 받침 및 몸체 -->
+            <path d="M22 23 C22 26 27 28 32 28 C26 28 23 25 22 23 Z" fill="#2E3192"/>
+            <path d="M20 28 L35 28 L32 30 L23 30 Z" fill="#E6007E"/>
+            
+            <!-- 램프 손잡이 꼬리 (소용돌이) -->
+            <path d="M48 6 C53 3 57 5 57 9 C57 14 51 14 49 11 C47 8 50 7 52 8 C53 9 52 10 51 10" stroke="#2B368C" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+            
+            <!-- 램프 뚜껑 꼭지 -->
+            <circle cx="34" cy="5" r="2.2" fill="#FFA500"/>
           </g>
         </svg>
       `,
       yes24: `
-        <svg viewBox="0 0 170 46" class="h-9 sm:h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
-          <path d="M78 7 C78 5.5 79.5 4 81 4 C82.5 4 83.5 5.5 83.5 7 L82 14 C82 15.5 80.5 16.5 79 16.5 C77.5 16.5 76.5 15.5 76.5 14 Z" fill="#E51921"/>
-          <path d="M88 7 C88 5.5 89.5 4 91 4 C92.5 4 93.5 5.5 93.5 7 L92 14 C92 15.5 90.5 16.5 89 16.5 C87.5 16.5 86.5 15.5 86.5 14 Z" fill="#E51921"/>
-          <text x="8" y="31" font-family="'Arial', 'Helvetica', sans-serif" font-size="22" font-weight="900" fill="#677282" letter-spacing="0.5">YES</text>
-          <text x="67" y="32" font-family="'Arial', 'Helvetica', sans-serif" font-size="24" font-weight="900" fill="#677282" letter-spacing="-1">24</text>
-          <path d="M68 34 C76 42.5 92 42.5 100 34" stroke="#0077C8" stroke-width="4.8" stroke-linecap="round"/>
-          <text x="108" y="31" font-family="'Arial', 'Helvetica', sans-serif" font-size="21" font-weight="900" fill="#677282" letter-spacing="0">.COM</text>
+        <svg viewBox="0 0 170 46" class="h-8 sm:h-9 w-auto" xmlns="http://www.w3.org/2000/svg">
+          <!-- YES 기울임 텍스트 -->
+          <text x="12" y="29" font-family="'Arial', 'Helvetica', sans-serif" font-size="20" font-weight="900" font-style="italic" fill="#586370" letter-spacing="0.5">YES</text>
+          
+          <!-- 따옴표 강조 (빨간색 2개) -->
+          <g transform="translate(62, 5)">
+            <path d="M2 0 L6 0 L4 8 L0 8 Z" fill="#E51921"/>
+            <path d="M8 0 L12 0 L10 8 L6 8 Z" fill="#E51921"/>
+          </g>
+          
+          <!-- 24 텍스트 -->
+          <text x="60" y="30" font-family="'Arial', 'Helvetica', sans-serif" font-size="24" font-weight="900" fill="#24282D" letter-spacing="-0.8">24</text>
+          
+          <!-- .COM 텍스트 -->
+          <text x="94" y="29" font-family="'Arial', 'Helvetica', sans-serif" font-size="20" font-weight="900" font-style="italic" fill="#586370" letter-spacing="0">.COM</text>
+          
+          <!-- 파란색 웃는 입 스마일 곡선 -->
+          <path d="M57 32 C65 42 85 42 93 32" stroke="#0077C8" stroke-width="4.2" stroke-linecap="round" fill="none"/>
         </svg>
       `,
       kyoboEbook: `
-        <svg viewBox="0 0 170 46" class="h-9 sm:h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 170 46" class="h-8 sm:h-9 w-auto" xmlns="http://www.w3.org/2000/svg">
+          <!-- 교보 초록색 새/꿈나무 심볼 -->
           <g transform="translate(73, 2)">
-            <path d="M2 7 C2 3 7 0 13 0 C19 0 23 4 23 9 C23 15 17 17.5 10 16.5 C6 15.5 2 12.5 2 7 Z" fill="#43B02A"/>
-            <circle cx="7" cy="7.5" r="1.5" fill="white"/>
-            <path d="M12 16 L12 20" stroke="#43B02A" stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M1 7 C1 2.5 5.5 0 11.5 0 C17.5 0 21.5 3.5 21.5 8 C21.5 13.5 15.5 16 9 15 C5 14.5 1 12 1 7 Z" fill="#38A927"/>
+            <circle cx="6" cy="6.5" r="1.3" fill="white"/>
+            <path d="M10.5 14.5 L10.5 18" stroke="#38A927" stroke-width="2.4" stroke-linecap="round"/>
           </g>
-          <text x="6" y="37" font-family="'Arial', 'Noto Sans KR', sans-serif" font-size="20" font-weight="900" fill="#004785" letter-spacing="1.2">KYOBO</text>
-          <text x="106" y="37" font-family="'Arial', 'Noto Sans KR', sans-serif" font-size="20" font-weight="500" fill="#004785" letter-spacing="-0.5">eBook</text>
+          <!-- K Y O B O 굵은 파란색 영문 텍스트 -->
+          <text x="4" y="36" font-family="'Arial', 'Helvetica', sans-serif" font-size="20" font-weight="900" fill="#004785" letter-spacing="2.2">KYOBO</text>
+          <!-- eBook 파란색 영문 텍스트 -->
+          <text x="98" y="36" font-family="'Arial', 'Helvetica', sans-serif" font-size="20" font-weight="500" fill="#004785" letter-spacing="-0.3">eBook</text>
         </svg>
       `,
       kyobo: `
-        <svg viewBox="0 0 170 46" class="h-9 sm:h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 170 46" class="h-8 sm:h-9 w-auto" xmlns="http://www.w3.org/2000/svg">
           <g transform="translate(10, 10)">
-            <path d="M2 6 C2 2.5 6 0 11 0 C16 0 19.5 3.5 19.5 8 C19.5 13 14 15 8 14 C5 13 2 10.5 2 6 Z" fill="#43B02A"/>
+            <path d="M2 6 C2 2.5 6 0 11 0 C16 0 19.5 3.5 19.5 8 C19.5 13 14 15 8 14 C5 13 2 10.5 2 6 Z" fill="#38A927"/>
             <circle cx="6" cy="6.5" r="1.3" fill="white"/>
-            <path d="M10 13.5 L10 17" stroke="#43B02A" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M10 13.5 L10 17" stroke="#38A927" stroke-width="2.2" stroke-linecap="round"/>
           </g>
           <text x="36" y="30" font-family="'Noto Sans KR', sans-serif" font-size="20" font-weight="900" fill="#17191C" letter-spacing="-1">교보문고</text>
           <text x="114" y="29" font-family="'Arial', sans-serif" font-size="11" font-weight="800" fill="#7E8694" letter-spacing="0.5">KYOBO</text>
         </svg>
       `,
       naver: `
-        <svg viewBox="0 0 170 46" class="h-9 sm:h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 170 46" class="h-8 sm:h-9 w-auto" xmlns="http://www.w3.org/2000/svg">
           <rect x="8" y="9" width="26" height="26" rx="5" fill="#03C75A"/>
           <path d="M16 27 L16 16 L21 23.5 L26 16 L26 27" stroke="white" stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
           <g transform="translate(40, 25)">
@@ -2590,8 +2613,6 @@
     function openBookPreview(bookId) {
       window.open(`book-detail.html?id=${encodeURIComponent(bookId)}`, '_blank');
     }
-      document.getElementById('preview-modal-price').innerText = `${book.price.toLocaleString()}원`;
-      document.getElementById('preview-modal-add-cart-btn').onclick = () => {
     function closeBookPreview() {
       const modal = document.getElementById('book-preview-modal');
       if (modal) {
