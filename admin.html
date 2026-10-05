@@ -1404,6 +1404,11 @@
               if (b.description) b.description = cleanBookDescription(b.description);
               return b;
             });
+            allBooks.sort((a, b) => {
+              const oa = (typeof a.displayOrder === 'number') ? a.displayOrder : 9999;
+              const ob = (typeof b.displayOrder === 'number') ? b.displayOrder : 9999;
+              return oa - ob;
+            });
           } else {
             allBooks = [];
           }
@@ -1694,13 +1699,15 @@
           const batch = db.batch();
           allBooks.forEach((book, idx) => {
             const ref = db.collection('phb_books').doc(book.id);
-            batch.update(ref, { displayOrder: idx });
+            batch.set(ref, { displayOrder: idx }, { merge: true });
           });
           await batch.commit();
         }
 
         try {
           localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+          localStorage.setItem('phb_books', JSON.stringify(allBooks));
+          localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
         } catch(e) {}
 
         exitReorderMode();

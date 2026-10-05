@@ -589,7 +589,14 @@ function getUnifiedBooks() {
   if (localList) {
     try {
       const parsed = JSON.parse(localList);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        parsed.sort((a, b) => {
+          const oa = (typeof a.displayOrder === 'number') ? a.displayOrder : 9999;
+          const ob = (typeof b.displayOrder === 'number') ? b.displayOrder : 9999;
+          return oa - ob;
+        });
+        return parsed;
+      }
     } catch (e) {
       console.warn("Error parsing local books, using fallback:", e);
     }

@@ -841,10 +841,17 @@ export default function PuritanHeritageBooksApp() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [books, setBooks] = useState(() => {
     try {
-      const saved = localStorage.getItem('phb_books');
+      const saved = localStorage.getItem('phb_books_list') || localStorage.getItem('phb_books') || localStorage.getItem('phb_custom_books');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          parsed.sort((a, b) => {
+            const oa = (typeof a.displayOrder === 'number') ? a.displayOrder : 9999;
+            const ob = (typeof b.displayOrder === 'number') ? b.displayOrder : 9999;
+            return oa - ob;
+          });
+          return parsed;
+        }
       }
     } catch (e) {}
     return BOOKS_DATA;
