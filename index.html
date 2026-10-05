@@ -430,9 +430,9 @@
   <!-- ========================================== -->
   <section id="hero-carousel-section" class="relative bg-[#121417] text-white overflow-hidden select-none border-b border-[#2B2F36]">
     <!-- Dynamic Hero Background Image (Changes with current book cover / fallback to classic hero) -->
-    <div id="hero-dynamic-bg" class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 scale-105 opacity-40 blur-xs" style="background-image: url('images/hero-no-text.jpg');"></div>
-    <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/90 pointer-events-none"></div>
-    <div class="absolute inset-0 bg-gradient-to-b from-[#17191C]/80 via-transparent to-[#17191C]/95 pointer-events-none"></div>
+    <div id="hero-dynamic-bg" class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 scale-105 opacity-65" style="background-image: url('images/hero-no-text.jpg');"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 to-black/75 pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-[#17191C]/60 via-transparent to-[#17191C]/80 pointer-events-none"></div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16 relative z-10">
       
@@ -3080,12 +3080,12 @@
         const coverImg = activeBook ? (activeBook.coverUrl || activeBook.coverImage) : null;
         if (coverImg) {
           bgEl.style.backgroundImage = `url('${coverImg}')`;
-          bgEl.classList.remove('opacity-40');
-          bgEl.classList.add('opacity-35');
+          bgEl.classList.remove('opacity-65', 'opacity-40', 'opacity-35');
+          bgEl.classList.add('opacity-60');
         } else {
           bgEl.style.backgroundImage = `url('images/hero-no-text.jpg')`;
-          bgEl.classList.remove('opacity-35');
-          bgEl.classList.add('opacity-40');
+          bgEl.classList.remove('opacity-60', 'opacity-40', 'opacity-35');
+          bgEl.classList.add('opacity-65');
         }
       }
 
