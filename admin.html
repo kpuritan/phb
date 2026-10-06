@@ -1349,13 +1349,78 @@
       });
     }
 
+    function normalizeCategory(cat) {
+      if (!cat) return 'dogmatics';
+      const c = String(cat).trim().toLowerCase();
+      if (c === 'dogmatics' || c.includes('조직신학') || c.includes('신학')) return 'dogmatics';
+      if (c === 'commentary' || c.includes('주석') || c.includes('강해') || c.includes('성경')) return 'commentary';
+      if (c === 'historical' || c.includes('역사')) return 'historical';
+      if (c === 'christian-life' || c === 'christian_life' || c.includes('크리스천') || c.includes('신앙') || c.includes('경건') || c.includes('라이프')) return 'christian-life';
+      if (c === 'puritan-works' || c === 'puritan' || c.includes('청교도') || c.includes('전집')) return 'puritan-works';
+      if (c === 'ebook' || c.includes('전자책') || c.includes('pdf')) return 'ebook';
+      return 'dogmatics';
+    }
+
+    async function compressBase64Image(dataUrl, maxWidth = 350, maxHeight = 500, quality = 0.75) {
+      if (!dataUrl || !dataUrl.startsWith('data:image')) return dataUrl;
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let w = img.width;
+          let h = img.height;
+          if (w > maxWidth || h > maxHeight) {
+            if (w / maxWidth > h / maxHeight) {
+              h = Math.round((h * maxWidth) / w);
+              w = maxWidth;
+            } else {
+              w = Math.round((w * maxHeight) / h);
+              h = maxHeight;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
+      });
+    }
+
+    function removeUndefinedRecursive(obj) {
+      if (obj === null || obj === undefined) return '';
+      if (typeof obj !== 'object') {
+        if (typeof obj === 'number' && isNaN(obj)) return 0;
+        return obj;
+      }
+      if (Array.isArray(obj)) {
+        return obj.map(removeUndefinedRecursive);
+      }
+      const clean = {};
+      for (const key of Object.keys(obj)) {
+        const val = obj[key];
+        if (val === undefined || val === null) {
+          clean[key] = '';
+        } else if (typeof val === 'number' && isNaN(val)) {
+          clean[key] = 0;
+        } else if (typeof val === 'object') {
+          clean[key] = removeUndefinedRecursive(val);
+        } else {
+          clean[key] = val;
+        }
+      }
+      return clean;
+    }
+
     async function sanitizeBookForFirestore(book) {
-      const clean = { ...book };
+      const clean = removeUndefinedRecursive(book);
       // Firestore field size limit is 1,048,487 bytes (1MB). Compress base64 strings if too large.
-      if (clean.coverImage && clean.coverImage.startsWith('data:image') && clean.coverImage.length > 500000) {
+      if (clean.coverImage && typeof clean.coverImage === 'string' && clean.coverImage.startsWith('data:image') && clean.coverImage.length > 500000) {
         clean.coverImage = await compressBase64Image(clean.coverImage);
       }
-      if (clean.coverUrl && clean.coverUrl.startsWith('data:image') && clean.coverUrl.length > 500000) {
+      if (clean.coverUrl && typeof clean.coverUrl === 'string' && clean.coverUrl.startsWith('data:image') && clean.coverUrl.length > 500000) {
         clean.coverUrl = clean.coverImage;
       }
       return clean;
@@ -1380,6 +1445,8 @@
           successCount++;
         }
         localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+        localStorage.setItem('phb_books', JSON.stringify(allBooks));
+        localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
         showToast(`성공! 총 ${successCount}권의 도서가 클라우드에 완벽 동기화되었습니다.`);
         alert(`🎉 총 ${successCount}권의 도서가 클라우드(Firebase)에 성공적으로 동기화되었습니다!\n이제 스마트폰이나 다른 컴퓨터에서 새로고침하시면 즉시 나타납니다.`);
       } catch (err) {
@@ -1398,7 +1465,7 @@
       if (localCustom !== null) {
         try {
           const parsed = JSON.parse(localCustom);
-          if (Array.isArray(parsed)) {
+          if (Array.isArray(parsed) && parsed.length > 0) {
             allBooks = parsed.map(b => {
               if (b.toc) b.toc = cleanBookToc(b.toc);
               if (b.description) b.description = cleanBookDescription(b.description);
@@ -1410,10 +1477,10 @@
               return oa - ob;
             });
           } else {
-            allBooks = [];
+            allBooks = DEFAULT_BOOKS_DATA.slice();
           }
         } catch (e) {
-          allBooks = [];
+          allBooks = DEFAULT_BOOKS_DATA.slice();
         }
       } else {
         allBooks = DEFAULT_BOOKS_DATA.slice();
@@ -1462,38 +1529,40 @@
       renderAdminBooks();
     }
 
-// 3. Render Books in Admin Table
+    // 3. Render Books in Admin Table
     function renderAdminBooks() {
       const tbody = document.getElementById('admin-books-table-body');
       const countBadge = document.getElementById('books-count-badge');
       const emptyState = document.getElementById('admin-empty-state');
+      if (!tbody) return;
 
       let filtered = allBooks.filter(book => {
+        const normCat = normalizeCategory(book.category);
         const matchesCat = (() => {
           if (currentAdminCategory === 'all') return true;
-          if (currentAdminCategory === 'ebook') return book.isEbook;
-          return book.category === currentAdminCategory;
+          if (currentAdminCategory === 'ebook') return book.isEbook || normCat === 'ebook';
+          return normCat === currentAdminCategory || book.category === currentAdminCategory;
         })();
 
         const q = currentAdminSearch.toLowerCase().trim();
         const matchesSearch = !q ||
-          (book.title && book.title.toLowerCase().includes(q)) ||
-          (book.author && book.author.toLowerCase().includes(q)) ||
-          (book.isbn && book.isbn.toLowerCase().includes(q)) ||
-          (book.series && book.series.toLowerCase().includes(q));
+          (book.title && String(book.title).toLowerCase().includes(q)) ||
+          (book.author && String(book.author).toLowerCase().includes(q)) ||
+          (book.isbn && String(book.isbn).toLowerCase().includes(q)) ||
+          (book.series && String(book.series).toLowerCase().includes(q));
 
         return matchesCat && matchesSearch;
       });
 
-      countBadge.innerText = `${allBooks.length}권 등록됨`;
+      if (countBadge) countBadge.innerText = `${allBooks.length}권 등록됨`;
 
       if (filtered.length === 0) {
         tbody.innerHTML = '';
-        emptyState.classList.remove('hidden');
+        if (emptyState) emptyState.classList.remove('hidden');
         return;
       }
 
-      emptyState.classList.add('hidden');
+      if (emptyState) emptyState.classList.add('hidden');
 
       tbody.innerHTML = filtered.map(book => {
         const catMap = {
@@ -1505,12 +1574,15 @@
           'puritan-works': '청교도저작 전집',
           'ebook': 'eBook'
         };
-        const catName = catMap[book.category] || book.category;
+        const normCat = normalizeCategory(book.category);
+        const catName = catMap[normCat] || book.category || '기타';
 
         const hasNaver = book.storeLinks && book.storeLinks.naver;
-        const hasAladin = book.storeLinks && book.storeLinks.aladin;
-        const hasKyobo = book.storeLinks && book.storeLinks.kyobo;
-        const hasYes24 = book.storeLinks && book.storeLinks.yes24;
+        const hasAladin = book.storeLinks && (book.storeLinks.aladin || book.storeLinks.ebookAladin);
+        const hasKyobo = book.storeLinks && (book.storeLinks.kyobo || book.storeLinks.ebookKyobo);
+        const hasYes24 = book.storeLinks && (book.storeLinks.yes24 || book.storeLinks.ebookYes24);
+
+        const safeId = encodeURIComponent(String(book.id || ''));
 
         return `
           <tr class="hover:bg-[#FAF8F5] transition-colors group" data-id="${book.id}">
@@ -1525,7 +1597,7 @@
               <div class="flex items-center space-x-3">
                 ${(book.coverUrl || book.coverImage) ? `
                   <div class="w-12 h-16 rounded shadow-sm shrink-0 border border-[#C39738]/40 overflow-hidden relative bg-white">
-                    <img src="${book.coverUrl || book.coverImage}" alt="${book.title}" class="w-full h-full object-cover">
+                    <img src="${book.coverUrl || book.coverImage}" alt="${book.title || ''}" class="w-full h-full object-cover">
                   </div>
                 ` : `
                   <div class="w-12 h-16 bg-gradient-to-br ${book.coverGradient || 'from-[#1a1c20] to-[#121417]'} rounded shadow-sm flex flex-col justify-between p-1 text-center shrink-0 border border-[#C39738]/30 overflow-hidden relative">
@@ -1536,7 +1608,7 @@
                 `}
                 <div class="space-y-0.5 max-w-xs sm:max-w-sm">
                   <div class="font-bold text-sm text-[#17191C] group-hover:text-[#6E1B2A] transition-colors leading-snug">
-                    ${book.title}
+                    ${book.title || '제목 없음'}
                   </div>
                   ${book.originalTitle ? `<div class="text-[11px] text-[#7E8694] italic truncate">${book.originalTitle}</div>` : ''}
                   <div class="text-[10px] text-[#5E6470] flex items-center gap-2 pt-0.5">
@@ -1560,14 +1632,14 @@
 
             <!-- 저자 / 역자 -->
             <td class="py-4 px-4 whitespace-nowrap">
-              <div class="font-medium text-[#17191C]">${book.author}</div>
+              <div class="font-medium text-[#17191C]">${book.author || '저자 미상'}</div>
               ${book.translator ? `<div class="text-[11px] text-[#7E8694]">${book.translator}</div>` : ''}
             </td>
 
             <!-- 정가 / 판매가 -->
             <td class="py-4 px-4 text-right whitespace-nowrap">
-              <div class="font-bold text-[#6E1B2A] text-sm">${(book.price || 0).toLocaleString()}원</div>
-              ${book.originalPrice ? `<div class="text-[10px] text-[#7E8694] line-through">${book.originalPrice.toLocaleString()}원</div>` : ''}
+              <div class="font-bold text-[#6E1B2A] text-sm">${(Number(book.price) || 0).toLocaleString()}원</div>
+              ${book.originalPrice ? `<div class="text-[10px] text-[#7E8694] line-through">${(Number(book.originalPrice) || 0).toLocaleString()}원</div>` : ''}
             </td>
 
             <!-- 서점 구매처 연동 -->
@@ -1592,10 +1664,10 @@
             <!-- 관리 작업 -->
             <td class="py-4 px-4 text-center whitespace-nowrap">
               <div class="flex items-center justify-center space-x-2">
-                <button onclick="editBook('${book.id}')" class="px-2.5 py-1.5 bg-[#FAF8F5] hover:bg-[#6E1B2A] hover:text-white text-[#17191C] border border-[#E4DFD7] rounded-lg transition-colors font-medium flex items-center gap-1" title="수정">
+                <button type="button" onclick="editBook('${safeId}')" class="px-2.5 py-1.5 bg-[#FAF8F5] hover:bg-[#6E1B2A] hover:text-white text-[#17191C] border border-[#E4DFD7] rounded-lg transition-colors font-medium flex items-center gap-1 cursor-pointer" title="수정">
                   <i class="fas fa-edit"></i> 수정
                 </button>
-                <button onclick="deleteBook('${book.id}')" class="px-2.5 py-1.5 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 border border-red-200 rounded-lg transition-colors font-medium flex items-center gap-1" title="삭제">
+                <button type="button" onclick="deleteBook('${safeId}')" class="px-2.5 py-1.5 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 border border-red-200 rounded-lg transition-colors font-medium flex items-center gap-1 cursor-pointer" title="삭제">
                   <i class="fas fa-trash-alt"></i> 삭제
                 </button>
               </div>
@@ -1727,8 +1799,10 @@
         tab.classList.remove('bg-[#17191C]', 'text-[#DFC075]', 'shadow');
         tab.classList.add('bg-white', 'text-[#5E6470]', 'border', 'border-[#E4DFD7]');
       });
-      event.target.classList.remove('bg-white', 'text-[#5E6470]', 'border', 'border-[#E4DFD7]');
-      event.target.classList.add('bg-[#17191C]', 'text-[#DFC075]', 'shadow');
+      if (event && event.target) {
+        event.target.classList.remove('bg-white', 'text-[#5E6470]', 'border', 'border-[#E4DFD7]');
+        event.target.classList.add('bg-[#17191C]', 'text-[#DFC075]', 'shadow');
+      }
       renderAdminBooks();
     }
 
@@ -1786,7 +1860,7 @@
     }
 
     function handleCoverUrlInput(url) {
-      currentCoverDataUrl = url.trim();
+      currentCoverDataUrl = (url || '').trim();
       const previewImg = document.getElementById('form-cover-preview-img');
       if (previewImg) {
         if (currentCoverDataUrl) {
@@ -1840,22 +1914,48 @@
     function openBookModal(book = null) {
       const modal = document.getElementById('book-edit-modal');
       const form = document.getElementById('book-form');
+      if (!modal || !form) return;
       form.reset();
 
       if (book) {
-        document.getElementById('book-modal-mode-title').innerText = `도서 정보 수정: ${book.title}`;
-        document.getElementById('form-book-id').value = book.id;
+        const titleText = book.title || '무제';
+        const modeTitle = document.getElementById('book-modal-mode-title');
+        if (modeTitle) modeTitle.innerText = `도서 정보 수정: ${titleText}`;
+
+        document.getElementById('form-book-id').value = book.id || '';
         document.getElementById('form-title').value = book.title || '';
         document.getElementById('form-original-title').value = book.originalTitle || '';
-        document.getElementById('form-author').value = book.author || '';
-        document.getElementById('form-translator').value = book.translator || '';
-        handleFormCategoryChange(book.category || 'dogmatics');
-        document.getElementById('form-category').value = book.category || 'dogmatics';
-        document.getElementById('form-subcategory').value = book.subCategory || 'all';
+        const normCat = normalizeCategory(book.category);
+        document.getElementById('form-category').value = normCat;
+        handleFormCategoryChange(normCat);
+
+        // Subcategory select & fallback
+        const subSelect = document.getElementById('form-subcategory');
+        const targetSub = book.subCategory || 'all';
+        if (subSelect) {
+          let hasOption = false;
+          for (let i = 0; i < subSelect.options.length; i++) {
+            if (subSelect.options[i].value === targetSub) {
+              hasOption = true;
+              break;
+            }
+          }
+          if (!hasOption && targetSub) {
+            const opt = document.createElement('option');
+            opt.value = targetSub;
+            opt.textContent = targetSub;
+            subSelect.appendChild(opt);
+          }
+          subSelect.value = targetSub;
+        }
         document.getElementById('form-series').value = book.series || '';
 
-        document.getElementById('form-price').value = book.price || '';
-        document.getElementById('form-original-price').value = book.originalPrice || '';
+        // Clean price values (strip commas / non-digits before setting to number inputs)
+        const rawPrice = String(book.price ?? '').replace(/[^0-9]/g, '');
+        const rawOrigPrice = String(book.originalPrice ?? '').replace(/[^0-9]/g, '');
+        document.getElementById('form-price').value = rawPrice;
+        document.getElementById('form-original-price').value = rawOrigPrice;
+
         document.getElementById('form-pages').value = book.pages || '';
         document.getElementById('form-pub-date').value = book.pubDate || '';
         document.getElementById('form-isbn').value = book.isbn || '';
@@ -1885,19 +1985,24 @@
         document.getElementById('form-is-preorder').checked = !!book.isPreorder;
         
         // Format radio setup
-        const isEbookCategory = (book.category === 'ebook') || (String(book.subCategory || '').toLowerCase() === 'ebook');
+        const isEbookCategory = (normCat === 'ebook') || (String(book.subCategory || '').toLowerCase() === 'ebook');
         const isOnlyEbook = isEbookCategory || (book.isEbook && !book.isHardcover && !book.isPaper);
         
         if (isOnlyEbook) {
-          document.getElementById('form-format-ebook').checked = true;
+          const radio = document.getElementById('form-format-ebook');
+          if (radio) radio.checked = true;
         } else if (book.isHardcover && book.isEbook) {
-          document.getElementById('form-format-both').checked = true;
+          const radio = document.getElementById('form-format-both');
+          if (radio) radio.checked = true;
         } else if (book.isEbook) {
-          document.getElementById('form-format-both').checked = true;
+          const radio = document.getElementById('form-format-both');
+          if (radio) radio.checked = true;
         } else if (book.isHardcover) {
-          document.getElementById('form-format-hardcover').checked = true;
+          const radio = document.getElementById('form-format-hardcover');
+          if (radio) radio.checked = true;
         } else {
-          document.getElementById('form-format-paper').checked = true;
+          const radio = document.getElementById('form-format-paper');
+          if (radio) radio.checked = true;
         }
 
         // Stores
@@ -1912,8 +2017,8 @@
         document.getElementById('form-link-ebook-kyobo').value = s.ebookKyobo || '';
 
         // Store sales visibility checkboxes
-        const hasPaperSales = book.isPaper !== undefined ? book.isPaper : (book.category !== 'ebook');
-        const hasEbookSales = book.isEbook !== undefined ? book.isEbook : (book.category === 'ebook');
+        const hasPaperSales = book.isPaper !== undefined ? book.isPaper : (normCat !== 'ebook');
+        const hasEbookSales = book.isEbook !== undefined ? book.isEbook : (normCat === 'ebook');
         document.getElementById('form-enable-paper').checked = hasPaperSales;
         document.getElementById('form-enable-ebook').checked = hasEbookSales;
         toggleStoreFieldVisibility();
@@ -1923,8 +2028,11 @@
         document.getElementById('form-toc').value = Array.isArray(book.toc) ? book.toc.join('\n') : (book.toc || '');
         document.getElementById('form-excerpt').value = book.excerpt || '';
       } else {
-        document.getElementById('book-modal-mode-title').innerText = '새 도서 등록';
+        const modeTitle = document.getElementById('book-modal-mode-title');
+        if (modeTitle) modeTitle.innerText = '새 도서 등록';
         document.getElementById('form-book-id').value = '';
+        document.getElementById('form-category').value = 'dogmatics';
+        handleFormCategoryChange('dogmatics');
         document.getElementById('form-cover-gradient').value = 'from-[#1a1c20] via-[#2d1b24] to-[#121417]';
         document.getElementById('form-enable-paper').checked = true;
         document.getElementById('form-enable-ebook').checked = false;
@@ -1955,26 +2063,34 @@
 
     function closeBookModal() {
       const modal = document.getElementById('book-edit-modal');
-      modal.classList.remove('flex');
-      modal.classList.add('hidden');
+      if (modal) {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+      }
     }
 
-    function editBook(id) {
-      const book = allBooks.find(b => b.id === id);
-      if (book) openBookModal(book);
+    function editBook(rawId) {
+      const id = decodeURIComponent(String(rawId || ''));
+      const book = allBooks.find(b => String(b.id) === id || String(b.isbn) === id || (b.title && b.title === id));
+      if (book) {
+        openBookModal(book);
+      } else {
+        alert(`도서 ID(${id})에 해당하는 도서를 찾을 수 없습니다.`);
+      }
     }
 
-    async function deleteBook(id) {
-      const book = allBooks.find(b => b.id === id);
+    async function deleteBook(rawId) {
+      const id = decodeURIComponent(String(rawId || ''));
+      const book = allBooks.find(b => String(b.id) === id);
       if (!book) return;
 
       if (confirm(`정말 도서 『${book.title}』을(를) 영구 삭제하시겠습니까?`)) {
         // Remove from memory
-        allBooks = allBooks.filter(b => b.id !== id);
+        allBooks = allBooks.filter(b => String(b.id) !== id);
         // Persist to unified localStorage key
         localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
-        localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
-      localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
+        localStorage.setItem('phb_books', JSON.stringify(allBooks));
+        localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
 
         // Delete from Firestore
         if (db) {
@@ -1985,17 +2101,16 @@
           }
         }
 
-        allBooks = allBooks.filter(b => b.id !== id);
-        localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
-        localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
-        localStorage.setItem('phb_books', JSON.stringify(allBooks));
         renderAdminBooks();
         showToast('도서가 성공적으로 삭제되었습니다.');
       }
     }
 
     async function handleBookFormSubmit(e) {
-      e.preventDefault();
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       const saveBtn = document.getElementById('btn-save-book');
       if (saveBtn) {
         saveBtn.disabled = true;
@@ -2003,10 +2118,10 @@
       }
 
       try {
-        const existingId = document.getElementById('form-book-id').value;
+        const existingId = document.getElementById('form-book-id').value.trim();
         const id = existingId || `phb-${Date.now()}`;
 
-        const tocVal = document.getElementById('form-toc').value.trim();
+        const tocVal = document.getElementById('form-toc')?.value.trim() || '';
         const tocArray = cleanBookToc(tocVal);
         let finalCoverUrl = document.getElementById('form-cover-url') ? document.getElementById('form-cover-url').value.trim() : '';
         if (currentCoverDataUrl) {
@@ -2021,49 +2136,80 @@
         const isEbook = ebookEnabled || (selectedFormat === 'ebook' || selectedFormat === 'both');
         const isPaper = paperEnabled || (selectedFormat === 'paper' || selectedFormat === 'hardcover' || selectedFormat === 'both');
 
-        const bookData = await sanitizeBookForFirestore({
-          id,
-          title: document.getElementById('form-title').value.trim(),
-          originalTitle: document.getElementById('form-original-title').value.trim(),
-          author: document.getElementById('form-author').value.trim(),
-          translator: document.getElementById('form-translator').value.trim(),
-          category: document.getElementById('form-category').value,
-          subCategory: document.getElementById('form-subcategory').value,
-          series: document.getElementById('form-series').value.trim() || 'PHB 클래식',
+        const priceVal = parseInt(String(document.getElementById('form-price')?.value || '').replace(/[^0-9]/g, ''), 10) || 0;
+        const origPriceVal = parseInt(String(document.getElementById('form-original-price')?.value || '').replace(/[^0-9]/g, ''), 10) || 0;
 
-          price: Number(document.getElementById('form-price').value) || 0,
-          originalPrice: Number(document.getElementById('form-original-price').value) || 0,
-          pages: document.getElementById('form-pages').value.trim(),
-          pubDate: document.getElementById('form-pub-date').value.trim(),
-          isbn: document.getElementById('form-isbn').value.trim(),
-          confessionTag: document.getElementById('form-confession-tag').value.trim() || '개혁주의 표준문서',
-          coverGradient: document.getElementById('form-cover-gradient').value,
+        const rawBookData = {
+          id,
+          title: document.getElementById('form-title')?.value.trim() || '무제',
+          originalTitle: document.getElementById('form-original-title')?.value.trim() || '',
+          author: document.getElementById('form-author')?.value.trim() || '저자 미상',
+          translator: document.getElementById('form-translator')?.value.trim() || '',
+          category: document.getElementById('form-category')?.value || 'dogmatics',
+          subCategory: document.getElementById('form-subcategory')?.value || 'all',
+          series: document.getElementById('form-series')?.value.trim() || 'PHB 클래식',
+
+          price: priceVal,
+          originalPrice: origPriceVal,
+          pages: document.getElementById('form-pages')?.value.trim() || '',
+          pubDate: document.getElementById('form-pub-date')?.value.trim() || '',
+          isbn: document.getElementById('form-isbn')?.value.trim() || '',
+          confessionTag: document.getElementById('form-confession-tag')?.value.trim() || '개혁주의 표준문서',
+          coverGradient: document.getElementById('form-cover-gradient')?.value || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]',
           coverUrl: finalCoverUrl || '',
           coverImage: finalCoverUrl || '',
 
-          isNew: document.getElementById('form-is-new').checked,
-          isPreorder: document.getElementById('form-is-preorder').checked,
+          isNew: document.getElementById('form-is-new')?.checked ?? false,
+          isPreorder: document.getElementById('form-is-preorder')?.checked ?? false,
           isHardcover: isHardcover,
           isEbook: isEbook,
           isPaper: isPaper,
           format: selectedFormat,
 
           storeLinks: {
-            naver: document.getElementById('form-link-naver').value.trim(),
-            aladin: document.getElementById('form-link-aladin').value.trim(),
-            kyobo: document.getElementById('form-link-kyobo').value.trim(),
-            yes24: document.getElementById('form-link-yes24').value.trim(),
-            ebookAladin: document.getElementById('form-link-ebook-aladin').value.trim(),
-            ebookYes24: document.getElementById('form-link-ebook-yes24').value.trim(),
-            ebookKyobo: document.getElementById('form-link-ebook-kyobo').value.trim(),
+            naver: document.getElementById('form-link-naver')?.value.trim() || '',
+            aladin: document.getElementById('form-link-aladin')?.value.trim() || '',
+            kyobo: document.getElementById('form-link-kyobo')?.value.trim() || '',
+            yes24: document.getElementById('form-link-yes24')?.value.trim() || '',
+            ebookAladin: document.getElementById('form-link-ebook-aladin')?.value.trim() || '',
+            ebookYes24: document.getElementById('form-link-ebook-yes24')?.value.trim() || '',
+            ebookKyobo: document.getElementById('form-link-ebook-kyobo')?.value.trim() || '',
           },
 
-          tagline: document.getElementById('form-tagline').value.trim(),
-          description: cleanBookDescription(document.getElementById('form-description').value.trim()),
+          tagline: document.getElementById('form-tagline')?.value.trim() || '',
+          description: cleanBookDescription(document.getElementById('form-description')?.value.trim() || ''),
           toc: tocArray,
-          excerpt: cleanBookDescription(document.getElementById('form-excerpt').value.trim()),
+          excerpt: cleanBookDescription(document.getElementById('form-excerpt')?.value.trim() || ''),
           updatedAt: new Date().toISOString()
-        });
+        };
+
+        const bookData = await sanitizeBookForFirestore(rawBookData);
+
+        // Update local state first
+        const idx = allBooks.findIndex(b => String(b.id) === String(id));
+        if (idx > -1) {
+          allBooks[idx] = Object.assign({}, allBooks[idx], bookData);
+        } else {
+          allBooks.unshift(bookData);
+        }
+
+        try {
+          localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+          localStorage.setItem('phb_books', JSON.stringify(allBooks));
+          localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
+        } catch (storageErr) {
+          console.warn('LocalStorage quota warning:', storageErr);
+          try {
+            const lightList = allBooks.map(b => ({
+              ...b,
+              coverUrl: b.coverUrl && b.coverUrl.length > 5000 ? '' : b.coverUrl,
+              coverImage: b.coverImage && b.coverImage.length > 5000 ? '' : b.coverImage
+            }));
+            localStorage.setItem('phb_books_list', JSON.stringify(lightList));
+            localStorage.setItem('phb_books', JSON.stringify(lightList));
+            localStorage.setItem('phb_custom_books', JSON.stringify(lightList));
+          } catch (e) {}
+        }
 
         // Save to Firestore
         if (db) {
@@ -2072,35 +2218,9 @@
             console.log("Firestore book saved successfully:", id);
           } catch (err) {
             console.error("Firestore save error:", err);
-            alert("⚠️ 클라우드(Firebase) 전송 중 오류가 발생했습니다: " + (err.message || err));
+            // Non-blocking alert, data is already saved locally
+            showToast('⚠️ 클라우드 전송 중 네트워크 지연이 발생했으나, 로컬 저장은 완료되었습니다.');
           }
-        } else {
-          alert("⚠️ Firebase 데이터베이스 연결이 초기화되지 않았습니다. 인터넷 연결을 확인해 주세요.");
-        }
-
-        // Update local state
-        const idx = allBooks.findIndex(b => b.id === id);
-        if (idx > -1) {
-          allBooks[idx] = bookData;
-        } else {
-          allBooks.unshift(bookData);
-        }
-
-        try {
-          localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
-          localStorage.removeItem('phb_custom_books');
-          localStorage.removeItem('phb_books');
-        } catch (storageErr) {
-          console.warn('LocalStorage quota warning:', storageErr);
-          try {
-            // If quota exceeded, save minimal list to localStorage without heavy base64
-            const lightList = allBooks.map(b => ({
-              ...b,
-              coverUrl: b.coverUrl && b.coverUrl.length > 5000 ? '' : b.coverUrl,
-              coverImage: b.coverImage && b.coverImage.length > 5000 ? '' : b.coverImage
-            }));
-            localStorage.setItem('phb_books_list', JSON.stringify(lightList));
-          } catch (e) {}
         }
 
         closeBookModal();
@@ -2115,11 +2235,14 @@
           saveBtn.innerHTML = '<i class="fas fa-check"></i> <span>도서 정보 저장 완료</span>';
         }
       }
+      return false;
     }
 
     function handleFormCategoryChange(cat) {
       const subSelect = document.getElementById('form-subcategory');
-      if (cat === 'dogmatics') {
+      if (!subSelect) return;
+      const normCat = normalizeCategory(cat);
+      if (normCat === 'dogmatics') {
         subSelect.innerHTML = `
           <option value="all">조직신학 전체</option>
           <option value="set">전집/세트 (Set)</option>
@@ -2130,16 +2253,38 @@
           <option value="ecclesiology">교회론</option>
           <option value="eschatology">종말론</option>
         `;
-      } else if (cat === 'commentary' || cat === 'exposition') {
+      } else if (normCat === 'commentary' || normCat === 'exposition') {
         subSelect.innerHTML = `
-          <option value="all">${cat === 'exposition' ? '성경강해 전체' : '성경주석 전체'}</option>
-          <option value="set">전집/세트 (Set)</option>
+          <option value="all">${normCat === 'exposition' ? '성경강해 전체' : '성경주석 전체'}</option>
           <option value="ot">구약 (OT)</option>
           <option value="nt">신약 (NT)</option>
+          <option value="set">전집/세트 (Set)</option>
+        `;
+      } else if (normCat === 'christian-life') {
+        subSelect.innerHTML = `
+          <option value="all">크리스천 라이프 전체</option>
+          <option value="sanctification">성화와 영적 전쟁</option>
+          <option value="prayer">기도와 경건</option>
+          <option value="family">가정과 예배</option>
+        `;
+      } else if (normCat === 'historical') {
+        subSelect.innerHTML = `
+          <option value="all">역사신학 전체</option>
+          <option value="reformation">종교개혁사</option>
+          <option value="puritan-history">청교도 역사</option>
+        `;
+      } else if (normCat === 'puritan-works') {
+        subSelect.innerHTML = `
+          <option value="all">청교도저작 전집 전체</option>
+          <option value="set">전집/세트 (Set)</option>
+          <option value="owen">존 오웬 전집</option>
+          <option value="goodwin">토마스 굿윈 전집</option>
         `;
       } else {
         subSelect.innerHTML = `
           <option value="all">기본 분류</option>
+          <option value="pdf">PDF 전자책</option>
+          <option value="epub">ePub 전자책</option>
         `;
       }
     }
