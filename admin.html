@@ -1564,7 +1564,7 @@
 
       if (emptyState) emptyState.classList.add('hidden');
 
-      tbody.innerHTML = filtered.map(book => {
+      tbody.innerHTML = filtered.map((book, idx) => {
         const catMap = {
           'dogmatics': '조직신학',
           'commentary': '성경주석',
@@ -1585,7 +1585,7 @@
         const safeId = encodeURIComponent(String(book.id || ''));
 
         return `
-          <tr class="hover:bg-[#FAF8F5] transition-colors group" data-id="${book.id}">
+          <tr class="hover:bg-[#FAF8F5] transition-colors group" data-id="${book.id || ''}">
             
             <!-- 드래그 핸들 -->
             <td class="drag-handle-cell py-4 px-3 text-center hidden cursor-grab active:cursor-grabbing text-[#C39738] text-base select-none" title="드래그하여 순서 변경">
@@ -1664,11 +1664,11 @@
             <!-- 관리 작업 -->
             <td class="py-4 px-4 text-center whitespace-nowrap">
               <div class="flex items-center justify-center space-x-2">
-                <button type="button" onclick="editBook('${safeId}')" class="px-2.5 py-1.5 bg-[#FAF8F5] hover:bg-[#6E1B2A] hover:text-white text-[#17191C] border border-[#E4DFD7] rounded-lg transition-colors font-medium flex items-center gap-1 cursor-pointer" title="수정">
-                  <i class="fas fa-edit"></i> 수정
+                <button type="button" onclick="editBook('${safeId}', ${idx})" class="px-2.5 py-1.5 bg-[#FAF8F5] hover:bg-[#6E1B2A] hover:text-white text-[#17191C] border border-[#E4DFD7] rounded-lg transition-colors font-medium flex items-center gap-1 cursor-pointer" title="수정">
+                  <i class="fas fa-edit pointer-events-none"></i> <span class="pointer-events-none">수정</span>
                 </button>
-                <button type="button" onclick="deleteBook('${safeId}')" class="px-2.5 py-1.5 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 border border-red-200 rounded-lg transition-colors font-medium flex items-center gap-1 cursor-pointer" title="삭제">
-                  <i class="fas fa-trash-alt"></i> 삭제
+                <button type="button" onclick="deleteBook('${safeId}', ${idx})" class="px-2.5 py-1.5 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 border border-red-200 rounded-lg transition-colors font-medium flex items-center gap-1 cursor-pointer" title="삭제">
+                  <i class="fas fa-trash-alt pointer-events-none"></i> <span class="pointer-events-none">삭제</span>
                 </button>
               </div>
             </td>
@@ -1912,138 +1912,164 @@
     }
 
     function openBookModal(book = null) {
-      const modal = document.getElementById('book-edit-modal');
-      const form = document.getElementById('book-form');
-      if (!modal || !form) return;
-      form.reset();
+      try {
+        const modal = document.getElementById('book-edit-modal');
+        const form = document.getElementById('book-form');
+        if (!modal || !form) {
+          console.error('Modal element not found');
+          alert('수정 모달창 요소를 찾을 수 없습니다.');
+          return;
+        }
+        form.reset();
 
-      if (book) {
-        const titleText = book.title || '무제';
-        const modeTitle = document.getElementById('book-modal-mode-title');
-        if (modeTitle) modeTitle.innerText = `도서 정보 수정: ${titleText}`;
+        const setVal = (id, val) => {
+          const el = document.getElementById(id);
+          if (el) el.value = (val !== undefined && val !== null) ? val : '';
+        };
 
-        document.getElementById('form-book-id').value = book.id || '';
-        document.getElementById('form-title').value = book.title || '';
-        document.getElementById('form-original-title').value = book.originalTitle || '';
-        const normCat = normalizeCategory(book.category);
-        document.getElementById('form-category').value = normCat;
-        handleFormCategoryChange(normCat);
+        if (book) {
+          const titleText = book.title || '무제';
+          const modeTitle = document.getElementById('book-modal-mode-title');
+          if (modeTitle) modeTitle.innerText = `도서 정보 수정: ${titleText}`;
 
-        // Subcategory select & fallback
-        const subSelect = document.getElementById('form-subcategory');
-        const targetSub = book.subCategory || 'all';
-        if (subSelect) {
-          let hasOption = false;
-          for (let i = 0; i < subSelect.options.length; i++) {
-            if (subSelect.options[i].value === targetSub) {
-              hasOption = true;
-              break;
+          setVal('form-book-id', book.id || '');
+          setVal('form-title', book.title || '');
+          setVal('form-original-title', book.originalTitle || '');
+          setVal('form-author', book.author || '');
+          setVal('form-translator', book.translator || '');
+
+          const normCat = normalizeCategory(book.category);
+          setVal('form-category', normCat);
+          handleFormCategoryChange(normCat);
+
+          // Subcategory select & fallback
+          const subSelect = document.getElementById('form-subcategory');
+          const targetSub = book.subCategory || 'all';
+          if (subSelect) {
+            let hasOption = false;
+            for (let i = 0; i < subSelect.options.length; i++) {
+              if (subSelect.options[i].value === targetSub) {
+                hasOption = true;
+                break;
+              }
+            }
+            if (!hasOption && targetSub) {
+              const opt = document.createElement('option');
+              opt.value = targetSub;
+              opt.textContent = targetSub;
+              subSelect.appendChild(opt);
+            }
+            subSelect.value = targetSub;
+          }
+          setVal('form-series', book.series || '');
+
+          // Clean price values (strip commas / non-digits before setting to number inputs)
+          const rawPrice = String(book.price ?? '').replace(/[^0-9]/g, '');
+          const rawOrigPrice = String(book.originalPrice ?? '').replace(/[^0-9]/g, '');
+          setVal('form-price', rawPrice);
+          setVal('form-original-price', rawOrigPrice);
+
+          setVal('form-pages', book.pages || '');
+          setVal('form-pub-date', book.pubDate || '');
+          setVal('form-isbn', book.isbn || '');
+          setVal('form-confession-tag', book.confessionTag || '');
+          setVal('form-cover-gradient', book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]');
+          
+          // Cover image setup
+          currentCoverDataUrl = book.coverUrl || book.coverImage || '';
+          const urlInput = document.getElementById('form-cover-url');
+          const previewImg = document.getElementById('form-cover-preview-img');
+          const fileInput = document.getElementById('form-cover-file');
+          if (fileInput) fileInput.value = '';
+          if (urlInput) urlInput.value = (book.coverUrl && !book.coverUrl.startsWith('data:')) ? book.coverUrl : '';
+          if (previewImg) {
+            if (currentCoverDataUrl) {
+              previewImg.src = currentCoverDataUrl;
+              previewImg.classList.remove('hidden');
+              previewImg.style.display = 'block';
+            } else {
+              previewImg.src = '';
+              previewImg.classList.add('hidden');
+              previewImg.style.display = 'none';
             }
           }
-          if (!hasOption && targetSub) {
-            const opt = document.createElement('option');
-            opt.value = targetSub;
-            opt.textContent = targetSub;
-            subSelect.appendChild(opt);
-          }
-          subSelect.value = targetSub;
-        }
-        document.getElementById('form-series').value = book.series || '';
+          handleCoverGradientChange(book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]');
+          updateCoverPreviewText();
 
-        // Clean price values (strip commas / non-digits before setting to number inputs)
-        const rawPrice = String(book.price ?? '').replace(/[^0-9]/g, '');
-        const rawOrigPrice = String(book.originalPrice ?? '').replace(/[^0-9]/g, '');
-        document.getElementById('form-price').value = rawPrice;
-        document.getElementById('form-original-price').value = rawOrigPrice;
-
-        document.getElementById('form-pages').value = book.pages || '';
-        document.getElementById('form-pub-date').value = book.pubDate || '';
-        document.getElementById('form-isbn').value = book.isbn || '';
-        document.getElementById('form-confession-tag').value = book.confessionTag || '';
-        document.getElementById('form-cover-gradient').value = book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]';
-        
-        // Cover image setup
-        currentCoverDataUrl = book.coverUrl || book.coverImage || '';
-        const urlInput = document.getElementById('form-cover-url');
-        const previewImg = document.getElementById('form-cover-preview-img');
-        const fileInput = document.getElementById('form-cover-file');
-        if (fileInput) fileInput.value = '';
-        if (urlInput) urlInput.value = (book.coverUrl && !book.coverUrl.startsWith('data:')) ? book.coverUrl : '';
-        if (previewImg) {
-          if (currentCoverDataUrl) {
-            previewImg.src = currentCoverDataUrl;
-            previewImg.classList.remove('hidden');
+          const chkNew = document.getElementById('form-is-new');
+          if (chkNew) chkNew.checked = !!book.isNew;
+          const chkPre = document.getElementById('form-is-preorder');
+          if (chkPre) chkPre.checked = !!book.isPreorder;
+          
+          // Format radio setup
+          const isEbookCategory = (normCat === 'ebook') || (String(book.subCategory || '').toLowerCase() === 'ebook');
+          const isOnlyEbook = isEbookCategory || (book.isEbook && !book.isHardcover && !book.isPaper);
+          
+          if (isOnlyEbook) {
+            const radio = document.getElementById('form-format-ebook');
+            if (radio) radio.checked = true;
+          } else if (book.isHardcover && book.isEbook) {
+            const radio = document.getElementById('form-format-both');
+            if (radio) radio.checked = true;
+          } else if (book.isEbook) {
+            const radio = document.getElementById('form-format-both');
+            if (radio) radio.checked = true;
+          } else if (book.isHardcover) {
+            const radio = document.getElementById('form-format-hardcover');
+            if (radio) radio.checked = true;
           } else {
-            previewImg.src = '';
-            previewImg.classList.add('hidden');
+            const radio = document.getElementById('form-format-paper');
+            if (radio) radio.checked = true;
           }
-        }
-        handleCoverGradientChange(book.coverGradient || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]');
-        updateCoverPreviewText();
 
-        document.getElementById('form-is-new').checked = !!book.isNew;
-        document.getElementById('form-is-preorder').checked = !!book.isPreorder;
-        
-        // Format radio setup
-        const isEbookCategory = (normCat === 'ebook') || (String(book.subCategory || '').toLowerCase() === 'ebook');
-        const isOnlyEbook = isEbookCategory || (book.isEbook && !book.isHardcover && !book.isPaper);
-        
-        if (isOnlyEbook) {
-          const radio = document.getElementById('form-format-ebook');
-          if (radio) radio.checked = true;
-        } else if (book.isHardcover && book.isEbook) {
-          const radio = document.getElementById('form-format-both');
-          if (radio) radio.checked = true;
-        } else if (book.isEbook) {
-          const radio = document.getElementById('form-format-both');
-          if (radio) radio.checked = true;
-        } else if (book.isHardcover) {
-          const radio = document.getElementById('form-format-hardcover');
-          if (radio) radio.checked = true;
+          // Stores
+          const s = book.storeLinks || {};
+          setVal('form-link-naver', s.naver || '');
+          setVal('form-link-aladin', s.aladin || '');
+          setVal('form-link-kyobo', s.kyobo || '');
+          setVal('form-link-yes24', s.yes24 || '');
+
+          setVal('form-link-ebook-aladin', s.ebookAladin || '');
+          setVal('form-link-ebook-yes24', s.ebookYes24 || '');
+          setVal('form-link-ebook-kyobo', s.ebookKyobo || '');
+
+          // Store sales visibility checkboxes
+          const hasPaperSales = book.isPaper !== undefined ? book.isPaper : (normCat !== 'ebook');
+          const hasEbookSales = book.isEbook !== undefined ? book.isEbook : (normCat === 'ebook');
+          const paperChk = document.getElementById('form-enable-paper');
+          if (paperChk) paperChk.checked = hasPaperSales;
+          const ebookChk = document.getElementById('form-enable-ebook');
+          if (ebookChk) ebookChk.checked = hasEbookSales;
+          toggleStoreFieldVisibility();
+
+          setVal('form-tagline', book.tagline || '');
+          setVal('form-description', book.description || '');
+          setVal('form-toc', Array.isArray(book.toc) ? book.toc.join('\n') : (book.toc || ''));
+          setVal('form-excerpt', book.excerpt || '');
         } else {
-          const radio = document.getElementById('form-format-paper');
-          if (radio) radio.checked = true;
+          const modeTitle = document.getElementById('book-modal-mode-title');
+          if (modeTitle) modeTitle.innerText = '새 도서 등록';
+          setVal('form-book-id', '');
+          setVal('form-category', 'dogmatics');
+          handleFormCategoryChange('dogmatics');
+          setVal('form-cover-gradient', 'from-[#1a1c20] via-[#2d1b24] to-[#121417]');
+          const paperChk = document.getElementById('form-enable-paper');
+          if (paperChk) paperChk.checked = true;
+          const ebookChk = document.getElementById('form-enable-ebook');
+          if (ebookChk) ebookChk.checked = false;
+          toggleStoreFieldVisibility();
+          clearCoverImage();
+          handleCoverGradientChange('from-[#1a1c20] via-[#2d1b24] to-[#121417]');
+          updateCoverPreviewText();
         }
 
-        // Stores
-        const s = book.storeLinks || {};
-        document.getElementById('form-link-naver').value = s.naver || '';
-        document.getElementById('form-link-aladin').value = s.aladin || '';
-        document.getElementById('form-link-kyobo').value = s.kyobo || '';
-        document.getElementById('form-link-yes24').value = s.yes24 || '';
-
-        document.getElementById('form-link-ebook-aladin').value = s.ebookAladin || '';
-        document.getElementById('form-link-ebook-yes24').value = s.ebookYes24 || '';
-        document.getElementById('form-link-ebook-kyobo').value = s.ebookKyobo || '';
-
-        // Store sales visibility checkboxes
-        const hasPaperSales = book.isPaper !== undefined ? book.isPaper : (normCat !== 'ebook');
-        const hasEbookSales = book.isEbook !== undefined ? book.isEbook : (normCat === 'ebook');
-        document.getElementById('form-enable-paper').checked = hasPaperSales;
-        document.getElementById('form-enable-ebook').checked = hasEbookSales;
-        toggleStoreFieldVisibility();
-
-        document.getElementById('form-tagline').value = book.tagline || '';
-        document.getElementById('form-description').value = book.description || '';
-        document.getElementById('form-toc').value = Array.isArray(book.toc) ? book.toc.join('\n') : (book.toc || '');
-        document.getElementById('form-excerpt').value = book.excerpt || '';
-      } else {
-        const modeTitle = document.getElementById('book-modal-mode-title');
-        if (modeTitle) modeTitle.innerText = '새 도서 등록';
-        document.getElementById('form-book-id').value = '';
-        document.getElementById('form-category').value = 'dogmatics';
-        handleFormCategoryChange('dogmatics');
-        document.getElementById('form-cover-gradient').value = 'from-[#1a1c20] via-[#2d1b24] to-[#121417]';
-        document.getElementById('form-enable-paper').checked = true;
-        document.getElementById('form-enable-ebook').checked = false;
-        toggleStoreFieldVisibility();
-        clearCoverImage();
-        handleCoverGradientChange('from-[#1a1c20] via-[#2d1b24] to-[#121417]');
-        updateCoverPreviewText();
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        modal.style.display = 'flex';
+      } catch (err) {
+        console.error('Error in openBookModal:', err);
+        alert('모달창을 여는 중 오류가 발생했습니다: ' + (err.message || err));
       }
-
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
     }
 
     function toggleStoreFieldVisibility() {
@@ -2066,45 +2092,86 @@
       if (modal) {
         modal.classList.remove('flex');
         modal.classList.add('hidden');
+        modal.style.display = 'none';
       }
     }
 
-    function editBook(rawId) {
-      const id = decodeURIComponent(String(rawId || ''));
-      const book = allBooks.find(b => String(b.id) === id || String(b.isbn) === id || (b.title && b.title === id));
-      if (book) {
-        openBookModal(book);
-      } else {
-        alert(`도서 ID(${id})에 해당하는 도서를 찾을 수 없습니다.`);
-      }
-    }
-
-    async function deleteBook(rawId) {
-      const id = decodeURIComponent(String(rawId || ''));
-      const book = allBooks.find(b => String(b.id) === id);
-      if (!book) return;
-
-      if (confirm(`정말 도서 『${book.title}』을(를) 영구 삭제하시겠습니까?`)) {
-        // Remove from memory
-        allBooks = allBooks.filter(b => String(b.id) !== id);
-        // Persist to unified localStorage key
-        localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
-        localStorage.setItem('phb_books', JSON.stringify(allBooks));
-        localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
-
-        // Delete from Firestore
-        if (db) {
-          try {
-            await db.collection("phb_books").doc(id).delete();
-          } catch (e) {
-            console.warn("Firestore delete failed:", e);
-          }
+    function editBook(rawId, index) {
+      try {
+        let id = '';
+        if (rawId) {
+          try { id = decodeURIComponent(String(rawId)); } catch (e) { id = String(rawId); }
         }
-
-        renderAdminBooks();
-        showToast('도서가 성공적으로 삭제되었습니다.');
+        let book = null;
+        if (id) {
+          book = allBooks.find(b => String(b.id) === id || String(b.isbn) === id || (b.title && b.title === id));
+        }
+        if (!book && typeof index === 'number' && allBooks[index]) {
+          book = allBooks[index];
+        }
+        if (!book && allBooks.length > 0 && id) {
+          book = allBooks.find(b => String(b.id).includes(id) || (b.title && b.title.includes(id)));
+        }
+        if (book) {
+          openBookModal(book);
+        } else {
+          console.error('Book not found for id:', id, 'index:', index, 'allBooks:', allBooks);
+          alert(`도서 정보를 찾을 수 없습니다. (ID: ${id})`);
+        }
+      } catch (err) {
+        console.error('Error in editBook:', err);
+        alert('도서 수정 모달을 여는 중 오류가 발생했습니다: ' + (err.message || err));
       }
     }
+
+    async function deleteBook(rawId, index) {
+      try {
+        let id = '';
+        if (rawId) {
+          try { id = decodeURIComponent(String(rawId)); } catch (e) { id = String(rawId); }
+        }
+        let book = null;
+        if (id) {
+          book = allBooks.find(b => String(b.id) === id || String(b.isbn) === id || (b.title && b.title === id));
+        }
+        if (!book && typeof index === 'number' && allBooks[index]) {
+          book = allBooks[index];
+        }
+        if (!book) return;
+
+        const bookId = book.id || id;
+        if (confirm(`정말 도서 『${book.title}』을(를) 영구 삭제하시겠습니까?`)) {
+          // Remove from memory
+          allBooks = allBooks.filter(b => b !== book && String(b.id) !== String(bookId));
+          // Persist to unified localStorage key
+          localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+          localStorage.setItem('phb_books', JSON.stringify(allBooks));
+          localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
+
+          // Delete from Firestore
+          if (db && bookId) {
+            try {
+              await db.collection("phb_books").doc(bookId).delete();
+            } catch (e) {
+              console.warn("Firestore delete failed:", e);
+            }
+          }
+
+          renderAdminBooks();
+          showToast('도서가 성공적으로 삭제되었습니다.');
+        }
+      } catch (err) {
+        console.error('Error in deleteBook:', err);
+        alert('도서 삭제 중 오류가 발생했습니다: ' + (err.message || err));
+      }
+    }
+
+    // Expose functions to global window scope for inline onclick handlers
+    window.editBook = editBook;
+    window.deleteBook = deleteBook;
+    window.openBookModal = openBookModal;
+    window.closeBookModal = closeBookModal;
+    window.handleFormCategoryChange = handleFormCategoryChange;
 
     async function handleBookFormSubmit(e) {
       if (e) {
