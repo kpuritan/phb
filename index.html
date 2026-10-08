@@ -3200,7 +3200,12 @@
     let heroSliderTimer = null;
 
     function getFeaturedBooks() {
-      // 신간, 예약도서 또는 대표 도서 우선 선택 (최대 5~6권)
+      // 1순위: 관리자가 직접 '대문 홍보 도서'로 지정한 도서들
+      const explicitlyFeatured = BOOKS_DATA.filter(b => b.isFeatured === true);
+      if (explicitlyFeatured.length > 0) {
+        return explicitlyFeatured;
+      }
+      // 2순위: 지정 도서가 없을 경우 기존 로직대로 신간, 예약도서 또는 대표 도서 자동 선택 (최대 5~6권)
       const featured = BOOKS_DATA.filter(b => b.isNew || b.isPreorder || b.subCategory === 'set');
       if (featured.length > 0) return featured.slice(0, 6);
       return BOOKS_DATA.slice(0, 5);
@@ -3239,6 +3244,11 @@
 
       track.innerHTML = items.map((book, idx) => {
         const isActive = idx === currentHeroIndex;
+        const isFree = (book.price === 0 || book.isFreePdf || book.hasPdfDownload);
+        const badgeText = book.heroBadge && book.heroBadge.trim() 
+          ? book.heroBadge.trim()
+          : (book.isPreorder ? '[ 특별 사전예약 도서 ]' : book.isNew ? '[ 주목할 신간 ]' : (book.isFeatured ? '[ ⭐ 대표 추천 도서 ]' : '[ PHB 대표 정본 ]'));
+
         return `
           <div class="hero-slide-item transition-all duration-700 w-full ${isActive ? 'opacity-100 relative z-10 block pointer-events-auto' : 'opacity-0 absolute inset-0 z-0 hidden pointer-events-none'}" data-slide-index="${idx}">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -3246,7 +3256,7 @@
               <!-- Left: Book 3D Cover Display -->
               <div class="lg:col-span-5 flex flex-col items-center justify-center">
                 <div class="text-[11px] font-bold text-[#DFC075] uppercase tracking-wider mb-2 font-cinzel">
-                  ${book.isPreorder ? '[ 특별 사전예약 도서 ]' : book.isNew ? '[ 주목할 신간 ]' : '[ PHB 대표 정본 ]'}
+                  ${badgeText}
                 </div>
                 <div onclick="openBookPreview('${book.id}')" class="cursor-pointer w-48 sm:w-56 h-72 sm:h-80 bg-gradient-to-br ${book.coverGradient} rounded-r-lg rounded-l-xs shadow-2xl book-spine-effect p-4 sm:p-5 flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 hover:-rotate-1 relative overflow-hidden group">
                   ${(book.coverUrl || book.coverImage) ? `
@@ -3296,7 +3306,7 @@
                   <span class="text-[#C39738]">•</span>
                   <span><strong>역자:</strong> ${book.translator}</span>
                   <span class="text-[#C39738]">•</span>
-                  <span><strong>정가:</strong> <span class="line-through text-[#A6ADB8]">${book.originalPrice.toLocaleString()}원</span> &rarr; <strong class="text-[#DFC075] text-sm">${book.price.toLocaleString()}원</strong></span>
+                  <span><strong>정가:</strong> ${isFree ? '<strong class="text-emerald-400 text-sm font-bold">무료 (PDF 제공)</strong>' : `<span class="line-through text-[#A6ADB8]">${(book.originalPrice || book.price).toLocaleString()}원</span> &rarr; <strong class="text-[#DFC075] text-sm">${(book.price || 0).toLocaleString()}원</strong>`}</span>
                 </div>
 
                 <!-- Action Buttons -->
@@ -3304,9 +3314,19 @@
                   <button onclick="openBookPreview('${book.id}')" class="px-5 py-2.5 bg-[#C39738] hover:bg-[#DFC075] text-[#17191C] font-bold text-xs sm:text-sm rounded-lg shadow-lg transition-colors cursor-pointer flex items-center gap-1.5">
                     <span>📖 상세 내용 및 목차 보기</span>
                   </button>
-                  <button onclick="addToCart('${book.id}')" class="px-5 py-2.5 bg-[#6E1B2A] hover:bg-[#8C2538] text-white font-semibold text-xs sm:text-sm rounded-lg shadow-lg transition-colors cursor-pointer flex items-center gap-1.5">
-                    <span>🛒 장바구니 담기</span>
-                  </button>
+                  ${(book.pdfUrl || book.pdfFile) ? `
+                    <a href="${book.pdfUrl || book.pdfFile}" target="_blank" download class="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-semibold text-xs sm:text-sm rounded-lg shadow-lg transition-colors cursor-pointer flex items-center gap-1.5">
+                      <span>📥 무료 PDF 다운로드</span>
+                    </a>
+                  ` : isFree ? `
+                    <button onclick="openBookPreview('${book.id}')" class="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-semibold text-xs sm:text-sm rounded-lg shadow-lg transition-colors cursor-pointer flex items-center gap-1.5">
+                      <span>📥 무료 PDF 열기</span>
+                    </button>
+                  ` : `
+                    <button onclick="addToCart('${book.id}')" class="px-5 py-2.5 bg-[#6E1B2A] hover:bg-[#8C2538] text-white font-semibold text-xs sm:text-sm rounded-lg shadow-lg transition-colors cursor-pointer flex items-center gap-1.5">
+                      <span>🛒 장바구니 담기</span>
+                    </button>
+                  `}
                 </div>
 
               </div>

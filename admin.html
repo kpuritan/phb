@@ -206,6 +206,9 @@
         <button onclick="filterAdminCategory('all')" class="admin-cat-tab active px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#17191C] text-[#DFC075] shadow">
           전체 보기
         </button>
+        <button onclick="filterAdminCategory('featured')" class="admin-cat-tab px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-white text-[#8B6714] hover:bg-[#EDE9E1] border border-[#C39738]/50 flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fas fa-star text-amber-500"></i> 대문 홍보 도서
+        </button>
         <button onclick="filterAdminCategory('dogmatics')" class="admin-cat-tab px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-white text-[#5E6470] hover:bg-[#EDE9E1] border border-[#E4DFD7]">
           조직신학
         </button>
@@ -512,7 +515,7 @@
             </div>
 
             <!-- Additional Badges -->
-            <div class="flex flex-wrap items-center gap-6 pt-1">
+            <div class="flex flex-wrap items-center gap-4 sm:gap-6 pt-1">
               <label class="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" id="form-is-new" class="rounded border-[#E4DFD7] text-[#6E1B2A] focus:ring-0" />
                 <span class="font-medium text-[#17191C]">신간 (NEW) 뱃지</span>
@@ -521,6 +524,19 @@
                 <input type="checkbox" id="form-is-preorder" class="rounded border-[#E4DFD7] text-[#6E1B2A] focus:ring-0" />
                 <span class="font-medium text-[#17191C]">예약판매 (Pre-order) 뱃지</span>
               </label>
+              <label class="flex items-center gap-2 cursor-pointer bg-[#DFC075]/15 px-3 py-1.5 rounded-lg border border-[#C39738]/50 text-[#8B6714] font-bold">
+                <input type="checkbox" id="form-is-featured" class="rounded border-[#C39738] text-[#9A7424] focus:ring-0" />
+                <span>⭐ 메인 대문 슬라이더 홍보 도서</span>
+              </label>
+            </div>
+
+            <!-- 대문 배지 문구 -->
+            <div class="pt-2">
+              <label class="block font-semibold text-[#17191C] text-[11px] mb-1">
+                <i class="fas fa-bullhorn text-[#C39738] mr-1"></i> 대문 슬라이더 홍보 배지 문구 (선택 사항)
+              </label>
+              <input type="text" id="form-hero-badge" placeholder="비워둘 시 기본값 적용 (예: [ 주목할 신간 ], [ 무료 배포 전자책 ], [ 특별 기획전 ])"
+                class="w-full px-3 py-2 bg-[#FAF8F5] border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:bg-white" />
             </div>
           </div>
 
@@ -1617,6 +1633,7 @@
         const normCat = normalizeCategory(book.category);
         const matchesCat = (() => {
           if (currentAdminCategory === 'all') return true;
+          if (currentAdminCategory === 'featured') return !!book.isFeatured;
           if (currentAdminCategory === 'ebook') return book.isEbook || normCat === 'ebook';
           return normCat === currentAdminCategory || book.category === currentAdminCategory;
         })();
@@ -1684,8 +1701,9 @@
                   </div>
                 `}
                 <div class="space-y-0.5 max-w-xs sm:max-w-sm">
-                  <div class="font-bold text-sm text-[#17191C] group-hover:text-[#6E1B2A] transition-colors leading-snug">
-                    ${book.title || '제목 없음'}
+                  <div class="font-bold text-sm text-[#17191C] group-hover:text-[#6E1B2A] transition-colors leading-snug flex items-center gap-1.5 flex-wrap">
+                    <span>${book.title || '제목 없음'}</span>
+                    ${book.isFeatured ? '<span class="bg-[#DFC075]/20 text-[#8B6714] border border-[#C39738]/50 text-[10px] font-bold px-1.5 py-0.2 rounded flex items-center gap-0.5"><i class="fas fa-star text-[9px] text-amber-500"></i>대문홍보</span>' : ''}
                   </div>
                   ${book.originalTitle ? `<div class="text-[11px] text-[#7E8694] italic truncate">${book.originalTitle}</div>` : ''}
                   <div class="text-[10px] text-[#5E6470] flex items-center gap-2 pt-0.5">
@@ -1732,6 +1750,7 @@
             <!-- 상태 뱃지 -->
             <td class="py-4 px-4 text-center whitespace-nowrap">
               <div class="flex flex-col items-center gap-1">
+                ${book.isFeatured ? '<span class="bg-[#DFC075] text-[#17191C] text-[9px] font-black px-1.5 py-0.5 rounded shadow-xs border border-[#9A7424] flex items-center gap-0.5" title="메인 대문 슬라이더 홍보 중"><i class="fas fa-star text-[8px] text-amber-900"></i>대문홍보</span>' : ''}
                 ${book.pdfUrl ? '<span class="bg-emerald-700 text-white text-[9px] font-bold px-1.5 py-0.2 rounded shadow-xs" title="무료 PDF 다운로드 가능"><i class="fas fa-file-pdf mr-0.5"></i>무료배포</span>' : ''}
                 ${book.isNew ? '<span class="bg-[#6E1B2A] text-white text-[9px] font-bold px-1.5 py-0.2 rounded">NEW</span>' : ''}
                 ${book.isPreorder ? '<span class="bg-[#C39738] text-[#17191C] text-[9px] font-bold px-1.5 py-0.2 rounded">예약판매</span>' : ''}
@@ -1741,11 +1760,15 @@
 
             <!-- 관리 작업 -->
             <td class="py-4 px-4 text-center whitespace-nowrap">
-              <div class="flex items-center justify-center space-x-2">
-                <button type="button" onclick="editBook('${safeId}', ${idx})" class="px-2.5 py-1.5 bg-[#FAF8F5] hover:bg-[#6E1B2A] hover:text-white text-[#17191C] border border-[#E4DFD7] rounded-lg transition-colors font-medium flex items-center gap-1 cursor-pointer" title="수정">
+              <div class="flex items-center justify-center space-x-1.5">
+                <button type="button" onclick="toggleHeroFeatured('${safeId}')" class="px-2 py-1.5 ${book.isFeatured ? 'bg-[#DFC075] text-[#17191C] font-bold border-[#C39738] shadow-xs' : 'bg-white hover:bg-amber-50 text-[#8B6714] border-[#E4DFD7]'} border rounded-lg transition-all text-xs flex items-center gap-1 cursor-pointer" title="${book.isFeatured ? '대문 슬라이더 홍보 해제' : '메인 대문 슬라이더에 홍보하기'}">
+                  <i class="fas fa-star pointer-events-none ${book.isFeatured ? 'text-[#17191C]' : 'text-amber-500'}"></i>
+                  <span class="pointer-events-none">${book.isFeatured ? '대문 ON' : '대문'}</span>
+                </button>
+                <button type="button" onclick="editBook('${safeId}', ${idx})" class="px-2 py-1.5 bg-[#FAF8F5] hover:bg-[#6E1B2A] hover:text-white text-[#17191C] border border-[#E4DFD7] rounded-lg transition-colors font-medium flex items-center gap-1 cursor-pointer" title="수정">
                   <i class="fas fa-edit pointer-events-none"></i> <span class="pointer-events-none">수정</span>
                 </button>
-                <button type="button" onclick="deleteBook('${safeId}', ${idx})" class="px-2.5 py-1.5 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 border border-red-200 rounded-lg transition-colors font-medium flex items-center gap-1 cursor-pointer" title="삭제">
+                <button type="button" onclick="deleteBook('${safeId}', ${idx})" class="px-2 py-1.5 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 border border-red-200 rounded-lg transition-colors font-medium flex items-center gap-1 cursor-pointer" title="삭제">
                   <i class="fas fa-trash-alt pointer-events-none"></i> <span class="pointer-events-none">삭제</span>
                 </button>
               </div>
@@ -1755,6 +1778,32 @@
         `;
       }).join('');
     }
+
+    async function toggleHeroFeatured(rawId) {
+      try {
+        const id = decodeURIComponent(String(rawId));
+        const book = allBooks.find(b => String(b.id) === id);
+        if (!book) return;
+
+        const newStatus = !book.isFeatured;
+        book.isFeatured = newStatus;
+
+        try {
+          localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
+          localStorage.setItem('phb_books', JSON.stringify(allBooks));
+          localStorage.setItem('phb_custom_books', JSON.stringify(allBooks));
+        } catch (e) {}
+
+        renderAdminBooks();
+        showToast(newStatus ? `⭐ 『${book.title}』이(가) 메인 대문 슬라이더 홍보 도서로 설정되었습니다!` : `『${book.title}』의 대문 홍보가 해제되었습니다.`);
+
+        // Sync to cloud
+        syncSingleBookToCloud(id, { isFeatured: newStatus });
+      } catch (err) {
+        console.error('toggleHeroFeatured error:', err);
+      }
+    }
+    window.toggleHeroFeatured = toggleHeroFeatured;
 
 
 
@@ -2150,6 +2199,9 @@
           if (chkNew) chkNew.checked = !!book.isNew;
           const chkPre = document.getElementById('form-is-preorder');
           if (chkPre) chkPre.checked = !!book.isPreorder;
+          const chkFeatured = document.getElementById('form-is-featured');
+          if (chkFeatured) chkFeatured.checked = !!book.isFeatured;
+          setVal('form-hero-badge', book.heroBadge || '');
           
           // Format radio setup
           const isEbookCategory = (normCat === 'ebook') || (String(book.subCategory || '').toLowerCase() === 'ebook');
@@ -2220,6 +2272,13 @@
           setVal('form-category', 'dogmatics');
           handleFormCategoryChange('dogmatics');
           setVal('form-cover-gradient', 'from-[#1a1c20] via-[#2d1b24] to-[#121417]');
+          const chkNew = document.getElementById('form-is-new');
+          if (chkNew) chkNew.checked = false;
+          const chkPre = document.getElementById('form-is-preorder');
+          if (chkPre) chkPre.checked = false;
+          const chkFeatured = document.getElementById('form-is-featured');
+          if (chkFeatured) chkFeatured.checked = false;
+          setVal('form-hero-badge', '');
           const paperChk = document.getElementById('form-enable-paper');
           if (paperChk) paperChk.checked = true;
           const ebookChk = document.getElementById('form-enable-ebook');
@@ -2528,6 +2587,8 @@
 
           isNew: document.getElementById('form-is-new')?.checked ?? false,
           isPreorder: document.getElementById('form-is-preorder')?.checked ?? false,
+          isFeatured: document.getElementById('form-is-featured')?.checked ?? false,
+          heroBadge: document.getElementById('form-hero-badge')?.value.trim() || '',
           isHardcover: isHardcover,
           isEbook: isEbook,
           isPaper: isPaper,
