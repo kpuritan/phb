@@ -359,32 +359,8 @@
             </div>
           </div>
 
-          <!-- 2. 전자책 (e-Book) 서점 로고 배너 -->
-          <div id="section-ebook-stores" class="pt-4 border-t border-[#E4DFD7]">
-            <div class="text-[#1e6e28] text-sm sm:text-base font-bold flex items-center justify-between mb-3">
-              <span>📱 전자책 (eBook / PDF) 구매 — 서점 로고를 클릭하시면 전자책으로 바로 이동합니다</span>
-              <span id="ebook-status-badge" class="text-xs font-semibold text-[#0057B3] bg-[#0070E0]/10 px-2.5 py-1 rounded border border-[#0070E0]/20">
-                e-Book 지원
-              </span>
-            </div>
-            <div class="border border-[#D5D9E0] bg-white rounded-xl overflow-hidden grid grid-cols-3 divide-x divide-[#D5D9E0] shadow-2xs">
-              <!-- 알라딘 eBook -->
-              <a id="link-ebook-aladin" href="#"
-                class="flex items-center justify-center p-4 hover:bg-[#F8F9FA] transition-colors group" title="알라딘 eBook에서 구매">
-              </a>
-              <!-- 예스24 eBook -->
-              <a id="link-ebook-yes24" href="#"
-                class="flex items-center justify-center p-4 hover:bg-[#F8F9FA] transition-colors group" title="예스24 eBook에서 구매">
-              </a>
-              <!-- 교보문고 sam/eBook -->
-              <a id="link-ebook-kyobo" href="#"
-                class="flex items-center justify-center p-4 hover:bg-[#F8F9FA] transition-colors group" title="교보문고 eBook에서 구매">
-              </a>
-            </div>
-          </div>
-
-          <!-- 3. 무료 배포 PDF 즉시 다운로드 배너 (신규 추가) -->
-          <div id="section-free-pdf-download" class="pt-5 border-t-2 border-[#DFC075]/40 hidden">
+          <!-- 1. 무료 배포 PDF 즉시 다운로드 배너 (최우선 배치) -->
+          <div id="section-free-pdf-download" class="pt-2 hidden">
             <div class="bg-gradient-to-r from-[#17191C] via-[#23272D] to-[#2D161B] text-white p-5 sm:p-6 rounded-xl border-2 border-[#DFC075] shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div class="space-y-1">
                 <div class="flex items-center gap-2">
@@ -411,6 +387,30 @@
                   <span>바로보기</span>
                 </a>
               </div>
+            </div>
+          </div>
+
+          <!-- 2. 전자책 (e-Book) 서점 로고 배너 -->
+          <div id="section-ebook-stores" class="pt-4 border-t border-[#E4DFD7]">
+            <div class="text-[#1e6e28] text-sm sm:text-base font-bold flex items-center justify-between mb-3">
+              <span>📱 전자책 (eBook / PDF) 서점 바로가기</span>
+              <span id="ebook-status-badge" class="text-xs font-semibold text-[#0057B3] bg-[#0070E0]/10 px-2.5 py-1 rounded border border-[#0070E0]/20">
+                e-Book 지원
+              </span>
+            </div>
+            <div class="border border-[#D5D9E0] bg-white rounded-xl overflow-hidden grid grid-cols-3 divide-x divide-[#D5D9E0] shadow-2xs">
+              <!-- 알라딘 eBook -->
+              <a id="link-ebook-aladin" href="#"
+                class="flex items-center justify-center p-4 hover:bg-[#F8F9FA] transition-colors group" title="알라딘 eBook에서 구매">
+              </a>
+              <!-- 예스24 eBook -->
+              <a id="link-ebook-yes24" href="#"
+                class="flex items-center justify-center p-4 hover:bg-[#F8F9FA] transition-colors group" title="예스24 eBook에서 구매">
+              </a>
+              <!-- 교보문고 sam/eBook -->
+              <a id="link-ebook-kyobo" href="#"
+                class="flex items-center justify-center p-4 hover:bg-[#F8F9FA] transition-colors group" title="교보문고 eBook에서 구매">
+              </a>
             </div>
           </div>
 
@@ -781,21 +781,46 @@
       const btnPdfDownload = document.getElementById('btn-free-pdf-download');
       const btnPdfView = document.getElementById('btn-free-pdf-view');
       const freePdfMeta = document.getElementById('free-pdf-meta');
+      const freePdfDesc = document.getElementById('free-pdf-desc');
+
+      const isFreeBook = (book.price === 0) || !!book.hasFreePdf || (book.pdfUrl && book.pdfUrl.trim() !== '');
 
       if (freePdfSection) {
-        if (book.pdfUrl) {
+        if (book.pdfUrl && book.pdfUrl.trim() !== '') {
           freePdfSection.classList.remove('hidden');
           if (btnPdfDownload) {
             btnPdfDownload.href = book.pdfUrl;
             btnPdfDownload.download = book.pdfFileName || `${book.title}.pdf`;
+            btnPdfDownload.classList.remove('hidden');
           }
           if (btnPdfView) {
             btnPdfView.href = book.pdfUrl;
+            btnPdfView.classList.remove('hidden');
+          }
+          if (freePdfDesc) {
+            freePdfDesc.innerText = '누구나 비용 없이 다운로드하여 PC, 태블릿, 모바일에서 자유롭게 읽으실 수 있습니다.';
           }
           if (freePdfMeta) {
             const fileNameText = book.pdfFileName ? `파일명: ${book.pdfFileName}` : '';
             const sizeText = book.pdfSize ? ` • 크기: ${book.pdfSize}` : '';
             freePdfMeta.innerText = `${fileNameText}${sizeText}`.trim();
+          }
+        } else if (isFreeBook) {
+          // Free or ebook format but PDF file not uploaded yet
+          freePdfSection.classList.remove('hidden');
+          if (btnPdfDownload) {
+            btnPdfDownload.href = `admin.html?edit=${encodeURIComponent(book.id)}`;
+            btnPdfDownload.removeAttribute('download');
+            btnPdfDownload.innerHTML = '<i class="fas fa-upload"></i> <span>관리자: PDF 파일 등록하기</span>';
+          }
+          if (btnPdfView) {
+            btnPdfView.classList.add('hidden');
+          }
+          if (freePdfDesc) {
+            freePdfDesc.innerHTML = '<span class="text-amber-300 font-semibold">⚠️ 전자책(PDF) 파일이 아직 등록되지 않았습니다.</span><br>관리자 화면에서 [도서 수정]을 통해 PDF 파일을 업로드하시면 즉시 다운로드 버튼이 활성화됩니다.';
+          }
+          if (freePdfMeta) {
+            freePdfMeta.innerText = 'PDF 등록 대기 상태';
           }
         } else {
           freePdfSection.classList.add('hidden');
@@ -804,11 +829,11 @@
 
       // 4. Format tag badge
       if (bookTypeTag) {
-        if (book.pdfUrl) {
+        if (book.pdfUrl && book.pdfUrl.trim() !== '') {
           bookTypeTag.innerText = '무료 배포 PDF 다운로드';
           bookTypeTag.className = 'bg-emerald-700 text-white text-xs font-semibold px-3 py-1.5 rounded-md inline-block shadow-xs';
         } else if (!hasPaperSales && hasEbookSales) {
-          bookTypeTag.innerText = '전자책 전용 (PDF)';
+          bookTypeTag.innerText = isFreeBook ? '무료 전자책 (PDF 파일 등록 필요)' : '전자책 전용 (PDF)';
           bookTypeTag.className = 'bg-[#6E1B2A] text-[#DFC075] text-xs font-semibold px-3 py-1.5 rounded-md inline-block';
         } else if (hasPaperSales && hasEbookSales) {
           bookTypeTag.innerText = book.isHardcover ? '양장본 & PDF' : '종이책 & PDF';

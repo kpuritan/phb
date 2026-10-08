@@ -710,7 +710,30 @@
     }
     const db = (typeof firebase !== 'undefined') ? firebase.firestore() : null;
     const auth = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth() : null;
-    const storage = (typeof firebase !== 'undefined' && firebase.storage) ? firebase.storage() : null;
+
+    // Dedicated Storage App for file & PDF uploads (kpuritan-home bucket)
+    let storage = null;
+    try {
+      const storageAppConfig = {
+        apiKey: "AIzaSyCJbOaiElCypwgtPgbwdnudn3VC737fMrs",
+        authDomain: "kpuritan-home.firebaseapp.com",
+        projectId: "kpuritan-home",
+        storageBucket: "kpuritan-home.firebasestorage.app",
+        messagingSenderId: "1071220455502",
+        appId: "1:1071220455502:web:7f6f59b48c48a73437f8f0"
+      };
+      let storageApp = firebase.apps.find(a => a.name === 'storageApp');
+      if (!storageApp) {
+        storageApp = firebase.initializeApp(storageAppConfig, 'storageApp');
+      }
+      storage = storageApp.storage();
+      if (storageApp.auth) {
+        storageApp.auth().signInAnonymously().catch(e => console.warn("Storage anonymous auth notice:", e));
+      }
+    } catch (e) {
+      console.warn("Storage setup notice:", e);
+      storage = (typeof firebase !== 'undefined' && firebase.storage) ? firebase.storage() : null;
+    }
 
     // Ensure Auth
     if (auth) {
@@ -1568,6 +1591,15 @@
 
       if (refreshIcon) refreshIcon.classList.remove('fa-spin');
       renderAdminBooks();
+
+      // Auto-open edit modal if ?edit=ID is in URL
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const editId = urlParams.get('edit');
+        if (editId) {
+          setTimeout(() => editBook(editId), 100);
+        }
+      } catch (e) {}
     }
 
     // 3. Render Books in Admin Table
@@ -2413,7 +2445,7 @@
           finalCoverUrl = currentCoverDataUrl;
         }
 
-        // PDF file handling (with 5s upload timeout protection)
+        // PDF file handling (with up to 30s upload timeout)
         let finalPdfUrl = document.getElementById('form-pdf-url') ? document.getElementById('form-pdf-url').value.trim() : '';
         let finalPdfFileName = currentPdfFileName || '';
         let finalPdfSize = '';
@@ -2421,18 +2453,21 @@
         if (currentPdfFile) {
           finalPdfFileName = currentPdfFile.name;
           finalPdfSize = (currentPdfFile.size / 1024 / 1024).toFixed(2) + ' MB';
+          if (saveBtn) {
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PDF 파일 업로드 중...';
+          }
           if (typeof storage !== 'undefined' && storage) {
             try {
               const safeName = currentPdfFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-              const pdfStorageRef = storage.ref(`pdfs/${id}_${Date.now()}_${safeName}`);
+              const storagePath = `files/${Date.now()}_${safeName}`;
+              const pdfStorageRef = storage.ref(storagePath);
+              const uploadTask = pdfStorageRef.put(currentPdfFile);
               const uploadTimeout = new Promise((_, reject) => 
-                setTimeout(() => reject(new Error('Storage upload timeout')), 5000)
+                setTimeout(() => reject(new Error('Storage upload timeout (30s)')), 30000)
               );
-              await Promise.race([pdfStorageRef.put(currentPdfFile), uploadTimeout]);
-              const urlTimeout = new Promise((_, reject) => 
-                setTimeout(() => reject(new Error('URL timeout')), 3000)
-              );
-              finalPdfUrl = await Promise.race([pdfStorageRef.getDownloadURL(), urlTimeout]);
+              await Promise.race([uploadTask, uploadTimeout]);
+              finalPdfUrl = await pdfStorageRef.getDownloadURL();
+              console.log("PDF upload SUCCESS! Download URL:", finalPdfUrl);
             } catch (pdfErr) {
               console.warn('Firebase Storage PDF upload fallback:', pdfErr);
               if (currentPdfDataUrl && currentPdfDataUrl.length < 500000) {
