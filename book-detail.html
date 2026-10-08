@@ -749,9 +749,26 @@
       eKyobo.href = storeLinks.ebook.kyobo;
       eKyobo.innerHTML = STORE_LOGOS.kyoboEbook;
 
-      // Check format (종이책 전용 / 전자책 전용 / 둘 다)
-      const hasPaperSales = book.isPaper !== false && (book.category !== 'ebook') && (book.format !== 'ebook');
-      const hasEbookSales = (book.isEbook === true) || (book.category === 'ebook') || (book.format === 'ebook') || (book.format === 'both');
+      // Check format and admin store display settings
+      const s = book.storeLinks || {};
+      const hasExplicitEbookLinks = !!((s.ebookAladin && s.ebookAladin.trim()) || (s.ebookYes24 && s.ebookYes24.trim()) || (s.ebookKyobo && s.ebookKyobo.trim()));
+      const hasExplicitPaperLinks = !!((s.naver && s.naver.trim()) || (s.aladin && s.aladin.trim()) || (s.kyobo && s.kyobo.trim()) || (s.yes24 && s.yes24.trim()));
+
+      // 1. 종이책 유통사 표시 여부: 관리자 설정(showPaperStores)이 false이면 무조건 숨김.
+      let hasPaperSales = (book.showPaperStores !== undefined)
+        ? !!book.showPaperStores
+        : (book.isPaper !== false && (book.category !== 'ebook') && (book.format !== 'ebook') && (hasExplicitPaperLinks || book.price > 0));
+
+      // 2. 전자책 유통사 표시 여부: 관리자 설정(showEbookStores)이 false이면 무조건 숨김!
+      // 설정이 명시되지 않은 경우: 전자책 유통사 링크가 실제로 등록된 경우에만 노출
+      let hasEbookSales = false;
+      if (book.showEbookStores === false) {
+        hasEbookSales = false;
+      } else if (book.showEbookStores === true) {
+        hasEbookSales = true;
+      } else {
+        hasEbookSales = hasExplicitEbookLinks || (!book.hasFreePdf && !book.pdfUrl && ((book.isEbook === true) || (book.category === 'ebook') || (book.format === 'ebook') || (book.format === 'both')));
+      }
 
       const paperStoreSection = document.getElementById('section-paper-stores');
       const ebookStoreSection = document.getElementById('section-ebook-stores');

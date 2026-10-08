@@ -530,18 +530,22 @@
         <div class="bg-white p-5 rounded-xl border border-[#E4DFD7] space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#F1ECE4] pb-2">
             <h3 class="font-serifKr font-bold text-sm text-[#6E1B2A] flex items-center gap-1.5">
-              <i class="fas fa-store text-[#C39738]"></i> 3. 판매 형태 및 서점 구매 링크 설정
+              <i class="fas fa-store text-[#C39738]"></i> 3. 서점(유통사) 구매 링크 노출 설정
             </h3>
-            <div class="flex items-center gap-4 text-xs">
+            <div class="flex flex-wrap items-center gap-4 text-xs">
               <label class="flex items-center gap-1.5 cursor-pointer font-semibold text-[#17191C]">
                 <input type="checkbox" id="form-enable-paper" checked onchange="toggleStoreFieldVisibility()" class="rounded border-[#E4DFD7] text-[#6E1B2A] focus:ring-0" />
-                <span>종이책 판매 노출</span>
+                <span>종이책 서점 링크 노출</span>
               </label>
               <label class="flex items-center gap-1.5 cursor-pointer font-semibold text-[#6E1B2A]">
                 <input type="checkbox" id="form-enable-ebook" onchange="toggleStoreFieldVisibility()" class="rounded border-[#E4DFD7] text-[#6E1B2A] focus:ring-0" />
-                <span>전자책(eBook) 판매 노출</span>
+                <span>전자책 유통사 링크 노출 (알라딘/YES24/교보)</span>
               </label>
             </div>
+          </div>
+          <div class="bg-amber-50/60 border border-amber-200/60 rounded-lg px-3 py-2 text-[11px] text-[#785E2F] flex items-center gap-2">
+            <i class="fas fa-info-circle text-amber-600"></i>
+            <span>무료 배포 PDF나 유통사 판매처가 없는 전자책은 위 <strong>[전자책 유통사 링크 노출]</strong> 체크를 해제하시면 상세 페이지에 서점 박스가 표시되지 않습니다.</span>
           </div>
 
           <!-- 종이책 서점 링크 -->
@@ -2180,8 +2184,12 @@
           setVal('form-link-ebook-kyobo', s.ebookKyobo || '');
 
           // Store sales visibility checkboxes
-          const hasPaperSales = book.isPaper !== undefined ? book.isPaper : (normCat !== 'ebook');
-          const hasEbookSales = book.isEbook !== undefined ? book.isEbook : (normCat === 'ebook');
+          const hasPaperSales = (book.showPaperStores !== undefined)
+            ? !!book.showPaperStores
+            : (book.isPaper !== undefined ? book.isPaper : (normCat !== 'ebook'));
+          const hasEbookSales = (book.showEbookStores !== undefined)
+            ? !!book.showEbookStores
+            : (!!(s.ebookAladin || s.ebookYes24 || s.ebookKyobo));
           const paperChk = document.getElementById('form-enable-paper');
           if (paperChk) paperChk.checked = hasPaperSales;
           const ebookChk = document.getElementById('form-enable-ebook');
@@ -2524,6 +2532,8 @@
           isEbook: isEbook,
           isPaper: isPaper,
           format: selectedFormat,
+          showPaperStores: paperEnabled,
+          showEbookStores: ebookEnabled,
 
           storeLinks: {
             naver: document.getElementById('form-link-naver')?.value.trim() || '',
