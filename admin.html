@@ -1358,30 +1358,59 @@
     }
 
     async function compressBase64Image(dataUrl, maxWidth = 350, maxHeight = 500, quality = 0.75) {
-      if (!dataUrl || !dataUrl.startsWith('data:image')) return dataUrl;
+      if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image')) return dataUrl;
       return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          let w = img.width;
-          let h = img.height;
-          if (w > maxWidth || h > maxHeight) {
-            if (w / maxWidth > h / maxHeight) {
-              h = Math.round((h * maxWidth) / w);
-              w = maxWidth;
-            } else {
-              w = Math.round((w * maxHeight) / h);
-              h = maxHeight;
-            }
+        let isSettled = false;
+        const timer = setTimeout(() => {
+          if (!isSettled) {
+            isSettled = true;
+            resolve(dataUrl);
           }
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
-          resolve(canvas.toDataURL('image/jpeg', quality));
-        };
-        img.onerror = () => resolve(dataUrl);
-        img.src = dataUrl;
+        }, 1500);
+
+        try {
+          const img = new Image();
+          img.onload = () => {
+            if (isSettled) return;
+            isSettled = true;
+            clearTimeout(timer);
+            try {
+              const canvas = document.createElement('canvas');
+              let w = img.width;
+              let h = img.height;
+              if (w > maxWidth || h > maxHeight) {
+                if (w / maxWidth > h / maxHeight) {
+                  h = Math.round((h * maxWidth) / w);
+                  w = maxWidth;
+                } else {
+                  w = Math.round((w * maxHeight) / h);
+                  h = maxHeight;
+                }
+              }
+              canvas.width = w;
+              canvas.height = h;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, w, h);
+              resolve(canvas.toDataURL('image/jpeg', quality));
+            } catch (canvasErr) {
+              resolve(dataUrl);
+            }
+          };
+          img.onerror = () => {
+            if (!isSettled) {
+              isSettled = true;
+              clearTimeout(timer);
+              resolve(dataUrl);
+            }
+          };
+          img.src = dataUrl;
+        } catch (e) {
+          if (!isSettled) {
+            isSettled = true;
+            clearTimeout(timer);
+            resolve(dataUrl);
+          }
+        }
       });
     }
 
@@ -1395,34 +1424,6 @@
       if (c === 'puritan-works' || c === 'puritan' || c.includes('청교도') || c.includes('전집')) return 'puritan-works';
       if (c === 'ebook' || c.includes('전자책') || c.includes('pdf')) return 'ebook';
       return 'dogmatics';
-    }
-
-    async function compressBase64Image(dataUrl, maxWidth = 350, maxHeight = 500, quality = 0.75) {
-      if (!dataUrl || !dataUrl.startsWith('data:image')) return dataUrl;
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          let w = img.width;
-          let h = img.height;
-          if (w > maxWidth || h > maxHeight) {
-            if (w / maxWidth > h / maxHeight) {
-              h = Math.round((h * maxWidth) / w);
-              w = maxWidth;
-            } else {
-              w = Math.round((w * maxHeight) / h);
-              h = maxHeight;
-            }
-          }
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
-          resolve(canvas.toDataURL('image/jpeg', quality));
-        };
-        img.onerror = () => resolve(dataUrl);
-        img.src = dataUrl;
-      });
     }
 
     function removeUndefinedRecursive(obj) {
@@ -1458,6 +1459,10 @@
       }
       if (clean.coverUrl && typeof clean.coverUrl === 'string' && clean.coverUrl.startsWith('data:image') && clean.coverUrl.length > 500000) {
         clean.coverUrl = clean.coverImage;
+      }
+      // If pdfUrl is a large base64 data URL, do NOT store base64 in Firestore document to avoid 1MB limit crash
+      if (clean.pdfUrl && typeof clean.pdfUrl === 'string' && clean.pdfUrl.startsWith('data:') && clean.pdfUrl.length > 300000) {
+        clean.pdfUrl = '';
       }
       return clean;
     }
@@ -1804,15 +1809,6 @@
         // displayOrder 필드 업데이트
         allBooks = allBooks.map((book, idx) => ({ ...book, displayOrder: idx }));
 
-        if (db) {
-          const batch = db.batch();
-          allBooks.forEach((book, idx) => {
-            const ref = db.collection('phb_books').doc(book.id);
-            batch.set(ref, { displayOrder: idx }, { merge: true });
-          });
-          await batch.commit();
-        }
-
         try {
           localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
           localStorage.setItem('phb_books', JSON.stringify(allBooks));
@@ -1822,9 +1818,27 @@
         exitReorderMode();
         renderAdminBooks();
         showToast('✅ 도서 순서가 저장되었습니다!');
+
+        // Background Cloud Sync with 4s timeout
+        if (db) {
+          (async () => {
+            try {
+              const batch = db.batch();
+              allBooks.forEach((book, idx) => {
+                const ref = db.collection('phb_books').doc(book.id);
+                batch.set(ref, { displayOrder: idx }, { merge: true });
+              });
+              const timeoutPromise = new Promise((_, rej) => setTimeout(() => rej(new Error('TIMEOUT')), 4000));
+              await Promise.race([batch.commit(), timeoutPromise]);
+              console.log('Reordered books synced to Firestore.');
+            } catch (cloudErr) {
+              console.warn('Reorder cloud sync notice:', cloudErr);
+            }
+          })();
+        }
       } catch(err) {
         console.error('Reorder save error:', err);
-        showToast('⚠️ 저장 중 오류가 발생했습니다. 다시 시도해주세요.');
+        showToast('⚠️ 순서 저장 중 오류가 발생했습니다.');
       } finally {
         if (saveBtn) { saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-check"></i> 순서 저장'; }
       }
@@ -2208,6 +2222,11 @@
         modal.classList.add('hidden');
         modal.style.display = 'none';
       }
+      const saveBtn = document.getElementById('btn-save-book');
+      if (saveBtn) {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<i class="fas fa-check"></i> <span>도서 정보 저장 완료</span>';
+      }
     }
 
     function editBook(rawId, index) {
@@ -2287,6 +2306,91 @@
     window.closeBookModal = closeBookModal;
     window.handleFormCategoryChange = handleFormCategoryChange;
 
+    // Helper: Convert object to Firestore REST API fields format
+    function convertToFirestoreFields(data) {
+      const fields = {};
+      for (const [k, v] of Object.entries(data)) {
+        if (v === null || v === undefined) {
+          fields[k] = { nullValue: null };
+        } else if (typeof v === 'boolean') {
+          fields[k] = { booleanValue: v };
+        } else if (typeof v === 'number') {
+          if (Number.isInteger(v)) {
+            fields[k] = { integerValue: String(v) };
+          } else {
+            fields[k] = { doubleValue: v };
+          }
+        } else if (typeof v === 'string') {
+          fields[k] = { stringValue: v };
+        } else if (Array.isArray(v)) {
+          fields[k] = {
+            arrayValue: {
+              values: v.map(item => {
+                if (typeof item === 'string') return { stringValue: item };
+                if (typeof item === 'number') return { integerValue: String(item) };
+                if (typeof item === 'boolean') return { booleanValue: item };
+                if (typeof item === 'object' && item !== null) return { mapValue: { fields: convertToFirestoreFields(item) } };
+                return { stringValue: String(item) };
+              })
+            }
+          };
+        } else if (typeof v === 'object') {
+          fields[k] = {
+            mapValue: {
+              fields: convertToFirestoreFields(v)
+            }
+          };
+        }
+      }
+      return fields;
+    }
+
+    // Helper: Direct REST API write fallback
+    async function saveBookViaRestApi(id, bookData) {
+      try {
+        const url = `https://firestore.googleapis.com/v1/projects/phbooks-bbea9/databases/(default)/documents/phb_books/${encodeURIComponent(id)}`;
+        const fields = convertToFirestoreFields(bookData);
+        const resp = await fetch(url, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fields })
+        });
+        if (!resp.ok) {
+          throw new Error(`REST API HTTP ${resp.status}`);
+        }
+        return await resp.json();
+      } catch (e) {
+        console.warn('REST API fallback attempt notice:', e);
+      }
+    }
+
+    // Helper: Background cloud sync with timeout & REST fallback
+    async function syncSingleBookToCloud(id, bookData) {
+      let synced = false;
+      if (db) {
+        try {
+          const timeoutPromise = new Promise((_, rej) => 
+            setTimeout(() => rej(new Error('FIRESTORE_TIMEOUT_3500MS')), 3500)
+          );
+          const writePromise = db.collection("phb_books").doc(id).set(bookData, { merge: true });
+          await Promise.race([writePromise, timeoutPromise]);
+          synced = true;
+          console.log("Firestore SDK sync success:", id);
+        } catch (sdkErr) {
+          console.warn("Firestore SDK sync timed out or failed, falling back to REST API:", sdkErr.message || sdkErr);
+        }
+      }
+
+      if (!synced) {
+        try {
+          await saveBookViaRestApi(id, bookData);
+          console.log("Firestore REST API fallback sync success:", id);
+        } catch (restErr) {
+          console.warn("Cloud sync warning (saved locally in browser):", restErr);
+        }
+      }
+    }
+
     async function handleBookFormSubmit(e) {
       if (e) {
         e.preventDefault();
@@ -2309,7 +2413,7 @@
           finalCoverUrl = currentCoverDataUrl;
         }
 
-        // PDF file handling
+        // PDF file handling (with 5s upload timeout protection)
         let finalPdfUrl = document.getElementById('form-pdf-url') ? document.getElementById('form-pdf-url').value.trim() : '';
         let finalPdfFileName = currentPdfFileName || '';
         let finalPdfSize = '';
@@ -2321,16 +2425,24 @@
             try {
               const safeName = currentPdfFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
               const pdfStorageRef = storage.ref(`pdfs/${id}_${Date.now()}_${safeName}`);
-              await pdfStorageRef.put(currentPdfFile);
-              finalPdfUrl = await pdfStorageRef.getDownloadURL();
+              const uploadTimeout = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Storage upload timeout')), 5000)
+              );
+              await Promise.race([pdfStorageRef.put(currentPdfFile), uploadTimeout]);
+              const urlTimeout = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('URL timeout')), 3000)
+              );
+              finalPdfUrl = await Promise.race([pdfStorageRef.getDownloadURL(), urlTimeout]);
             } catch (pdfErr) {
-              console.warn('Firebase Storage PDF upload failed, falling back to data URL:', pdfErr);
-              if (currentPdfDataUrl) finalPdfUrl = currentPdfDataUrl;
+              console.warn('Firebase Storage PDF upload fallback:', pdfErr);
+              if (currentPdfDataUrl && currentPdfDataUrl.length < 500000) {
+                finalPdfUrl = currentPdfDataUrl;
+              }
             }
-          } else if (currentPdfDataUrl) {
+          } else if (currentPdfDataUrl && currentPdfDataUrl.length < 500000) {
             finalPdfUrl = currentPdfDataUrl;
           }
-        } else if (!finalPdfUrl && currentPdfDataUrl) {
+        } else if (!finalPdfUrl && currentPdfDataUrl && currentPdfDataUrl.length < 500000) {
           finalPdfUrl = currentPdfDataUrl;
         }
 
@@ -2397,7 +2509,7 @@
 
         const bookData = await sanitizeBookForFirestore(rawBookData);
 
-        // Update local state first
+        // 1. Instant local memory update
         const idx = allBooks.findIndex(b => String(b.id) === String(id));
         if (idx > -1) {
           allBooks[idx] = Object.assign({}, allBooks[idx], bookData);
@@ -2405,6 +2517,7 @@
           allBooks.unshift(bookData);
         }
 
+        // 2. Instant LocalStorage persistence (with safety fallback)
         try {
           localStorage.setItem('phb_books_list', JSON.stringify(allBooks));
           localStorage.setItem('phb_books', JSON.stringify(allBooks));
@@ -2415,7 +2528,8 @@
             const lightList = allBooks.map(b => ({
               ...b,
               coverUrl: b.coverUrl && b.coverUrl.length > 5000 ? '' : b.coverUrl,
-              coverImage: b.coverImage && b.coverImage.length > 5000 ? '' : b.coverImage
+              coverImage: b.coverImage && b.coverImage.length > 5000 ? '' : b.coverImage,
+              pdfUrl: b.pdfUrl && b.pdfUrl.length > 5000 ? '' : b.pdfUrl
             }));
             localStorage.setItem('phb_books_list', JSON.stringify(lightList));
             localStorage.setItem('phb_books', JSON.stringify(lightList));
@@ -2423,21 +2537,14 @@
           } catch (e) {}
         }
 
-        // Save to Firestore
-        if (db) {
-          try {
-            await db.collection("phb_books").doc(id).set(bookData, { merge: true });
-            console.log("Firestore book saved successfully:", id);
-          } catch (err) {
-            console.error("Firestore save error:", err);
-            // Non-blocking alert, data is already saved locally
-            showToast('⚠️ 클라우드 전송 중 네트워크 지연이 발생했으나, 로컬 저장은 완료되었습니다.');
-          }
-        }
-
+        // 3. Optimistic UI update: Close modal immediately & re-render!
         closeBookModal();
         renderAdminBooks();
-        showToast('도서 정보가 성공적으로 저장되었습니다!');
+        showToast('✅ 도서 정보가 성공적으로 저장되었습니다!');
+
+        // 4. Background non-blocking cloud sync
+        syncSingleBookToCloud(id, bookData);
+
       } catch (error) {
         console.error('Save error:', error);
         alert('도서 정보 저장 중 문제가 발생했습니다: ' + (error.message || error));
