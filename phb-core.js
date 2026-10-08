@@ -1046,6 +1046,7 @@ function generateBookCardHtml(book) {
 
         <!-- Badges on top left -->
         <div class="absolute top-3 left-3 flex flex-col gap-1 z-20">
+          ${book.pdfUrl ? '<span class="bg-emerald-700 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow flex items-center gap-1"><i class="fas fa-file-pdf"></i> 무료배포</span>' : ''}
           ${book.isPreorder ? '<span class="bg-[#6E1B2A] text-white text-[9px] font-bold px-2 py-0.5 rounded shadow">사전예약</span>' : ''}
           ${book.isNew ? '<span class="bg-[#C39738] text-[#17191C] text-[9px] font-bold px-2 py-0.5 rounded shadow">신간</span>' : ''}
           ${book.isHardcover ? '<span class="bg-[#17191C] text-[#DFC075] text-[9px] font-bold px-1.5 py-0.5 rounded border border-[#C39738]/40 shadow">양장</span>' : ''}

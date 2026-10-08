@@ -596,6 +596,42 @@
               </div>
             </div>
           </div>
+
+          <!-- 무료 배포용 PDF 파일 업로드 및 다운로드 링크 (신규 추가) -->
+          <div id="wrapper-free-pdf" class="space-y-3 pt-3 border-t-2 border-[#DFC075]/40 bg-[#FAF8F5] p-3.5 rounded-xl border">
+            <div class="flex items-center justify-between">
+              <div class="font-serifKr font-bold text-xs text-[#6E1B2A] flex items-center gap-1.5">
+                <i class="fas fa-file-pdf text-red-600"></i> 무료 배포용 PDF 파일 등록 (방문자 즉시 다운로드 제공)
+              </div>
+              <span class="text-[10px] text-[#C39738] bg-[#C39738]/10 px-2 py-0.5 rounded font-bold border border-[#C39738]/30">무료 배포 지원</span>
+            </div>
+            <p class="text-[11px] text-[#5E6470]">
+              도서 전문 또는 무료 샘플/소책자 PDF를 등록하시면, 도서 상세페이지에 눈에 띄는 <strong>[📥 무료 PDF 다운로드]</strong> 버튼이 생성되어 방문자가 즉시 다운받을 수 있습니다.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-center">
+              <div>
+                <label class="block font-semibold text-[#17191C] text-[11px] mb-1">
+                  <i class="fas fa-upload text-[#6E1B2A] mr-1"></i> PDF 파일 직접 업로드 (PC / 모바일)
+                </label>
+                <div class="flex items-center gap-2">
+                  <input type="file" id="form-pdf-file" accept="application/pdf,.pdf" onchange="handlePdfFileSelect(event)"
+                    class="w-full text-xs text-[#5E6470] file:mr-2.5 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-red-700 file:text-white hover:file:bg-red-800 file:cursor-pointer bg-white border border-[#E4DFD7] rounded-lg p-1" />
+                  <button type="button" onclick="clearPdfFile()" class="px-2.5 py-1.5 bg-white hover:bg-red-50 text-red-600 border border-red-200 rounded text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer" title="PDF 파일 지우기">
+                    지우기
+                  </button>
+                </div>
+                <div id="pdf-file-status" class="text-[10px] text-green-700 font-medium mt-1 hidden"></div>
+              </div>
+
+              <div>
+                <label class="block font-semibold text-[#17191C] text-[11px] mb-1">
+                  <i class="fas fa-link text-[#C39738] mr-1"></i> 또는 외부 PDF 다운로드 URL 직접 입력
+                </label>
+                <input type="url" id="form-pdf-url" placeholder="https://.../book.pdf 또는 구글드라이브 링크" oninput="handlePdfUrlInput(this.value)"
+                  class="w-full px-3 py-2 bg-white border border-[#E4DFD7] rounded-lg text-xs text-[#17191C] focus:outline-none focus:border-[#6E1B2A]" />
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- 4. 소개글, 목차, 본문 발췌 (Description, TOC, Excerpt) -->
@@ -1655,6 +1691,7 @@
             <!-- 상태 뱃지 -->
             <td class="py-4 px-4 text-center whitespace-nowrap">
               <div class="flex flex-col items-center gap-1">
+                ${book.pdfUrl ? '<span class="bg-emerald-700 text-white text-[9px] font-bold px-1.5 py-0.2 rounded shadow-xs" title="무료 PDF 다운로드 가능"><i class="fas fa-file-pdf mr-0.5"></i>무료배포</span>' : ''}
                 ${book.isNew ? '<span class="bg-[#6E1B2A] text-white text-[9px] font-bold px-1.5 py-0.2 rounded">NEW</span>' : ''}
                 ${book.isPreorder ? '<span class="bg-[#C39738] text-[#17191C] text-[9px] font-bold px-1.5 py-0.2 rounded">예약판매</span>' : ''}
                 ${book.isEbook ? '<span class="bg-[#23272D] text-[#DFC075] text-[9px] font-bold px-1.5 py-0.2 rounded">eBook</span>' : ''}
@@ -1894,6 +1931,69 @@
       }
     }
 
+    // PDF Free Distribution Management
+    let currentPdfFile = null;
+    let currentPdfDataUrl = '';
+    let currentPdfFileName = '';
+
+    function handlePdfFileSelect(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      if (!file.name.toLowerCase().endsWith('.pdf') && file.type !== 'application/pdf') {
+        alert('PDF 파일(.pdf)만 등록 가능합니다.');
+        e.target.value = '';
+        return;
+      }
+      currentPdfFile = file;
+      currentPdfFileName = file.name;
+      const statusEl = document.getElementById('pdf-file-status');
+      if (statusEl) {
+        statusEl.innerText = `📄 선택됨: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+        statusEl.classList.remove('hidden');
+      }
+      const urlInput = document.getElementById('form-pdf-url');
+      if (urlInput) urlInput.value = '';
+
+      // If file is reasonably sized (< 20MB), convert to data URL for local storage caching fallback
+      if (file.size < 20 * 1024 * 1024) {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          currentPdfDataUrl = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function handlePdfUrlInput(url) {
+      const trimmed = url.trim();
+      currentPdfDataUrl = trimmed;
+      if (trimmed) {
+        currentPdfFile = null;
+        const fileInput = document.getElementById('form-pdf-file');
+        if (fileInput) fileInput.value = '';
+        const statusEl = document.getElementById('pdf-file-status');
+        if (statusEl) {
+          statusEl.innerText = `🔗 다운로드 외부 링크 적용됨`;
+          statusEl.classList.remove('hidden');
+        }
+      }
+    }
+
+    function clearPdfFile() {
+      currentPdfFile = null;
+      currentPdfDataUrl = '';
+      currentPdfFileName = '';
+      const fileInput = document.getElementById('form-pdf-file');
+      const urlInput = document.getElementById('form-pdf-url');
+      const statusEl = document.getElementById('pdf-file-status');
+      if (fileInput) fileInput.value = '';
+      if (urlInput) urlInput.value = '';
+      if (statusEl) {
+        statusEl.innerText = '';
+        statusEl.classList.add('hidden');
+      }
+    }
+
     function updateCoverPreviewText() {
       const t = document.getElementById('form-title')?.value.trim() || '도서명 미리보기';
       const a = document.getElementById('form-author')?.value.trim() || '저자명';
@@ -2042,6 +2142,19 @@
           if (ebookChk) ebookChk.checked = hasEbookSales;
           toggleStoreFieldVisibility();
 
+          // PDF free distribution setup
+          clearPdfFile();
+          if (book.pdfUrl) {
+            currentPdfDataUrl = book.pdfUrl;
+            currentPdfFileName = book.pdfFileName || '';
+            setVal('form-pdf-url', book.pdfUrl.startsWith('data:') ? '' : book.pdfUrl);
+            const statusEl = document.getElementById('pdf-file-status');
+            if (statusEl) {
+              statusEl.innerText = `📄 등록된 PDF: ${book.pdfFileName || 'PDF 파일'} ${book.pdfSize ? '(' + book.pdfSize + ')' : ''}`;
+              statusEl.classList.remove('hidden');
+            }
+          }
+
           setVal('form-tagline', book.tagline || '');
           setVal('form-description', book.description || '');
           setVal('form-toc', Array.isArray(book.toc) ? book.toc.join('\n') : (book.toc || ''));
@@ -2059,6 +2172,7 @@
           if (ebookChk) ebookChk.checked = false;
           toggleStoreFieldVisibility();
           clearCoverImage();
+          clearPdfFile();
           handleCoverGradientChange('from-[#1a1c20] via-[#2d1b24] to-[#121417]');
           updateCoverPreviewText();
         }
@@ -2195,6 +2309,31 @@
           finalCoverUrl = currentCoverDataUrl;
         }
 
+        // PDF file handling
+        let finalPdfUrl = document.getElementById('form-pdf-url') ? document.getElementById('form-pdf-url').value.trim() : '';
+        let finalPdfFileName = currentPdfFileName || '';
+        let finalPdfSize = '';
+
+        if (currentPdfFile) {
+          finalPdfFileName = currentPdfFile.name;
+          finalPdfSize = (currentPdfFile.size / 1024 / 1024).toFixed(2) + ' MB';
+          if (typeof storage !== 'undefined' && storage) {
+            try {
+              const safeName = currentPdfFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+              const pdfStorageRef = storage.ref(`pdfs/${id}_${Date.now()}_${safeName}`);
+              await pdfStorageRef.put(currentPdfFile);
+              finalPdfUrl = await pdfStorageRef.getDownloadURL();
+            } catch (pdfErr) {
+              console.warn('Firebase Storage PDF upload failed, falling back to data URL:', pdfErr);
+              if (currentPdfDataUrl) finalPdfUrl = currentPdfDataUrl;
+            }
+          } else if (currentPdfDataUrl) {
+            finalPdfUrl = currentPdfDataUrl;
+          }
+        } else if (!finalPdfUrl && currentPdfDataUrl) {
+          finalPdfUrl = currentPdfDataUrl;
+        }
+
         const paperEnabled = document.getElementById('form-enable-paper')?.checked ?? true;
         const ebookEnabled = document.getElementById('form-enable-ebook')?.checked ?? false;
 
@@ -2225,6 +2364,12 @@
           coverGradient: document.getElementById('form-cover-gradient')?.value || 'from-[#1a1c20] via-[#2d1b24] to-[#121417]',
           coverUrl: finalCoverUrl || '',
           coverImage: finalCoverUrl || '',
+
+          // PDF Free Distribution
+          pdfUrl: finalPdfUrl || '',
+          pdfFileName: finalPdfFileName || (finalPdfUrl ? '전자책(PDF)' : ''),
+          pdfSize: finalPdfSize || '',
+          hasFreePdf: !!finalPdfUrl,
 
           isNew: document.getElementById('form-is-new')?.checked ?? false,
           isPreorder: document.getElementById('form-is-preorder')?.checked ?? false,
