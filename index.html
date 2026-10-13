@@ -2281,8 +2281,11 @@
       const shipCost = total === 0 ? 0 : freeShip ? 0 : 3500;
       const finalTotal = total + shipCost;
 
-      document.getElementById('header-cart-count').innerText = count;
-      document.getElementById('cart-drawer-title').innerText = `장바구니 (${count}권)`;
+      const headerCartCount = document.getElementById('header-cart-count');
+      if (headerCartCount) headerCartCount.innerText = count;
+
+      const cartDrawerTitle = document.getElementById('cart-drawer-title');
+      if (cartDrawerTitle) cartDrawerTitle.innerText = `장바구니 (${count}권)`;
 
       const shipNotice = document.getElementById('cart-shipping-notice');
       if (freeShip) {
@@ -3587,6 +3590,7 @@
         if (modal) {
           modal.classList.remove('hidden');
           modal.classList.add('flex');
+          modal.style.display = 'flex';
         }
       } catch (e) {
         console.warn('POD popup check error:', e);
@@ -3598,6 +3602,7 @@
       if (modal) {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
+        modal.style.display = 'none';
       }
       try {
         const chk = document.getElementById('pod-hide-today-checkbox');
@@ -3623,38 +3628,49 @@
       if (modal) {
         modal.classList.remove('hidden');
         modal.classList.add('flex');
+        modal.style.display = 'flex';
       }
     };
     window.closePodPopup = closePodPopup;
     window.goToPodCatalog = goToPodCatalog;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      updateAdminUI();
-      syncDynamicBooks();
-      renderCategoryTabs();
-      renderBooksGrid();
-      renderHeroSlider();
-      updateCartUI();
+    function initPage() {
+      try { updateAdminUI(); } catch (e) { console.warn('updateAdminUI err:', e); }
+      try { syncDynamicBooks(); } catch (e) { console.warn('syncDynamicBooks err:', e); }
+      try { renderCategoryTabs(); } catch (e) { console.warn('renderCategoryTabs err:', e); }
+      try { renderBooksGrid(); } catch (e) { console.warn('renderBooksGrid err:', e); }
+      try { renderHeroSlider(); } catch (e) { console.warn('renderHeroSlider err:', e); }
+      try { updateCartUI(); } catch (e) { console.warn('updateCartUI err:', e); }
+
+      // Read URL parameters (?search=... or ?cat=...)
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchParam = urlParams.get('search') || urlParams.get('q');
+        const catParam = urlParams.get('cat');
+        const subParam = urlParams.get('sub') || 'all';
+
+        if (searchParam) {
+          const input = document.getElementById('header-search-input');
+          if (input) input.value = searchParam;
+          handleSearch(searchParam);
+          const el = document.getElementById('catalog-section');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        } else if (catParam) {
+          setFilter(catParam, subParam, true);
+        }
+      } catch (e) {
+        console.warn('URL param parse err:', e);
+      }
 
       // Trigger POD Promotion Popup
       setTimeout(checkAndShowPodPopup, 500);
+    }
 
-      // Read URL parameters (?search=... or ?cat=...)
-      const urlParams = new URLSearchParams(window.location.search);
-      const searchParam = urlParams.get('search') || urlParams.get('q');
-      const catParam = urlParams.get('cat');
-      const subParam = urlParams.get('sub') || 'all';
-
-      if (searchParam) {
-        const input = document.getElementById('header-search-input');
-        if (input) input.value = searchParam;
-        handleSearch(searchParam);
-        const el = document.getElementById('catalog-section');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      } else if (catParam) {
-        setFilter(catParam, subParam, true);
-      }
-    });
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPage);
+    } else {
+      initPage();
+    }
   </script>
 </body>
 </html>
