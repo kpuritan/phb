@@ -1090,6 +1090,103 @@
   </div>
 
   <!-- ========================================== -->
+  <!-- MODAL 5: POD 종이책 출간 및 구매 안내 팝업 -->
+  <!-- ========================================== -->
+  <div id="pod-promo-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-xs hidden items-center justify-center p-4 transition-all duration-300" onclick="if(event.target === this) closePodPopup()">
+    <div class="bg-[#F8F7F4] text-[#17191C] w-full max-w-lg rounded-2xl border-2 border-[#C39738] shadow-2xl overflow-hidden relative transform transition-all animate-fadeIn">
+      
+      <!-- 상단 헤더 배너 -->
+      <div class="bg-gradient-to-r from-[#17191C] via-[#360D15] to-[#17191C] text-white p-5 sm:p-6 relative border-b-2 border-[#C39738]">
+        <!-- 닫기 버튼 -->
+        <button onclick="closePodPopup()" class="absolute top-4 right-4 text-[#DFC075] hover:text-white p-1 rounded-full transition-colors cursor-pointer" aria-label="팝업 닫기">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#C39738]/20 border border-[#C39738]/50 text-[#DFC075] text-[11px] font-bold tracking-wider uppercase mb-2.5">
+          <span>✨</span>
+          <span>PRINT ON DEMAND (POD)</span>
+        </div>
+        <h3 class="text-xl sm:text-2xl font-serifKr font-bold text-white leading-tight">
+          퓨리탄 헤리티지 북스<br/>
+          <span class="text-[#DFC075]">POD 맞춤 종이책</span> 출간 안내
+        </h3>
+        <p class="text-xs text-[#E4DFD7] font-serifKr mt-2 opacity-90 leading-relaxed">
+          원서의 깊이와 정통 개혁주의 영성을 평생 소장할 수 있는 실물 종이책으로 만나보세요.
+        </p>
+      </div>
+
+      <!-- 본문 안내 카드 -->
+      <div class="p-6 space-y-4 text-xs font-sans">
+        
+        <!-- 핵심 특장점 3가지 -->
+        <div class="grid grid-cols-1 gap-3">
+          
+          <!-- 1. 절판 없는 1권 주문 제작 -->
+          <div class="p-3.5 bg-white rounded-xl border border-[#E4DFD7] flex items-start space-x-3 shadow-2xs">
+            <div class="w-8 h-8 rounded-lg bg-[#FAF8F5] border border-[#C39738] flex items-center justify-center text-[#6E1B2A] shrink-0 font-bold">
+              <svg class="w-4 h-4 text-[#6E1B2A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            </div>
+            <div>
+              <div class="font-bold text-[#17191C] text-xs sm:text-sm">절판 없는 맞춤 인쇄 (POD)</div>
+              <p class="text-[#5E6470] text-[11px] mt-0.5 leading-relaxed">
+                품절이나 절판 걱정 없이, 주문 즉시 1권부터 최신 개정 정본으로 깨끗하게 인쇄·제본됩니다.
+              </p>
+            </div>
+          </div>
+
+          <!-- 2. 프리미엄 소장용 퀄리티 -->
+          <div class="p-3.5 bg-white rounded-xl border border-[#E4DFD7] flex items-start space-x-3 shadow-2xs">
+            <div class="w-8 h-8 rounded-lg bg-[#FAF8F5] border border-[#C39738] flex items-center justify-center text-[#6E1B2A] shrink-0 font-bold">
+              <svg class="w-4 h-4 text-[#6E1B2A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            <div>
+              <div class="font-bold text-[#17191C] text-xs sm:text-sm">고급 용지 & 편안한 가독성 조판</div>
+              <p class="text-[#5E6470] text-[11px] mt-0.5 leading-relaxed">
+                눈의 피로를 덜어주는 최고급 미색 모조지와 정교한 맞춤 활자로 장시간 묵상과 연구에 최적화되었습니다.
+              </p>
+            </div>
+          </div>
+
+          <!-- 3. 편리한 주문 및 배송 -->
+          <div class="p-3.5 bg-white rounded-xl border border-[#E4DFD7] flex items-start space-x-3 shadow-2xs">
+            <div class="w-8 h-8 rounded-lg bg-[#FAF8F5] border border-[#C39738] flex items-center justify-center text-[#6E1B2A] shrink-0 font-bold">
+              <svg class="w-4 h-4 text-[#6E1B2A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+            </div>
+            <div>
+              <div class="font-bold text-[#17191C] text-xs sm:text-sm">온라인 서점 연동 & 직배송</div>
+              <p class="text-[#5E6470] text-[11px] mt-0.5 leading-relaxed">
+                각 도서 상세페이지에서 공식 유통 서점(스마트스토어, 교보문고 등)을 통해 안전하게 주문하실 수 있습니다.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 액션 버튼 -->
+        <div class="pt-2">
+          <button onclick="goToPodCatalog()" class="w-full py-3.5 bg-gradient-to-r from-[#6E1B2A] to-[#8C2538] hover:from-[#8C2538] hover:to-[#6E1B2A] text-white rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center space-x-2 cursor-pointer">
+            <span>📚 종이책 도서 목록 바로 둘러보기</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- 하단 푸터 (오늘 하루 보지 않기 & 닫기) -->
+      <div class="bg-[#FAF8F5] px-6 py-3.5 border-t border-[#E4DFD7] flex items-center justify-between text-xs text-[#5E6470]">
+        <label class="inline-flex items-center space-x-2 cursor-pointer select-none">
+          <input type="checkbox" id="pod-hide-today-checkbox" class="w-4 h-4 rounded border-[#C39738] text-[#6E1B2A] focus:ring-[#C39738] cursor-pointer" />
+          <span class="text-[11px] text-[#7E8694] hover:text-[#17191C] transition-colors">오늘 하루 동안 다시 보지 않기</span>
+        </label>
+        <button onclick="closePodPopup()" class="px-3 py-1.5 text-[#17191C] font-semibold hover:text-[#6E1B2A] text-xs transition-colors cursor-pointer">
+          닫기
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
   <!-- JAVASCRIPT LOGIC -->
   <!-- ========================================== -->
   <script>
@@ -3477,6 +3574,60 @@
     window.cleanBookDescription = cleanBookDescription;
     window.formatCleanDescriptionParagraphs = formatCleanDescriptionParagraphs;
 
+    // ==========================================
+    // POD Promotion Popup Controller
+    // ==========================================
+    function checkAndShowPodPopup() {
+      try {
+        const hideUntil = localStorage.getItem('phb_hide_pod_popup');
+        if (hideUntil && Date.now() < Number(hideUntil)) {
+          return;
+        }
+        const modal = document.getElementById('pod-promo-modal');
+        if (modal) {
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+        }
+      } catch (e) {
+        console.warn('POD popup check error:', e);
+      }
+    }
+
+    function closePodPopup(forceHide = false) {
+      const modal = document.getElementById('pod-promo-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      try {
+        const chk = document.getElementById('pod-hide-today-checkbox');
+        if (forceHide || (chk && chk.checked)) {
+          const expireTime = Date.now() + 24 * 60 * 60 * 1000;
+          localStorage.setItem('phb_hide_pod_popup', String(expireTime));
+        }
+      } catch (e) {
+        console.warn('POD popup storage error:', e);
+      }
+    }
+
+    function goToPodCatalog() {
+      closePodPopup(false);
+      const el = document.getElementById('catalog-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    window.openPodPopup = function() {
+      const modal = document.getElementById('pod-promo-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    };
+    window.closePodPopup = closePodPopup;
+    window.goToPodCatalog = goToPodCatalog;
+
     document.addEventListener('DOMContentLoaded', () => {
       updateAdminUI();
       syncDynamicBooks();
@@ -3484,6 +3635,9 @@
       renderBooksGrid();
       renderHeroSlider();
       updateCartUI();
+
+      // Trigger POD Promotion Popup
+      setTimeout(checkAndShowPodPopup, 500);
 
       // Read URL parameters (?search=... or ?cat=...)
       const urlParams = new URLSearchParams(window.location.search);
